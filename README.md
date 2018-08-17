@@ -6,4 +6,4 @@
 <h1 style="color:red">我是tesdt</h1>
   </div>
 日常的工作经历
-  [图片01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/invertedIndex01.png)
+  ![图片01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/invertedIndex01.png)
