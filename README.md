@@ -1,11 +1,35 @@
 # Kangaroo-
 
 # 日常工作总结
-<div>
-<h1 style="color:red" >红色的<h1>
-<h1 style="color:red">我是tesdt</h1>
-  </div>
-日常的工作经历
+ * 换行 \<br\>
+ * 单行文本：前面使用两个Tab
+ * 多行文本: 每行行首加两个Tab
+
+ * 插入连接
+ 
+    \[百度](http://baidu.com)
+  
+ * 插入github仓库的图片并加入超链接
+ 
+    \[![baidu]](http://baidu.com)  
+    \[baidu]:http://www.baidu.com/img/bdlogo.gif "百度Logo"  
+    
+ * 代码
+ 
+      插入代码片段：在代码上下行用```标记，注意`符号是tab键上面那个，要实现语法高亮，则在```后面加上编程语言的名称
+      
+ * 文本超链接
+ 
+    [要显示的文字](链接的地址"鼠标悬停显示")，在URL之后用双引号括起来一个字符串，即鼠标悬停显示的文本，可不写
+
+-----------------------
+  ## mapreduce
+  
+* 倒排索引
+
+    [倒排索引概述](https://github.com/bigDataHell/Kangaroo-/blob/master/mapreduce/invertedIndex/remade.md)  
+    [倒排索引代码](https://github.com/bigDataHell/Kangaroo-/blob/master/mapreduce/invertedIndex/InvertedIndex.java)
   
 
-![图片01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/invertedIndex01.png)
+-------------------------
+
