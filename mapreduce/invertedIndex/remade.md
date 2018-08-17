@@ -36,4 +36,6 @@
 
 ![图片04](https://github.com/bigDataHell/Kangaroo-/blob/master/images/ivertedIndex04.png)
 
-* 具体实现请看代码
+* *具体实现请看代码*
+
+      [代码](https://github.com/bigDataHell/Kangaroo-/blob/master/mapreduce/invertedIndex/InvertedIndex.java)
