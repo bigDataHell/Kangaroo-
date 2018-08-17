@@ -34,8 +34,8 @@
  我们最终要得到的文档内容的形式为: 单词  文件1:次数;文件2:次数;文件3:次数.....
 
 
-![图片04](https://github.com/bigDataHell/Kangaroo-/blob/master/images/ivertedIndex04.png)
+![图片04](https://github.com/bigDataHell/Kangaroo-/blob/master/images/invertedIndex04.png)
 
 * *具体实现请看代码*
 
-    [代码](https://github.com/bigDataHell/Kangaroo-/blob/master/images/invertedIndex04.png)
+    [代码]https://github.com/bigDataHell/Kangaroo-/blob/master/mapreduce/invertedIndex/InvertedIndex.java)
