@@ -11,8 +11,7 @@
         
     2) 当用户指定key，使用hash算法。如果key一直不变，同一个key算出来的hash值是个固定值。如果是固定值，这种hash取模就没有意义。
         我们要保证key的值是一直变动的,比如可以是username,则相同的用户会被分到同一个分区中.
-    
-  ``` java
+    ``` java
       /**
      * Create a record to be sent to Kafka
      * 
@@ -25,12 +24,12 @@
     }
   ```
       DefaultPartitioner.partition()中的哈希算法:
-  ```  java
+```  java
   return Utils.toPositive(Utils.murmur2(keyBytes)) % numPartitions; 
-  ```
+```
     
     3）当用既没有指定partition也没有key,会使用默认的分发策略,即轮询分发,每个partiton依次分发.
-  ``` java
+``` java
       /**
      * Create a record with no key
      * 
@@ -40,7 +39,7 @@
     public ProducerRecord(String topic, V value) {
         this(topic, null, null, null, value, null);
     }
-  ```
+```
     4) partition和key同时存在,按照partition分发数据.
     
  ### 消费者的负载均衡机制
@@ -52,8 +51,9 @@
     当消费者数量和分区数量相等时,如果消费速度还是跟不上生产速度,则此时在增加消费时是没有作用的.<br>
     因为Kafka的负载均衡策略规定,比分区数量多出来的消费者处于空闲状态,一个消费者只能消费一个partition中的数据.
     
-    实际解决方案: 1 修改topic的partition数量<br>
-                 2 减少消费者的处理时间,提高处理速度.
+    实际解决方案: 
+      1 修改topic的partition数量<br>
+      2 减少消费者的处理时间,提高处理速度.
                  
  
  ### 消息不丢失机制
