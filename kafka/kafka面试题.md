@@ -8,6 +8,12 @@ messageQueue : 消息队列  <br>
   
   topic /'tɒpɪk/ : 主题（等于theme）；题目；一般规则；总论
   
+  Producer
+  Consumer
+  Cluster
+  
+  
+  
 
 ### 1 为什么使用消息队列? 消息队列的作用是什么?
 
