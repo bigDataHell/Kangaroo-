@@ -8,9 +8,11 @@ messageQueue : 消息队列  <br>
   
   topic /'tɒpɪk/ : 主题（等于theme）；题目；一般规则；总论
   
-  Producer
-  Consumer
-  Cluster
+  broker /'brəʊkə/ : 经纪人，掮客,也可以认为是服务器
+  
+  Producer /prə'dʊsɚ/ : 生产者
+  Consumer /kən'sumɚ/ : 消费者
+  Cluster  /'klʌstɚ/ : 群；簇；丛；串
   
   
   
