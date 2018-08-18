@@ -1,4 +1,43 @@
 
+## Kafka 名词解释
+
+ * Producer ：消息生产者，就是向 kafka broker 发消息的客户端。
+ 
+ * Consumer ：消息消费者，向 kafka broker 取消息的客户端
+ 
+ * Topic ：主题。
+ 
+ * Consumer Group （CG）：这是 kafka 用来实现一个 topic 消息的广播（发给所有的 consumer）
+    和单播（发给任意一个 consumer）的手段。一个 topic 可以有多个 CG。topic 的消息会复制（不
+    是真的复制，是概念上的）到所有的 CG，但每个 partion 只会把消息发给该 CG 中的一个
+    consumer。如果需要实现广播，只要每个 consumer 有一个独立的 CG 就可以了。要实现单播只
+    要所有的 consumer 在同一个 CG。用 CG 还可以将 consumer 进行自由的分组而不需要多次发送
+    消息到不同的 topic。
+    
+ * Broker ：一台 kafka 服务器就是一个 broker。一个集群由多个 broker 组成。一个 broker 可以容
+    纳多个 topic。
+    
+ * Partition：为了实现扩展性，一个非常大的 topic 可以分布到多个 broker（即服务器）上，一个
+    topic 可以分为多个 partition，每个 partition 是一个有序的队列。partition 中的每条消息都会被分
+    配一个有序的 id（offset）。kafka 只保证按一个 partition 中的顺序将消息发给 consumer，不保
+    证一个 topic 的整体（多个 partition 间）的顺序。
+    
+ * Offset：kafka 的存储文件都是按照 offset.kafka 来命名，用 offset 做名字的好处是方便查找。例
+    如你想找位于 2049 的位置，只要找到 2048.kafka 的文件即可。当然 the first offset 就是
+    00000000000.kafka
+    
+ * Replication：Kafka 支持以 Partition 为单位对 Message 进行冗余备份，每个 Partition 都可以配
+    置至少 1 个 Replication(当仅 1 个 Replication 时即仅该 Partition 本身)。
+    
+ * Leader：每个 Replication 集合中的 Partition 都会选出一个唯一的 Leader，所有的读写请求都由
+    Leader 处理。其他 Replicas 从 Leader 处把数据更新同步到本地，过程类似大家熟悉的 MySQL
+    中的 Binlog 同步。每个 Cluster 当中会选举出一个 Broker 来担任 Controller，负责处理 Partition
+    的 Leader 选举，协调 Partition 迁移等工作。
+    
+  * ISR(In-Sync Replica)：是 Replicas 的一个子集，表示目前 Alive 且与 Leader 能够“Catch-up”的
+      Replicas 集合。 由于读写都是首先落到 Leader  上，所以一般来说通过同步机制从 Leader 上拉取
+      数据的 Replica 都会和 Leader 有一些延迟(包括了延迟时间和延迟条数两个维度)，任意一个超过
+      阈值都会把该 Replica 踢出 ISR。每个 Partition 都有它自己独立的 ISR。
 ### 生产者数据分发策略
 
 1 每个topic数据的分发策略在生产者端.
