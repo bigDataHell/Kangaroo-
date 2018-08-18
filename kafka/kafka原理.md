@@ -5,10 +5,11 @@
 
 2 Kafka在数据生产的时候，有一个数据分发策略。默认的情况使用DefaultPartitioner.class类。
   这个类中就定义数据分发的策略。
-    1) 如果用户指定了partition,生产端就不会调用DefaultPartitioner.partition()方法
+ 
+    1) 如果用户指定了partition,生产端就不会调用DefaultPartitioner.partition()方法<br>
     2) 当用户指定key，使用hash算法。如果key一直不变，同一个key算出来的hash值是个固定值。如果是固定值，这种hash取模就没有意义。
     
-    ``` java
+  ``` java
       /**
      * Create a record to be sent to Kafka
      * 
@@ -19,7 +20,7 @@
     public ProducerRecord(String topic, K key, V value) {
         this(topic, null, null, key, value, null);
     }
-    ```
+  ```
     
-    3）当用既没有指定partition也没有key,会使用默认的分发策略,即轮询分发,每个partiton依次分发.
+    3）当用既没有指定partition也没有key,会使用默认的分发策略,即轮询分发,每个partiton依次分发.<br>
     4) partition和key同时存在,按照partition分发数据.
