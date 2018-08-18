@@ -26,7 +26,7 @@
     
 | 数据存储|数据转换|数据计算|分布式协调|分布式调度|
 |:-----: |:-----:|:-----:|:-----:|:-----:|
-|1|[Kafka](#Kafka)|[mapreduce](#数据计算)|4|5|
+|1|[Kafka](#kafka)|[mapreduce](#数据计算)|4|5|
 |Hbase|#|hadoop|zookeeper|Mesos|
 |Cassandra|flume|spark|Consul|yarn|
 |MonggoDB|RabbitMQ|Filink|Etcd|#|
