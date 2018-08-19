@@ -12,7 +12,7 @@ value>。Key 表示每行首字符偏移值，value 表示这一行文本内容�
 重写的 map 函数。RecordReader 读取一行这里调用一次。
 
 * map 逻辑完之后，将 map 的每条结果通过 context.write 进行 collect 数据
-收集。**在 collect 中，会先对其进行分区处理，**默认使用 HashPartitioner。
+收集。**在 collect 中，会先对其进行分区处理**，默认使用 HashPartitioner。
 MapReduce 提供 Partitioner 接口，它的作用就是根据 key 或 value 及 reduce 的数量
 来决定当前的这对输出数据最终应该交由哪个 reduce task 处理。默认对 key hash 后再以
 reduce task 数量取模。默认的取模方式只是为了平均 reduce 的处理能力，如果用户自己
@@ -53,5 +53,6 @@ merge 合并，因为最终的文件只有一个，写入磁盘，并且为这�
 一个索引文件，以记录每个 reduce 对应数据的偏移量。
 
 ### 具体过程看下图:
+
 ![MapTask01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/MapTask01.png)
 
