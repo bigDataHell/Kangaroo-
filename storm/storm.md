@@ -7,3 +7,7 @@
 
 ## Storm架构
 
+* 架构图:
+
+![storm01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/storm01.png)
+
