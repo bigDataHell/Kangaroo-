@@ -56,6 +56,7 @@ Kafka 和传统的消息系统不同在于：
 ## Kafka 架构原理
 
 * kafka架构图:
+
 ![kafka01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/kafka02.jpg)
 
 Kafka名词解释
@@ -244,7 +245,7 @@ HW 能保证 Leader 所在的 Broker 失效，该消息仍然可以从新选举�
 
 要实现 exactly-once 在 Kafka 0.11.0 中有两个官方策略：
 
-  * **单 Producer 单 Topic**
+**单 Producer 单 Topic**
 
 每个 Producer 在初始化的时候都会被分配一个唯一的 PID，对于每个唯一的 PID，Producer 向指定的 Topic 中某个特定的 Partition 发送的消息都会携带一个从 0 单调递增的 Sequence Number。
 
