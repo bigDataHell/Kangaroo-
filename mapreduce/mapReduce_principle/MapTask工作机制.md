@@ -56,3 +56,7 @@ merge 合并，因为最终的文件只有一个，写入磁盘，并且为这�
 
 ![MapTask01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/MapTask01.png)
 
+### 整个MapReduce阶段
+
+![MapReduce](https://github.com/bigDataHell/Kangaroo-/blob/master/images/MapReduce.png)
+
