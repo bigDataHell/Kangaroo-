@@ -314,7 +314,8 @@ Transaction Log 的设计与 Offset Log 用于保存 Consumer 的 Offset 类似�
         this(topic, null, null, key, value, null);
     }
   ```
-      DefaultPartitioner.partition()中的哈希算法:
+DefaultPartitioner.partition()中的哈希算法:
+
 ```  java
   return Utils.toPositive(Utils.murmur2(keyBytes)) % numPartitions; 
 ```
