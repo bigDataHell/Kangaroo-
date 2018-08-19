@@ -45,6 +45,11 @@
 
     [倒排索引概述](https://github.com/bigDataHell/Kangaroo-/blob/master/mapreduce/invertedIndex/remade.md)  
     [倒排索引代码](https://github.com/bigDataHell/Kangaroo-/blob/master/mapreduce/invertedIndex/InvertedIndex.java)
+    
+* MapReduce原理
+
+    [MapTask工作机制](https://github.com/bigDataHell/Kangaroo-/blob/master/mapreduce/mapReduce_principle/MapTask%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6.md) 
+    [ReduceTask工作机制](https://github.com/bigDataHell/Kangaroo-/blob/master/mapreduce/mapReduce_principle/ReduceTask%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6.md) 
   
 
 -------------------------
