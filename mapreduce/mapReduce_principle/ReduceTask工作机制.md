@@ -17,3 +17,11 @@
 
 * 对排序后的键值对调用 reduce 方法，键相等的键值对调用一次 reduce 方法，
 每次调用会产生零个或者多个键值对，最后把这些输出的键值对写入到 HDFS文件中。
+
+## reduceTask
+
+![reduceTask01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/reduceTask01.png)
+
+## 真个MapReducer阶段
+
+![MapReduce](https://github.com/bigDataHell/Kangaroo-/blob/master/images/MapReduce.png)
