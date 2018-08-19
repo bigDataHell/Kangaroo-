@@ -320,6 +320,7 @@ Transaction Log 的设计与 Offset Log 用于保存 Consumer 的 Offset 类似�
 ```
     
     3）当用既没有指定partition也没有key,会使用默认的分发策略,即轮询分发,每个partiton依次分发.
+    
 ``` java
       /**
      * Create a record with no key
