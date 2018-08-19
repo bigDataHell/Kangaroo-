@@ -40,8 +40,47 @@
       阈值都会把该 Replica 踢出 ISR。每个 Partition 都有它自己独立的 ISR。
       
       
-      ? kafka的客户端和服务端分别是什么?
+## Kafka和其他消息队列的对比
+
+Kafka 和传统的消息系统不同在于：
+* Kafka是一个分布式系统，易于向外扩展。
+* 它同时为发布和订阅提供高吞吐量。
+* 它支持多订阅者，当失败时能自动平衡消费者。
+* 消息的持久化。
+
+
+ * Kafka 和其他消息队列的对比
+
+![kafka01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/kafka01.jpg)
       
+## Kafka 架构原理
+
+* kafka架构图:
+![kafka01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/kafka02.jpg)
+
+Kafka名词解释
+
+在一套 Kafka 架构中有多个 Producer，多个 Broker，多个 Consumer，每个 Producer 可以对应多个 Topic，每个 Consumer 只能对应一个 Consumer Group。
+
+整个 Kafka 架构对应一个 ZK 集群，通过 ZK 管理集群配置，选举 Leader，以及在 Consumer Group 发生变化时进行 Rebalance。
+
+## Topic 和 Partition
+
+在 Kafka 中的每一条消息都有一个 Topic。一般来说在我们应用中产生不同类型的数据，都可以设置不同的主题。
+
+一个主题一般会有多个消息的订阅者，当生产者发布消息到某个主题时，订阅了这个主题的消费者都可以接收到生产者写入的新消息。
+
+Kafka 为每个主题维护了分布式的分区(Partition)日志文件，每个 Partition 在 Kafka 存储层面是 Append Log。
+
+任何发布到此 Partition 的消息都会被追加到 Log 文件的尾部，在分区中的每条消息都会按照时间顺序分配到一个单调递增的顺序编号，也就是我们的 Offset。Offset 是一个 Long 型的数字。
+
+我们通过这个 Offset 可以确定一条在该 Partition 下的唯一消息。在 Partition 下面是保证了有序性，但是在 Topic 下面没有保证有序性。
+
+![kafka01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/kafka04.jpg)
+
+在上图中我们的生产者会决定发送到哪个 Partition：
+* 如果没有 Key 值则进行轮询发送。
+* 如果有 Key 值，对 Key 值进行 Hash，然后对分区数量取余，保证了同一个 Key 值的会被路由到同一个分区；如果想队列的强顺序一致性，可以让所有的消息都设置   为同一个 Key。
 
 ## 消费模型
 
@@ -61,112 +100,63 @@
 
 比如消费者可以消费已经消费过的消息进行重新处理，或者消费最近的消息等等。
 
-## Kafka和其他消息队列的对比
+##  网络模型
 
-Kafka 和传统的消息系统不同在于：
-* Kafka是一个分布式系统，易于向外扩展。
-* 它同时为发布和订阅提供高吞吐量。
-* 它支持多订阅者，当失败时能自动平衡消费者。
-* 消息的持久化。
+* Kafka Client：单线程 Selector
 
+![kafka01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/kafka07.jpg)
 
- * Kafka 和其他消息队列的对比
+单线程模式适用于并发链接数小，逻辑简单，数据量小的情况。在 Kafka 中，Consumer 和 Producer 都是使用的上面的单线程模式。
 
-![kafka01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/kafka01.jpg)
+这种模式不适合 Kafka 的服务端，在服务端中请求处理过程比较复杂，会造成线程阻塞，一旦出现后续请求就会无法处理，会造成大量请求超时，引起雪崩。而在服务器中应该充分利用多线程来处理执行逻辑。
 
+* Kafka Server：多线程 Selector
 
-## Topic 和 Partition
+![kafka01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/kafka08.jpg)
 
-在 Kafka 中的每一条消息都有一个 Topic。一般来说在我们应用中产生不同类型的数据，都可以设置不同的主题。
+在 Kafka 服务端采用的是多线程的 Selector 模型，Acceptor 运行在一个单独的线程中，对于读取操作的线程池中的线程都会在 Selector 注册 Read 事件，负责服务端读取请求的逻辑。
 
-一个主题一般会有多个消息的订阅者，当生产者发布消息到某个主题时，订阅了这个主题的消费者都可以接收到生产者写入的新消息。
+成功读取后，将请求放入 Message Queue共享队列中。然后在写线程池中，取出这个请求，对其进行逻辑处理。
 
-Kafka 为每个主题维护了分布式的分区(Partition)日志文件，每个 Partition 在 Kafka 存储层面是 Append Log。
+这样，即使某个请求线程阻塞了，还有后续的线程从消息队列中获取请求并进行处理，在写线程中处理完逻辑处理，由于注册了 OP_WIRTE 事件，所以还需要对其发送响应。
 
-任何发布到此 Partition 的消息都会被追加到 Log 文件的尾部，在分区中的每条消息都会按照时间顺序分配到一个单调递增的顺序编号，也就是我们的 Offset。Offset 是一个 Long 型的数字。
+## 高可靠分布式存储模型
 
-我们通过这个 Offset 可以确定一条在该 Partition 下的唯一消息。在 Partition 下面是保证了有序性，但是在 Topic 下面没有保证有序性。
+在 Kafka 中保证高可靠模型依靠的是副本机制，有了副本机制之后，就算机器宕机也不会发生数据丢失。
 
-![kafka01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/kafka04.jpg)
+## 高性能的日志存储
 
-在上图中我们的生产者会决定发送到哪个 Partition：
- * 如果没有 Key 值则进行轮询发送。
-* 如果有 Key 值，对 Key 值进行 Hash，然后对分区数量取余，保证了同一个 Key 值的会被路由到同一个分区；如果想队列的强顺序一致性，可以让所有的消息都设置为同一个 Key。
+Kafka 一个 Topic 下面的所有消息都是以 Partition 的方式分布式的存储在多个节点上。
 
+同时在 Kafka 的机器上，每个 Partition 其实都会对应一个日志目录，在目录下面会对应多个日志分段(LogSegment)。
 
-## 高可用模型及幂等
+LogSegment 文件由两部分组成，分别为“.index”文件和“.log”文件，分别表示为 Segment 索引文件和数据文件。
 
-在分布式系统中一般有三种处理语义：
+这两个文件的命令规则为：Partition 全局的第一个 Segment 从 0 开始，后续每个 Segment 文件名为上一个 Segment 文件最后一条消息的 Offset 值，数值大小为 64 位，20 位数字字符长度，没有数字用 0 填充。
 
-### at-least-once
+如下，假设有 1000 条消息，每个 LogSegment 大小为 100，下面展现了 900-1000 的索引和 Log：
 
-至少一次，有可能会有多次。如果 Producer 收到来自 Ack 的确认，则表示该消息已经写入到 Kafka 了，此时刚好是一次，也就是我们后面的 Exactly-once。
+![kafka01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/kafka06.jpg)
 
-但是如果 Producer 超时或收到错误，并且 request.required.acks 配置的不是 -1，则会重试发送消息，客户端会认为该消息未写入 Kafka。
+由于 Kafka 消息数据太大，如果全部建立索引，既占了空间又增加了耗时，所以 Kafka 选择了稀疏索引的方式，这样索引可以直接进入内存，加快偏查询速度。
 
-如果 Broker 在发送 Ack 之前失败，但在消息成功写入 Kafka 之后，这一次重试将会导致我们的消息会被写入两次。
+简单介绍一下如何读取数据，如果我们要读取第 911 条数据首先第一步，找到它是属于哪一段的。
 
-所以消息就不止一次地传递给最终 Consumer，如果 Consumer 处理逻辑没有保证幂等的话就会得到不正确的结果。
+根据二分法查找到它属于的文件，找到 0000900.index 和 00000900.log 之后，然后去 index 中去查找 (911-900) = 11 这个索引或者小于 11 最近的索引。
 
-在这种语义中会出现乱序，也就是当第一次 Ack 失败准备重试的时候，但是第二消息已经发送过去了，这个时候会出现单分区中乱序的现象。
+在这里通过二分法我们找到了索引是 [10,1367]，然后我们通过这条索引的物理位置 1367，开始往后找，直到找到 911 条数据。
 
-我们需要设置 Prouducer 的参数 max.in.flight.requests.per.connection，flight.requests 是 Producer 端用来保存发送请求且没有响应的队列，保证 Produce r端未响应的请求个数为 1。
+上面讲的是如果要找某个 Offset 的流程，但是我们大多数时候并不需要查找某个 Offset，只需要按照顺序读即可。
 
-### at-most-once
+而在顺序读中，操作系统会在内存和磁盘之间添加 Page Cache，也就是我们平常见到的预读操作，所以我们的顺序读操作时速度很快。
 
-如果在 Ack 超时或返回错误时 Producer 不重试，也就是我们讲 request.required.acks = -1，则该消息可能最终没有写入 Kafka，所以 Consumer 不会接收消息。
+但是 Kafka 有个问题，如果分区过多，那么日志分段也会很多，写的时候由于是批量写，其实就会变成随机写了，随机 I/O 这个时候对性能影响很大。所以一般来说 Kafka 不能有太多的 Partition。
 
-### exactly-once
+针对这一点，RocketMQ 把所有的日志都写在一个文件里面，就能变成顺序写，通过一定优化，读也能接近于顺序读。
 
-刚好一次，即使 Producer 重试发送消息，消息也会保证最多一次地传递给 Consumer。该语义是最理想的，也是最难实现的。
-
-在 0.10 之前并不能保证 exactly-once，需要使用 Consumer 自带的幂等性保证。0.11.0 使用事务保证了。
-
-### 如何实现 exactly-once
-
-要实现 exactly-once 在 Kafka 0.11.0 中有两个官方策略：
-
-**单 Producer 单 Topic**
-
-每个 Producer 在初始化的时候都会被分配一个唯一的 PID，对于每个唯一的 PID，Producer 向指定的 Topic 中某个特定的 Partition 发送的消息都会携带一个从 0 单调递增的 Sequence Number。
-
-在我们的 Broker 端也会维护一个维度为，每次提交一次消息的时候都会对齐进行校验：
-* 如果消息序号比 Broker 维护的序号大一以上，说明中间有数据尚未写入，也即乱序，此时 Broker 拒绝该消息，Producer 抛出 InvalidSequenceNumber。
-* 如果消息序号小于等于 Broker 维护的序号，说明该消息已被保存，即为重复消息，Broker 直接丢弃该消息，Producer 抛出 DuplicateSequenceNumber。
-* 如果消息序号刚好大一，就证明是合法的。
-
-上面所说的解决了两个问题：
-* 当 Prouducer 发送了一条消息之后失败，Broker 并没有保存，但是第二条消息却发送成功，造成了数据的乱序。
-* 当 Producer 发送了一条消息之后，Broker 保存成功，Ack 回传失败，Producer 再次投递重复的消息。
-
-上面所说的都是在同一个 PID 下面，意味着必须保证在单个 Producer 中的同一个 Seesion 内，如果 Producer 挂了，被分配了新的 PID，这样就无法保证了，所以 Kafka 中又有事务机制去保证。
-
-## 事务
-
-在 Kafka 中事务的作用是：
-* 实现 exactly-once 语义。
-* 保证操作的原子性，要么全部成功，要么全部失败。
-* 有状态的操作的恢复。
-
-事务可以保证就算跨多个，在本次事务中的对消费队列的操作都当成原子性，要么全部成功，要么全部失败。
-
-并且，有状态的应用也可以保证重启后从断点处继续处理，也即事务恢复。
-
-在 Kafka 的事务中，应用程序必须提供一个唯一的事务 ID，即 Transaction ID，并且宕机重启之后，也不会发生改变。
-
-Transactin ID 与 PID 可能一一对应，区别在于 Transaction ID 由用户提供，而 PID 是内部的实现对用户透明。
-
-为了 Producer 重启之后，旧的 Producer 具有相同的 Transaction ID 失效，每次 Producer 通过 Transaction ID 拿到 PID 的同时，还会获取一个单调递增的 Epoch。
-
-由于旧的 Producer 的 Epoch 比新 Producer 的 Epoch 小，Kafka 可以很容易识别出该 Producer 是老的，Producer 并拒绝其请求。
-
-为了实现这一点，Kafka 0.11.0.0 引入了一个服务器端的模块，名为 Transaction Coordinator，用于管理 Producer 发送的消息的事务性。
-
-该 Transaction Coordinator 维护 Transaction Log，该 Log 存于一个内部的 Topic 内。
-
-由于 Topic 数据具有持久性，因此事务的状态也具有持久性。Producer 并不直接读写 Transaction Log，它与 Transaction Coordinator 通信，然后由 Transaction Coordinator 将该事务的状态插入相应的 Transaction Log。
-
-Transaction Log 的设计与 Offset Log 用于保存 Consumer 的 Offset 类似。
+大家可以思考一下：
+* 为什么需要分区，也就是说主题只有一个分区，难道不行吗？
+* 日志为什么需要分段？
 
 ## 副本机制
 
@@ -220,6 +210,83 @@ HW 能保证 Leader 所在的 Broker 失效，该消息仍然可以从新选举�
 * -1：Producer 需要等待 ISR 中的所有 Follower 都确认接收到数据后才算一次发送完成，可靠性最高。
 
 但是这样也不能保证数据不丢失，比如当 ISR 中只有 Leader 时(其他节点都和 ZK 断开连接，或者都没追上)，这样就变成了 acks = 1 的情况。
+
+
+## 高可用模型及幂等
+
+在分布式系统中一般有三种处理语义：
+
+*  at-least-once
+
+至少一次，有可能会有多次。如果 Producer 收到来自 Ack 的确认，则表示该消息已经写入到 Kafka 了，此时刚好是一次，也就是我们后面的 Exactly-once。
+
+但是如果 Producer 超时或收到错误，并且 request.required.acks 配置的不是 -1，则会重试发送消息，客户端会认为该消息未写入 Kafka。
+
+如果 Broker 在发送 Ack 之前失败，但在消息成功写入 Kafka 之后，这一次重试将会导致我们的消息会被写入两次。
+
+所以消息就不止一次地传递给最终 Consumer，如果 Consumer 处理逻辑没有保证幂等的话就会得到不正确的结果。
+
+在这种语义中会出现乱序，也就是当第一次 Ack 失败准备重试的时候，但是第二消息已经发送过去了，这个时候会出现单分区中乱序的现象。
+
+我们需要设置 Prouducer 的参数 max.in.flight.requests.per.connection，flight.requests 是 Producer 端用来保存发送请求且没有响应的队列，保证 Produce r端未响应的请求个数为 1。
+
+*  at-most-once
+
+如果在 Ack 超时或返回错误时 Producer 不重试，也就是我们讲 request.required.acks = -1，则该消息可能最终没有写入 Kafka，所以 Consumer 不会接收消息。
+
+*  exactly-once
+
+刚好一次，即使 Producer 重试发送消息，消息也会保证最多一次地传递给 Consumer。该语义是最理想的，也是最难实现的。
+
+在 0.10 之前并不能保证 exactly-once，需要使用 Consumer 自带的幂等性保证。0.11.0 使用事务保证了。
+
+*  如何实现 exactly-once
+
+要实现 exactly-once 在 Kafka 0.11.0 中有两个官方策略：
+
+  * **单 Producer 单 Topic**
+
+每个 Producer 在初始化的时候都会被分配一个唯一的 PID，对于每个唯一的 PID，Producer 向指定的 Topic 中某个特定的 Partition 发送的消息都会携带一个从 0 单调递增的 Sequence Number。
+
+在我们的 Broker 端也会维护一个维度为，每次提交一次消息的时候都会对齐进行校验：
+* 如果消息序号比 Broker 维护的序号大一以上，说明中间有数据尚未写入，也即乱序，此时 Broker 拒绝该消息，Producer 抛出 InvalidSequenceNumber。
+* 如果消息序号小于等于 Broker 维护的序号，说明该消息已被保存，即为重复消息，Broker 直接丢弃该消息，Producer 抛出 DuplicateSequenceNumber。
+* 如果消息序号刚好大一，就证明是合法的。
+
+上面所说的解决了两个问题：
+* 当 Prouducer 发送了一条消息之后失败，Broker 并没有保存，但是第二条消息却发送成功，造成了数据的乱序。
+* 当 Producer 发送了一条消息之后，Broker 保存成功，Ack 回传失败，Producer 再次投递重复的消息。
+
+上面所说的都是在同一个 PID 下面，意味着必须保证在单个 Producer 中的同一个 Seesion 内，如果 Producer 挂了，被分配了新的 PID，这样就无法保证了，所以 Kafka 中又有事务机制去保证。
+
+## 事务
+
+在 Kafka 中事务的作用是：
+* 实现 exactly-once 语义。
+* 保证操作的原子性，要么全部成功，要么全部失败。
+* 有状态的操作的恢复。
+
+事务可以保证就算跨多个，在本次事务中的对消费队列的操作都当成原子性，要么全部成功，要么全部失败。
+
+并且，有状态的应用也可以保证重启后从断点处继续处理，也即事务恢复。
+
+在 Kafka 的事务中，应用程序必须提供一个唯一的事务 ID，即 Transaction ID，并且宕机重启之后，也不会发生改变。
+
+Transactin ID 与 PID 可能一一对应，区别在于 Transaction ID 由用户提供，而 PID 是内部的实现对用户透明。
+
+为了 Producer 重启之后，旧的 Producer 具有相同的 Transaction ID 失效，每次 Producer 通过 Transaction ID 拿到 PID 的同时，还会获取一个单调递增的 Epoch。
+
+由于旧的 Producer 的 Epoch 比新 Producer 的 Epoch 小，Kafka 可以很容易识别出该 Producer 是老的，Producer 并拒绝其请求。
+
+为了实现这一点，Kafka 0.11.0.0 引入了一个服务器端的模块，名为 Transaction Coordinator，用于管理 Producer 发送的消息的事务性。
+
+该 Transaction Coordinator 维护 Transaction Log，该 Log 存于一个内部的 Topic 内。
+
+由于 Topic 数据具有持久性，因此事务的状态也具有持久性。Producer 并不直接读写 Transaction Log，它与 Transaction Coordinator 通信，然后由 Transaction Coordinator 将该事务的状态插入相应的 Transaction Log。
+
+Transaction Log 的设计与 Offset Log 用于保存 Consumer 的 Offset 类似。
+
+
 
 ### 生产者数据分发策略
 
