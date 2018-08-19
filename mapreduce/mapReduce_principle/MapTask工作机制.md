@@ -5,20 +5,20 @@
 应启动多少个 MapTask。split 与 block 的对应关系默认是一对一。
 
 * 将 输 入 文 件 切 分 为 splits 之 后 ， 由 RecordReader 对 象 （ 默 认
-LineRecordReader）进行读取，以\n 作为分隔符，读取一行数据，返回<key，
+LineRecordReader,具体LineRecordReader中的nextKeyValue方法读取）进行读取，以\n 作为分隔符，读取一行数据，返回<key，
 value>。Key 表示每行首字符偏移值，value 表示这一行文本内容。
 
 * 读取 split 返回<key,value>，进入用户自己继承的 Mapper 类中，执行用户
 重写的 map 函数。RecordReader 读取一行这里调用一次。
 
 * map 逻辑完之后，将 map 的每条结果通过 context.write 进行 collect 数据
-收集。在 collect 中，会先对其进行分区处理，默认使用 HashPartitioner。
+收集。**在 collect 中，会先对其进行分区处理，**默认使用 HashPartitioner。
 MapReduce 提供 Partitioner 接口，它的作用就是根据 key 或 value 及 reduce 的数量
 来决定当前的这对输出数据最终应该交由哪个 reduce task 处理。默认对 key hash 后再以
 reduce task 数量取模。默认的取模方式只是为了平均 reduce 的处理能力，如果用户自己
 对 Partitioner 有需求，可以订制并设置到 job 上。
 
-* 接下来，会将数据写入内存，内存中这片区域叫做环形缓冲区，缓冲区的作
+* 接下来，会将数据写入内存，内存中这片区域叫做`环形缓冲区`，缓冲区的作
 用是批量收集 map 结果，减少磁盘 IO 的影响。我们的 key/value 对以及
 Partition 的结果都会被写入缓冲区。当然写入之前，key 与 value 值都会
 被序列化成字节数组。
@@ -36,7 +36,7 @@ Partition 的结果都会被写入缓冲区。当然写入之前，key 与 value
 锁定这 80MB 的内存，执行溢写过程。Map task 的输出结果还可以往剩下的 20MB 内存中写，
 互不影响。
 
-* 当溢写线程启动后，需要对这 80MB 空间内的 key 做排序(Sort)。排序是
+* 当**溢写线程启动**后，需要对这 80MB 空间内的 key 做排序(Sort)。排序是
 MapReduce 模型默认的行为，这里的排序也是对序列化的字节做的排序。
 如果 job 设置过 Combiner，那么现在就是使用 Combiner 的时候了。将
 有相同 key 的 key/value 对的 value 加起来，减少溢写到磁盘的数据量。
@@ -51,3 +51,7 @@ Combiner 绝不能改变最终的计算结果。Combiner 只应该用于那种 R
 多个临时文件存在。当整个数据处理结束之后开始对磁盘中的临时文件进行
 merge 合并，因为最终的文件只有一个，写入磁盘，并且为这个文件提供了
 一个索引文件，以记录每个 reduce 对应数据的偏移量。
+
+### 具体过程看下图:
+![MapTask01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/MapTask01.png)
+
