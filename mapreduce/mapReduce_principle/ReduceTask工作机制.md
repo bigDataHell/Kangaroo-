@@ -1,4 +1,8 @@
 
+## reduceTask
+
+![reduceTask01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/reduceTask01.png)
+
 ## 详细步骤：
 
 * Copy 阶段，简单地拉取数据。Reduce 进程启动一些数据 copy 线程(Fetcher)，
@@ -18,9 +22,7 @@
 * 对排序后的键值对调用 reduce 方法，键相等的键值对调用一次 reduce 方法，
 每次调用会产生零个或者多个键值对，最后把这些输出的键值对写入到 HDFS文件中。
 
-## reduceTask
 
-![reduceTask01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/reduceTask01.png)
 
 ## 整个MapReducer阶段
 
