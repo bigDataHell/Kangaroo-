@@ -55,4 +55,7 @@
  ### Kafka
  
    * [Kafka面试题](https://github.com/bigDataHell/Kangaroo-/blob/master/kafka/kafka%E9%9D%A2%E8%AF%95%E9%A2%98.md)
+   * [Kafka原理架构](https://github.com/bigDataHell/Kangaroo-/blob/master/kafka/kafka%E5%8E%9F%E7%90%86.md)
+   
+  
 
