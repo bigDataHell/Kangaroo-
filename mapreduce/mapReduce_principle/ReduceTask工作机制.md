@@ -22,6 +22,6 @@
 
 ![reduceTask01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/reduceTask01.png)
 
-## 真个MapReducer阶段
+## 整个MapReducer阶段
 
 ![MapReduce](https://github.com/bigDataHell/Kangaroo-/blob/master/images/MapReduce.png)
