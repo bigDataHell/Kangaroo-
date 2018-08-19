@@ -1,3 +1,8 @@
+
+## 具体过程看下图:
+
+![MapTask01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/MapTask01.png)
+
 ## 详细步骤：
 
 * 首先，读取数据组件 InputFormat （默认 TextInputFormat）会通过 getSplits
@@ -52,9 +57,7 @@ Combiner 绝不能改变最终的计算结果。Combiner 只应该用于那种 R
 merge 合并，因为最终的文件只有一个，写入磁盘，并且为这个文件提供了
 一个索引文件，以记录每个 reduce 对应数据的偏移量。
 
-### 具体过程看下图:
 
-![MapTask01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/MapTask01.png)
 
 ### 整个MapReduce阶段
 
