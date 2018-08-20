@@ -27,7 +27,7 @@
 | 数据存储|数据转换|数据计算|分布式协调|分布式调度|SQL|数据结构与算法|
 |:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 |1|2|3|4|5|6|7|
-|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|[algorithms](#Algorithms)|
+|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|[algorithms](#algorithms)|
 |Hbase|#|hadoop|zookeeper|Mesos|#|#|
 |Cassandra|flume|spark|Consul|yarn|#|#|
 |MonggoDB|RabbitMQ|Filink|Etcd|#|#|#|
@@ -71,6 +71,8 @@
  ## 数据结构与算法
    
   ### Algorithms
+  
+  * [快排](https://github.com/bigDataHell/Kangaroo-/blob/master/dataStructures_algorithms/Quicksort.md)
    
   
 
