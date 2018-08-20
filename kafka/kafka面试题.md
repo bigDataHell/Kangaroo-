@@ -33,16 +33,16 @@ messageQueue : 消息队列  <br>
   
   可以使多个服务器同时处理消息.
   
-  *扩展:
+  *扩展:*
   
   并行与并发的区别:
-  并行(parallel)：
+  `并行(parallel):`
   指在同一时刻，有多条指令在多个处理器上同时执行。就好像两个人各拿一把铁锨在挖坑，一小时后，每人一个大坑。所以无论从微观还是从宏观来   看，二者都是一起执行的。
   
   ![并行](https://github.com/bigDataHell/Kangaroo-/blob/master/images/%E5%B9%B6%E5%8F%91.png)
   
 
-  并发(concurrency)：
+  `并发(concurrency)：`
   指在同一时刻只能有一条指令执行，但多个进程指令被快速的轮换执行，使得在宏观上具有多个进程同时执行的效果，但在微观上并不是同时执   行的，只是把时间分成若干段，使多个进程快速交替的执行。这就好像两个人用同一把铁锨，轮流挖坑，一小时后，两个人各挖一个小一点的坑，要想挖两个大一点得   坑，一定会用两个小时。
   
   ![并发](https://github.com/bigDataHell/Kangaroo-/blob/master/images/%E5%B9%B6%E8%A1%8C.png)
