@@ -28,19 +28,19 @@
 |:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|
 |1|2|3|4|5|6|
 |#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|
-|Hbase|#|hadoop|zookeeper|Mesos||#|
-|Cassandra|flume|spark|Consul|yarn||#|
-|MonggoDB|RabbitMQ|Filink|Etcd|#||#|
-|#|#|storm|Eureka|#||#|
-|#|#|Hive|#|#||#|
-|#|#|Pig|#|#||#|
+|Hbase|#|hadoop|zookeeper|Mesos|#|
+|Cassandra|flume|spark|Consul|yarn|#|
+|MonggoDB|RabbitMQ|Filink|Etcd|#|#|
+|#|#|storm|Eureka|#|#|
+|#|#|Hive|#|#|#|
+|#|#|Pig|#|#|#|
 
 
 
 
 -----------------------
 ## 数据计算
-  ### mapreduce
+  ### MapReduce
   
 * 倒排索引
 
@@ -51,6 +51,9 @@
 
     [MapTask工作机制](https://github.com/bigDataHell/Kangaroo-/blob/master/mapreduce/mapReduce_principle/MapTask%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6.md)<br> 
     [ReduceTask工作机制](https://github.com/bigDataHell/Kangaroo-/blob/master/mapreduce/mapReduce_principle/ReduceTask%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6.md) 
+    
+   ### Storm
+   
   
 
 -------------------------
