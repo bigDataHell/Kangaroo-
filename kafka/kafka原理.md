@@ -197,6 +197,9 @@ Kafka 每个主题的每个分区都有一个主副本以及 0 个或者多个�
 这里先要说下两个名词：HW(高水位)是 Consumer 能够看到的此 Partition 的位置，LEO 是每个 Partition 的 Log 最后一条 Message 的位置。
 
 
+水位以上为同步好(副本同步leader数据)的数据,水位以下为没用同不好的数据,随着副本数据的同步,HW逐渐下降.
+
+
 
 HW 能保证 Leader 所在的 Broker 失效，该消息仍然可以从新选举的 Leader 中获取，不会造成消息丢失。
 
