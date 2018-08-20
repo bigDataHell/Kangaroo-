@@ -54,8 +54,8 @@
     
     
  ### Storm
-
-   [Storm原理与架构](https://github.com/bigDataHell/Kangaroo-/blob/master/storm/storm.md)
+ 
+   * [Storm原理与架构](https://github.com/bigDataHell/Kangaroo-/blob/master/storm/storm.md)
 
 -------------------------
 
