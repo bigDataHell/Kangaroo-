@@ -24,16 +24,16 @@
     
 --------------------------------------------------
     
-| 数据存储|数据转换|数据计算|分布式协调|分布式调度|SQL|
-|:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|
-|1|2|3|4|5|6|
-|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|
-|Hbase|#|hadoop|zookeeper|Mesos|#|
-|Cassandra|flume|spark|Consul|yarn|#|
-|MonggoDB|RabbitMQ|Filink|Etcd|#|#|
-|#|#|[Storm](#storm)|Eureka|#|#|
-|#|#|Hive|#|#|#|
-|#|#|Pig|#|#|#|
+| 数据存储|数据转换|数据计算|分布式协调|分布式调度|SQL|数据结构与算法|
+|:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+|1|2|3|4|5|6|7|
+|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|#|
+|Hbase|#|hadoop|zookeeper|Mesos|#|#|
+|Cassandra|flume|spark|Consul|yarn|#|#|
+|MonggoDB|RabbitMQ|Filink|Etcd|#|#|#|
+|#|#|[Storm](#storm)|Eureka|#|#|#|
+|#|#|Hive|#|#|#|#|
+|#|#|Pig|#|#|#|#|
 
 
 
