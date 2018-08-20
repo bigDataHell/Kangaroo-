@@ -47,7 +47,7 @@ messageQueue : 消息队列  <br>
   
   ![并发](https://github.com/bigDataHell/Kangaroo-/blob/master/images/%E5%B9%B6%E8%A1%8C.png)
 
-  **并行包括并发
+  **并行包括并发**
   
 * 冗余
 
