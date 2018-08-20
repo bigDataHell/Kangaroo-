@@ -231,17 +231,17 @@ HW 能保证 Leader 所在的 Broker 失效，该消息仍然可以从新选举�
 
 我们需要设置 Prouducer 的参数 max.in.flight.requests.per.connection，flight.requests 是 Producer 端用来保存发送请求且没有响应的队列，保证 Produce r端未响应的请求个数为 1。
 
-*  at-most-once
+*  **at-most-once 至少一次**
 
 如果在 Ack 超时或返回错误时 Producer 不重试，也就是我们讲 request.required.acks = -1，则该消息可能最终没有写入 Kafka，所以 Consumer 不会接收消息。
 
-*  exactly-once
+*  **exactly-once 最多一次**
 
 刚好一次，即使 Producer 重试发送消息，消息也会保证最多一次地传递给 Consumer。该语义是最理想的，也是最难实现的。
 
 在 0.10 之前并不能保证 exactly-once，需要使用 Consumer 自带的幂等性保证。0.11.0 使用事务保证了。
 
-*  如何实现 exactly-once
+*  **如何实现 exactly-once 绝对一次**
 
 要实现 exactly-once 在 Kafka 0.11.0 中有两个官方策略：
 
@@ -302,7 +302,7 @@ Transaction Log 的设计与 Offset Log 用于保存 Consumer 的 Offset 类似�
     2) 当用户指定key，使用hash算法。如果key一直不变，同一个key算出来的hash值是个固定值。如果是固定值，这种hash取模就没有意义。
         我们要保证key的值是一直变动的,比如可以是username,则相同的用户会被分到同一个分区中.
         
-    ``` java
+``` java
       /**
      * Create a record to be sent to Kafka
      * 
@@ -313,7 +313,8 @@ Transaction Log 的设计与 Offset Log 用于保存 Consumer 的 Offset 类似�
     public ProducerRecord(String topic, K key, V value) {
         this(topic, null, null, key, value, null);
     }
-  ```
+```
+
 DefaultPartitioner.partition()中的哈希算法:
 
 
