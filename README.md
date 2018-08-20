@@ -28,12 +28,12 @@
 |:-----: |:-----:|:-----:|:-----:|:-----:||:-----:|
 |1|2|3|4|5|6|
 |#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|
-|Hbase|#|hadoop|zookeeper|Mesos|
-|Cassandra|flume|spark|Consul|yarn|
-|MonggoDB|RabbitMQ|Filink|Etcd|#|
-|#|#|storm|Eureka|#|
-|#|#|Hive|#|#|
-|#|#|Pig|#|#|
+|Hbase|#|hadoop|zookeeper|Mesos||#|
+|Cassandra|flume|spark|Consul|yarn||#|
+|MonggoDB|RabbitMQ|Filink|Etcd|#||#|
+|#|#|storm|Eureka|#||#|
+|#|#|Hive|#|#||#|
+|#|#|Pig|#|#||#|
 
 
 
