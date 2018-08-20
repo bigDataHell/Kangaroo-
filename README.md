@@ -27,7 +27,7 @@
 | 数据存储|数据转换|数据计算|分布式协调|分布式调度|SQL|数据结构与算法|
 |:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 |1|2|3|4|5|6|7|
-|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|#|
+|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|[algorithms](#Algorithms)|
 |Hbase|#|hadoop|zookeeper|Mesos|#|#|
 |Cassandra|flume|spark|Consul|yarn|#|#|
 |MonggoDB|RabbitMQ|Filink|Etcd|#|#|#|
@@ -66,6 +66,11 @@
  
    * [Kafka面试题](https://github.com/bigDataHell/Kangaroo-/blob/master/kafka/kafka%E9%9D%A2%E8%AF%95%E9%A2%98.md)
    * [Kafka原理架构](https://github.com/bigDataHell/Kangaroo-/blob/master/kafka/kafka%E5%8E%9F%E7%90%86.md)
+   
+   
+ ## 数据结构与算法
+   
+  ### Algorithms
    
   
 
