@@ -106,9 +106,18 @@ public class ConsumerDemo {
 
 * 输出:
 
-> 偏移量: 1720 record.key: null 消费的信息:主题one557 分区:string_demo record.toString:ConsumerRecord(topic = string_demo, partition = 0, offset = 1720, CreateTime = 1534846818027, serialized key size = -1, serialized value size = 12, headers = RecordHeaders(headers = [], isReadOnly = false), key = null, value = 主题one557) 分区:0
- 偏移量: 1721 record.key: null 消费的信息:主题one558 分区:string_demo record.toString:ConsumerRecord(topic = string_demo, partition = 0, offset = 1721, CreateTime = 1534846818530, serialized key size = -1, serialized value size = 12, headers = RecordHeaders(headers = [], isReadOnly = false), key = null, value = 主题one558) 分区:0
- 偏移量: 1722 record.key: null 消费的信息:主题one559 分区:string_demo record.toString:ConsumerRecord(topic = string_demo, partition = 0, offset = 1722, CreateTime = 1534846819030, serialized key size = -1, serialized value size = 12, headers = RecordHeaders(headers = [], isReadOnly = false), key = null, value = 主题one559) 分区:0
- 偏移量: 1723 record.key: null 消费的信息:主题one560 分区:string_demo record.toString:ConsumerRecord(topic = string_demo, partition = 0, offset = 1723, CreateTime = 1534846819530, serialized key size = -1, serialized value size = 12, headers = RecordHeaders(headers = [], isReadOnly = false), key = null, value = 主题one560) 分区:0
- 偏移量: 1724 record.key: null 消费的信息:主题one561 分区:string_demo record.toString:ConsumerRecord(topic = string_demo, partition = 0, offset = 1724, CreateTime = 1534846820031, serialized key size = -1, serialized value size = 12, headers = RecordHeaders(headers = [], isReadOnly = false), key = null, value = 主题one561) 分区:0
+> 偏移量: 1720 record.key: null 消费的信息:主题one557 分区:string_demo record.toString:ConsumerRecord(topic = string_demo, partition = 0, offset = 1720, CreateTime = 1534846818027, serialized key size = -1, serialized value size = 12, headers = RecordHeaders(headers = [], isReadOnly = false), key = null, value = 主题one557) 分区:0 <br>
+ 偏移量: 1721 record.key: null 消费的信息:主题one558 分区:string_demo record.toString:ConsumerRecord(topic = string_demo, partition = 0, offset = 1721, CreateTime = 1534846818530, serialized key size = -1, serialized value size = 12, headers = RecordHeaders(headers = [], isReadOnly = false), key = null, value = 主题one558) 分区:0 <br>
+ 偏移量: 1722 record.key: null 消费的信息:主题one559 分区:string_demo record.toString:ConsumerRecord(topic = string_demo, partition = 0, offset = 1722, CreateTime = 1534846819030, serialized key size = -1, serialized value size = 12, headers = RecordHeaders(headers = [], isReadOnly = false), key = null, value = 主题one559) 分区:0 <br>
+
+* 1 一个主题可以输出不同的内容,同一个consumer将按照对应分区消息排序依次消费.
+        分区内保证消息的有序行,同主题不能保证消息的有序性.
+* 2 当只有一个分区时,两个consumer同时消费,只能一个consumer消费到数据,列一个则无法消费数据,处于闲置状态.
+    当消费数据的分区挂掉后,最后的消费数据为:
+    
+    ![kafka_API01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/kafka_API01.png)
+    
+    另一个闲置的consumer则接着挂掉的consumer接着消费,但是**最后一条数据会被消费两次 ?**
+    
+    ![kafka_API01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/kafka_API02.png)
 
