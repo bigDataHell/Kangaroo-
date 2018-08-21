@@ -24,10 +24,10 @@
     
 --------------------------------------------------
     
-| 数据存储|数据转换|数据计算|分布式协调|分布式调度|SQL|数据结构与算法|
-|:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
-|1|2|3|4|5|6|7|
-|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|[algorithms](#algorithms)|
+| 数据存储|数据转换|数据计算|分布式协调|分布式调度|SQL|数据结构与算法|异常|
+|:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+|1|2|3|4|5|6|7|8|
+|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|[algorithms](#algorithms)|[Exception](#exception)|
 |Hbase|#|hadoop|zookeeper|Mesos|#|#|
 |Cassandra|flume|spark|Consul|yarn|#|#|
 |MonggoDB|RabbitMQ|Filink|Etcd|#|#|#|
@@ -73,6 +73,12 @@
   ### Algorithms
   
   * [快排](https://github.com/bigDataHell/Kangaroo-/blob/master/dataStructures_algorithms/Quicksort.md)
+  
+  
+---------------------------------------------------------
+## Exception
+
+[java.lang.NoClassDefFoundError](https://github.com/bigDataHell/Kangaroo-/blob/master/Exception/%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8.md#javalangnoclassdeffounderror----maven)
    
   
 
