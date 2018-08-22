@@ -54,8 +54,16 @@
     
     
  ### Storm
+    
+ #### 原理与架构
  
    * [Storm原理与架构](https://github.com/bigDataHell/Kangaroo-/blob/master/storm/storm.md)
+   
+ #### 案例
+ 
+  * [WordCount案例](https://github.com/bigDataHell/Kangaroo-/tree/master/storm/WordCountDemo)
+   
+
 
 -------------------------
 
