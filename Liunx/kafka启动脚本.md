@@ -2,6 +2,8 @@
 
 ### 1 在 /etc/profile 中配置:
 
+__最好在本用户中的profile中配置__
+
 ``` 
 #set kafka env
 export KAFKA_HOME=/export/server/kafka
