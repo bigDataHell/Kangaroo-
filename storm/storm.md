@@ -13,6 +13,9 @@
 
 ## 3 Storm编程模型
 
+![storm01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/storm02.png)
+
+
 **Topology**：Storm中运行的一个实时应用程序，因为各个组件间的消息流动形成逻辑上的一个拓扑结构。
 
 **Spout**：在一个topology中产生源数据流的组件。通常情况下spout会从外部数据源中读取数据，然后转换为topology内部的源数据。Spout是一个主动的角色，其接口中有个nextTuple()函数，storm框架会不停地调用此函数，用户只要在其中生成源数据即可。
@@ -29,19 +32,19 @@
 
 Stream Grouping定义了一个流在Bolt任务间该如何被切分。这里有Storm提供的6个Stream Grouping类型：
 
-1. 随机分组(Shuffle grouping)：随机分发tuple到Bolt的任务，保证每个任务获得相等数量的tuple。 跨服务器通信，浪费网络资源，尽量不适用
+1. **随机分组(Shuffle grouping)** ：随机分发tuple到Bolt的任务，保证每个任务获得相等数量的tuple。 跨服务器通信，浪费网络资源，尽量不适用
 
-2. 字段分组(Fields grouping)：根据指定字段分割数据流，并分组。例如，根据“user-id”字段，相同“user-id”的元组总是分发到同一个任务，不同“user-id”的元组可能分发到不同的任务。  跨服务器，除非有必要，才使用这种方式。
+2. **字段分组(Fields grouping)** ：根据指定字段分割数据流，并分组。例如，根据“user-id”字段，相同“user-id”的元组总是分发到同一个任务，不同“user-id”的元组可能分发到不同的任务。  跨服务器，除非有必要，才使用这种方式。
 
-3. 全部分组(All grouping)：tuple被复制到bolt的所有任务。这种类型需要谨慎使用。 人手一份，完全不必要
+3. **全部分组(All grouping)** ：tuple被复制到bolt的所有任务。这种类型需要谨慎使用。 人手一份，完全不必要
 
-4. 全局分组(Global grouping)：全部流都分配到bolt的同一个任务。明确地说，是分配给ID最小的那个task。 欺负新人
+4. **全局分组(Global grouping)** ：全部流都分配到bolt的同一个任务。明确地说，是分配给ID最小的那个task。 欺负新人
 
-5. 无分组(None grouping)：你不需要关心流是如何分组。目前，无分组等效于随机分组。但最终，Storm将把无分组的Bolts放到Bolts或Spouts订阅它们的同一线程去执行(如果可能)。
+5. **无分组(None grouping)** ：你不需要关心流是如何分组。目前，无分组等效于随机分组。但最终，Storm将把无分组的Bolts放到Bolts或Spouts订阅它们的同一线程去执行(如果可能)。
 
-6. 直接分组(Direct grouping)：这是一个特别的分组类型。元组生产者决定tuple由哪个元组处理者任务接收。 点名分配   AckerBolt 消息容错
+6. **直接分组(Direct grouping)** ：这是一个特别的分组类型。元组生产者决定tuple由哪个元组处理者任务接收。 点名分配   AckerBolt 消息容错
 
-7.LocalOrShuffle 分组。 优先将数据发送到本地的Task，节约网络通信的资源。
+7. **LocalOrShuffle 分组** :  优先将数据发送到本地的Task，节约网络通信的资源。
 
 
 ## 5 并发度
