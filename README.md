@@ -61,7 +61,7 @@
    
  #### 案例
  
-  * [WordCount案例](https://github.com/bigDataHell/Kangaroo-/tree/master/storm/WordCountDemo)
+  * [WordCount案例](https://github.com/bigDataHell/Kangaroo-/tree/master/storm/case/WordCountDemo)
   * [实时交易数据统计](https://github.com/bigDataHell/Kangaroo-/tree/master/storm/case/Real-timeTransactionDataStatistics)
    
 
