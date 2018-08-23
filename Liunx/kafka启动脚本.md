@@ -12,6 +12,8 @@ export PATH=${KAFKA_HOME}/bin:$PATH
 
 **source /ect/profile**
 
+注意,在所有的liunx上都需要配置profile文件
+
 ### 2 在kafka的bin目录下新建三个文件
 
 * startkafka.sh
