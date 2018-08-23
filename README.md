@@ -75,7 +75,8 @@
  
    * [Kafka面试题](https://github.com/bigDataHell/Kangaroo-/blob/master/kafka/kafka%E9%9D%A2%E8%AF%95%E9%A2%98.md)
    * [Kafka原理架构](https://github.com/bigDataHell/Kangaroo-/blob/master/kafka/kafka%E5%8E%9F%E7%90%86.md)
-   
+   * [Kafka控制台命令](https://github.com/bigDataHell/Kangaroo-/blob/master/kafka/kafkak%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%91%BD%E4%BB%A4.md)
+   * [KafkaAPI](https://github.com/bigDataHell/Kangaroo-/blob/master/kafka/API.md)
 --------------------------------
  ## 数据结构与算法
    
