@@ -26,7 +26,7 @@
     如你想找位于 2049 的位置，只要找到 2048.kafka 的文件即可。当然 the first offset 就是
     00000000000.kafka
     
- * Replication：Kafka 支持以 Partition 为单位对 Message 进行冗余备份，每个 Partition 都可以配
+ * Replication(副本)：Kafka 支持以 Partition 为单位对 Message 进行冗余备份，每个 Partition 都可以配
     置至少 1 个 Replication(当仅 1 个 Replication 时即仅该 Partition 本身)。
     
  * Leader：每个 Replication 集合中的 Partition 都会选出一个唯一的 Leader，所有的读写请求都由
