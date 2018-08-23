@@ -48,5 +48,47 @@
 
 ## 4 Flume+Kafka整合
 
+* 1 flume配置文件 : /export/server/flume/myconfig/exec.conf
+
+``` 
+a1.sources = r1
+a1.channels = c1
+a1.sinks = k1
+
+a1.sources.r1.type = exec
+a1.sources.r1.command = tail -F /export/data/flume/click_log/data.log
+a1.sources.r1.channels = c1
+#a1.sources.r1.interceptors = i1
+#a1.sources.r1.interceptors.i1.type = cn.itcast.realtime.flume.AppInterceptor$AppInterceptorBuilder
+#a1.sources.r1.interceptors.i1.appId = 1
+
+a1.channels.c1.type=memory
+a1.channels.c1.capacity=10000
+a1.channels.c1.transactionCapacity=100
+
+a1.sinks.k1.type = org.apache.flume.sink.kafka.KafkaSink
+a1.sinks.k1.topic = system_log
+a1.sinks.k1.brokerList = hadoop-node-1:9092
+a1.sinks.k1.requiredAcks = 1
+a1.sinks.k1.batchSize = 20
+a1.sinks.k1.channel = c1
+``` 
+* 2 创建文件  /export/server/flume/myconfig/click_log_out.sh 模拟日志生成
+```
+for((i=0;i<500000;i++));
+do echo "i am dabai " +$i >> /export/data/flume/click_log/data.log;
+done
+```
+* 3 启动flume
+
+   ./flume-ng agent  --conf  conf  --conf-file  conf/file.log --name a1 -Dflume.root.logger=DEBUG, console
+   
+* 4 创建主题
+
+ kafka-topics.sh --create --zookeeper hadoop-node-1:2181 --topic system_log --partitions 6 --replication-factor 2 
+
+* 5 消费主题
+
+ kafka-console-consumer.sh --zookeeper hadoop-node-1:2181 --from-beginning --topic system_log
 
 
