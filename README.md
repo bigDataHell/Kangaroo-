@@ -24,16 +24,16 @@
     
 --------------------------------------------------
     
-| 数据存储|数据转换|数据计算|分布式协调|分布式调度|SQL|数据结构与算法|异常|
-|:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
-|1|2|3|4|5|6|7|8|
-|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|[algorithms](#algorithms)|[Exception](#exception)|
-|Hbase|#|hadoop|zookeeper|Mesos|#|#|
-|Cassandra|flume|spark|Consul|yarn|#|#|
-|MonggoDB|RabbitMQ|Filink|Etcd|#|#|#|
-|#|#|[Storm](#storm)|Eureka|#|#|#|
-|#|#|Hive|#|#|#|#|
-|#|#|Pig|#|#|#|#|
+| 数据存储|数据转换|数据计算|分布式协调|分布式调度|SQL|数据结构与算法|异常|Linux|
+|:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+|1|2|3|4|5|6|7|8|9|
+|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|[algorithms](#algorithms)|[Exception](#exception)|[一键启动脚本]#一键启动脚本)|
+|Hbase|#|hadoop|zookeeper|Mesos|#|#||
+|Cassandra|flume|spark|Consul|yarn|#|#||
+|MonggoDB|RabbitMQ|Filink|Etcd|#|#|#||
+|#|#|[Storm](#storm)|Eureka|#|#|#||
+|#|#|Hive|#|#|#|#||
+|#|#|Pig|#|#|#|#||
 
 
 
@@ -89,5 +89,9 @@
 
 [java.lang.NoClassDefFoundError --Maven-scope](https://github.com/bigDataHell/Kangaroo-/blob/master/Exception/%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8.md#javalangnoclassdeffounderror----maven)
    
-  
+------------------------------------------------------
+
+## 一键启动脚本
+
+
 
