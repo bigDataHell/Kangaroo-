@@ -48,6 +48,8 @@
 
 ## 4 Flume+Kafka整合
 
+![日志采集](https://github.com/bigDataHell/Kangaroo-/blob/master/images/storm_%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86.png)
+
 * 1 flume配置文件 : /export/server/flume/myconfig/exec.conf
 
 ``` 
@@ -81,7 +83,7 @@ done
 ```
 * 3 启动flume
 
-   ./flume-ng agent  --conf  conf  --conf-file  conf/file.log --name a1 -Dflume.root.logger=DEBUG, console
+ ./flume-ng agent  --conf  conf  --conf-file  conf/file.log --name a1 -Dflume.root.logger=DEBUG, console
    
 * 4 创建主题
 
