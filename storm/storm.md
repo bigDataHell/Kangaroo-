@@ -49,4 +49,28 @@ Stream Grouping定义了一个流在Bolt任务间该如何被切分。这里有S
 
 ## 5 并发度
 
+nimbus : 主节点
+
+supervisor : 从节点
+
+亦歌supervisor可以配置多个worker,每个worker可以运行多个executor.
+
+在executor里运行一个topology的一个component（spout、bolt）叫做task。task  是storm中进行计算的最小的运行单位，表示是spout或者bolt的运行实例。
+
+supervisor(节点)>worker(进程)>executor(线程)>task(实例)
+
+Topology是一个实时应用程序,可以在多个worker上运行.
+
+程序执行的最大粒度的运行单位是进程，刚才说的task也是需要有进程来运行它的，在supervisor中，运行task的进程称为worker，
+Supervisor节点上可以运行非常多的worker进程，一般在一个进程中是可以启动多个线程的，所以我们可以在worker中运行多个线程，这些线程称为executor，在executor中运行task。
+
+worker,executor,task解释
+ 
+1个worker进程执行的是1个topology的子集（注：不会出现1个worker为多个topology服务）。1个worker进程会启动1个或多个executor线程来执行1个topology的component(spout或bolt)。因此，1个运行中的topology就是由集群中多台物理机上的多个worker进程组成的。
+ 
+executor是1个被worker进程启动的单独线程。每个executor只会运行1个topology的1个component(spout或bolt)的task（注：task可以是1个或多个，storm默认是1个component只生成1个task，executor线程里会在每次循环里顺序调用所有task实例）。
+ 
+task是最终运行spout或bolt中代码的单元（注：1个task即为spout或bolt的1个实例，executor线程在执行期间会调用该task的nextTuple或execute方法）。topology启动后，1个component(spout或bolt)的task数目是固定不变的，但该component使用的executor线程数可以动态调整（例如：1个executor线程可以执行该component的1个或多个task实例）。这意味着，对于1个component存在这样的条件：#threads<=#tasks（即：线程数小于等于task数目）。默认情况下task的数目等于executor线程数目，即1个executor线程只运行1个task。
+ 
+ 
 
