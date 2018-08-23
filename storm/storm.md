@@ -32,9 +32,9 @@
 
 Stream Grouping定义了一个流在Bolt任务间该如何被切分。这里有Storm提供的6个Stream Grouping类型：
 
-1. **随机分组(Shuffle grouping)** ：随机分发tuple到Bolt的任务，保证每个任务获得相等数量的tuple。 跨服务器通信，浪费网络资源，尽量不适用
+1. **随机分组(Shuffle grouping)** ：随机分发tuple到Bolt的任务，保证每个任务获得相等数量的tuple。比None grouping效率高. 跨服务器通信，浪费网络资源，尽量不适用
 
-2. **字段分组(Fields grouping)** ：根据指定字段分割数据流，并分组。例如，根据“user-id”字段，相同“user-id”的元组总是分发到同一个任务，不同“user-id”的元组可能分发到不同的任务。  跨服务器，除非有必要，才使用这种方式。
+2. **字段分组(Fields grouping)** ：根据指定字段分割数据流，并分组。例如，根据“user-id”字段，相同“user-id”的元组总是分发到同一个任务，不同“user-id”的元组可能分发到不同的任务。采用hash取模算法.  跨服务器，除非有必要，才使用这种方式。
 
 3. **全部分组(All grouping)** ：tuple被复制到bolt的所有任务。这种类型需要谨慎使用。 人手一份，完全不必要
 
