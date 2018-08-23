@@ -27,7 +27,7 @@
 | 数据存储|数据转换|数据计算|分布式协调|分布式调度|SQL|数据结构与算法|异常|Linux|
 |:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 |1|2|3|4|5|6|7|8|9|
-|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|[algorithms](#algorithms)|[Exception](#exception)|[一键启动脚本]#一键启动脚本)|
+|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|[algorithms](#algorithms)|[Exception](#exception)|[一键启动脚本](#一键启动脚本)|
 |Hbase|#|hadoop|zookeeper|Mesos|#|#||
 |Cassandra|flume|spark|Consul|yarn|#|#||
 |MonggoDB|RabbitMQ|Filink|Etcd|#|#|#||
