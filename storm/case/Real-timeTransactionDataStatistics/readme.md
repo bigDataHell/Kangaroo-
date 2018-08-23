@@ -33,12 +33,12 @@
 
 **Redis Key如何设计？**
 
-Index：{pid}：{date}   value
-Index:1290:20160526   value
-Index:1291:20160526   value
-Index:1292:20160526   value
-Index:1293:20160526   value
-Index:1294:20160526   value
+Index：{pid}：{date}   value <br>
+Index:1290:20160526   value <br>
+Index:1291:20160526   value <br>
+Index:1292:20160526   value <br>
+Index:1293:20160526   value <br>
+Index:1294:20160526   value <br>
 
 ## 数据展示
 
@@ -60,12 +60,13 @@ Index:1294:20160526   value
    
 3、Save2ReidsBolt，保存相关业务指标
 
-  问题：   在redis中存放整个网站销售的原价，  b:t:p:20160410 ---> value
+  问题：   在redis中存放整个网站销售的原价，  b:t:p:20160410 ---> value <br>
 	         redis:   String----> value1+value2 + value3 + value4  incrBy
      
 b:t:p:20160410
 b:t:p:20161111
 b:t:p:20160412
+
 
 
 
