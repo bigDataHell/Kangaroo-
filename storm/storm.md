@@ -65,6 +65,8 @@ Topology是一个实时应用程序,可以在多个worker上运行.
 Supervisor节点上可以运行非常多的worker进程，一般在一个进程中是可以启动多个线程的，所以我们可以在worker中运行多个线程，这些线程称为executor，在executor中运行task。
 
 worker,executor,task解释
+
+worker是storm最小的资源单位
  
 1个worker进程执行的是1个topology的子集（注：不会出现1个worker为多个topology服务）。1个worker进程会启动1个或多个executor线程来执行1个topology的component(spout或bolt)。因此，1个运行中的topology就是由集群中多台物理机上的多个worker进程组成的。
  
