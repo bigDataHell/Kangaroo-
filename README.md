@@ -63,7 +63,7 @@
  
   * [WordCount案例](https://github.com/bigDataHell/Kangaroo-/tree/master/storm/case/WordCountDemo)
   * [实时交易数据统计](https://github.com/bigDataHell/Kangaroo-/tree/master/storm/case/Real-timeTransactionDataStatistics)
-   
+  * [实时日志监控告警系统](https://github.com/bigDataHell/Kangaroo-/blob/master/storm/case/Real-timeLogMonitoringAlarmSystem/%E5%AE%9E%E6%97%B6%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6%E7%B3%BB%E7%BB%9F.md)
 
 
 -------------------------
