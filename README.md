@@ -30,7 +30,7 @@
 |:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 |1|2|3|4|5|6|7|8|9|
 |#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|[algorithms](#algorithms)|[Exception](#exception)|[一键启动脚本](#一键启动脚本)|
-|Hbase|#|hadoop|zookeeper|Mesos|#|#||
+|Hbase|#|hadoop|zookeeper|Mesos|[lucene](#lucene)|#||
 |Cassandra|flume|spark|Consul|yarn|#|#||
 |MonggoDB|RabbitMQ|Filink|Etcd|#|#|#||
 |#|#|[Storm](#storm)|Eureka|#|#|#||
@@ -98,4 +98,9 @@
 
  [kafka启动脚本](https://github.com/bigDataHell/Kangaroo-/blob/master/Liunx/kafka%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC.md) <br>
  [zookeeper启动脚本](https://github.com/bigDataHell/Kangaroo-/blob/master/Liunx/zookeeper%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8.md)
+ --------------------------------------------------------------
+ ## lucene
+ 
+ [lucene的基本使用](https://github.com/bigDataHell/Kangaroo-/blob/master/SE/lucene.md)
+ 
 
