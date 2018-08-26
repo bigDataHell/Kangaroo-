@@ -4,6 +4,8 @@
  * 换行 \<br\>
  * 单行文本：前面使用两个Tab
  * 多行文本: 每行行首加两个Tab
+ * <u>下划线<u>
+ *  ~~删除线~~   ~删除线~
 
  * 插入连接
  
@@ -28,7 +30,7 @@
 |:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 |1|2|3|4|5|6|7|8|9|
 |#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|[algorithms](#algorithms)|[Exception](#exception)|[一键启动脚本](#一键启动脚本)|
-|Hbase|#|hadoop|zookeeper|Mesos|#|#||
+|Hbase|#|hadoop|zookeeper|Mesos|[lucene](#lucene)|#||
 |Cassandra|flume|spark|Consul|yarn|#|#||
 |MonggoDB|RabbitMQ|Filink|Etcd|#|#|#||
 |#|#|[Storm](#storm)|Eureka|#|#|#||
@@ -63,7 +65,7 @@
  
   * [WordCount案例](https://github.com/bigDataHell/Kangaroo-/tree/master/storm/case/WordCountDemo)
   * [实时交易数据统计](https://github.com/bigDataHell/Kangaroo-/tree/master/storm/case/Real-timeTransactionDataStatistics)
-   
+  * [实时日志监控告警系统](https://github.com/bigDataHell/Kangaroo-/blob/master/storm/case/Real-timeLogMonitoringAlarmSystem/%E5%AE%9E%E6%97%B6%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6%E7%B3%BB%E7%BB%9F.md)
 
 
 -------------------------
@@ -75,7 +77,8 @@
  
    * [Kafka面试题](https://github.com/bigDataHell/Kangaroo-/blob/master/kafka/kafka%E9%9D%A2%E8%AF%95%E9%A2%98.md)
    * [Kafka原理架构](https://github.com/bigDataHell/Kangaroo-/blob/master/kafka/kafka%E5%8E%9F%E7%90%86.md)
-   
+   * [Kafka控制台命令](https://github.com/bigDataHell/Kangaroo-/blob/master/kafka/kafkak%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%91%BD%E4%BB%A4.md)
+   * [KafkaAPI](https://github.com/bigDataHell/Kangaroo-/blob/master/kafka/API.md)
 --------------------------------
  ## 数据结构与算法
    
@@ -95,4 +98,9 @@
 
  [kafka启动脚本](https://github.com/bigDataHell/Kangaroo-/blob/master/Liunx/kafka%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC.md) <br>
  [zookeeper启动脚本](https://github.com/bigDataHell/Kangaroo-/blob/master/Liunx/zookeeper%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8.md)
+ --------------------------------------------------------------
+ ## lucene
+ 
+ [lucene的基本使用](https://github.com/bigDataHell/Kangaroo-/blob/master/SE/lucene.md)
+ 
 
