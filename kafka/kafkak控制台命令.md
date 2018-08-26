@@ -8,7 +8,7 @@ kafka-topics.sh --create --zookeeper hadoop-node-1:2181 --topic system_log --par
 `partitions` : 分区数量 <br>
 `replication-factor` :  副本数量 <br>
 
-## 查看所有分区
+## 查看所有主题
 
 kafka-topics.sh --zookeeper hadoop-node-1:2181 --list
 
