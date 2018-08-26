@@ -98,7 +98,7 @@ Solr：基于Lucene开发的企业级的搜索引擎产品
 ### 3.1 引入依赖
 
 ``` xml
-<dependencies>
+dependencies>
         <!--核心库-->
         <dependency>
             <groupId>org.apache.lucene</groupId>
@@ -128,12 +128,13 @@ Solr：基于Lucene开发的企业级的搜索引擎产品
             <artifactId>lucene-highlighter</artifactId>
             <version>5.2.1</version>
         </dependency>
-    <!--ik-analyzer 中文分词器-->
-    <dependency>
-        <groupId>cn.bestwu</groupId>
-        <artifactId>ik-analyzers</artifactId>
-        <version>5.1.0</version>
-    </dependency>
+        <!--ik-analyzer 中文分词器-->
+        <dependency>
+            <groupId>cn.bestwu</groupId>
+            <artifactId>ik-analyzers</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+    </dependencies>
 ```
 
 
