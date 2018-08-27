@@ -65,11 +65,12 @@ WHERE 子句用于规定选择的标准。
 * 实例  LIKE
       * 通配符
       
-      	% :  替代一个或多个字符
+        > % :  替代一个或多个字符
          _ : 仅替代一个字符
          [charlist] : 字符列中的任何单一字符
          [^charlist] 或者 [!charlist] : 不在字符列中的任何单一字符
-         
+
+
  MySQL 不支持 [^charlist] 或 [!charlist] 通配符
  
 包含`a`的 COLUMN_NAME <br>
