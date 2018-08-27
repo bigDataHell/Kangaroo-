@@ -50,8 +50,38 @@ WHERE 子句用于规定选择的标准。
 |<=|小于等于|
 |BETWEEN|在某个范围内|
 |LIKE|搜索某种模式|
+
 在某些版本的 SQL 中，操作符 <> 可以写为 !=。
 
+* 实例 BETWEEN 
+
+找出字段  `COLUMN_Name` 开头首字母在 a ~ g(包含) 之间并且字段`INTEGER_IDX` > 2 的数据
+`SELECT * FROM COLUMNS_V2 WHERE COLUMN_Name BETWEEN 'a' AND 'g' AND INTEGER_IDX > 2;`
+
+结果:
+![sql01]()
+
+* 实例  LIKE
+      * 通配符
+      
+      	% :  替代一个或多个字符
+         _ : 仅替代一个字符
+         [charlist] : 字符列中的任何单一字符
+         [^charlist] 或者 [!charlist] : 不在字符列中的任何单一字符
+         
+ MySQL 不支持 [^charlist] 或 [!charlist] 通配符
+ 
+包含`a`的 COLUMN_NAME <br>
+SELECT * FROM COLUMNS_V2 WHERE COLUMN_NAME LIKE  '%a%';
+
+以 `a` 开头的 COLUMN_NAME <br>
+SELECT * FROM COLUMNS_V2 WHERE COLUMN_NAME LIKE  'a%';
+
+以 `a` 结尾的COLUMN_NAME <br>
+SELECT * FROM COLUMNS_V2 WHERE COLUMN_NAME LIKE  '%a';
+
+查找COLUMN_NAME包含ag并且ag后追加任意字符
+SELECT * FROM COLUMNS_V2 WHERE COLUMN_NAME LIKE  'ag_';
 
 
 
