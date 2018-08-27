@@ -46,11 +46,11 @@ SQL 语言声明的是结果集的属性，计算机会根据 SQL 所声明的�
 
 `SELECT * FROM tb_item_cat LIMIT 1100,3;`
 
-## distinct 去重,统计
+## distinct : 去重,统计
 
 #### 作用 1  去重
 
-select distinct month,day from t_dim_time;
+`select distinct month,day from t_dim_time;`
 
 distinct会同时作用于`month`,`day`这两个字段.
 
@@ -58,7 +58,7 @@ distinct会同时作用于`month`,`day`这两个字段.
 
 该字段不相同的天数的个数:
 
-select count(distinct day) from t_dim_time;
+`select count(distinct day) from t_dim_time;`
 
 
 
