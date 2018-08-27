@@ -36,7 +36,7 @@ SQL 语言声明的是结果集的属性，计算机会根据 SQL 所声明的�
 
 * 查找前1100条数据
 
-SELECT * FROM tb_item_cat LIMIT 1100;
+`SELECT * FROM tb_item_cat LIMIT 1100;`
 
 * 查找第1101条数据,只显示一条.
 
@@ -45,4 +45,20 @@ SELECT * FROM tb_item_cat LIMIT 1100;
 * 查找第1101 ~1103三条数据
 
 `SELECT * FROM tb_item_cat LIMIT 1100,3;`
+
+## distinct 去重,统计
+
+#### 作用 1  去重
+
+select distinct month,day from t_dim_time;
+
+distinct会同时作用于`month`,`day`这两个字段.
+
+#### 作用 2 统计
+
+该字段不相同的天数的个数:
+
+select count(distinct day) from t_dim_time;
+
+
 
