@@ -90,19 +90,19 @@
 ---------------------------------------------------------
 ## Exception
 
-[java.lang.NoClassDefFoundError --Maven-scope](https://github.com/bigDataHell/Kangaroo-/blob/master/Exception/%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8.md#javalangnoclassdeffounderror----maven)
+* [java.lang.NoClassDefFoundError --Maven-scope](https://github.com/bigDataHell/Kangaroo-/blob/master/Exception/%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8.md#javalangnoclassdeffounderror----maven)
    
 ------------------------------------------------------
 
 ## 一键启动脚本
 
- [kafka启动脚本](https://github.com/bigDataHell/Kangaroo-/blob/master/Liunx/kafka%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC.md) <br>
- [zookeeper启动脚本](https://github.com/bigDataHell/Kangaroo-/blob/master/Liunx/zookeeper%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8.md)
+ * [kafka启动脚本](https://github.com/bigDataHell/Kangaroo-/blob/master/Liunx/kafka%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC.md) <br>
+ * [zookeeper启动脚本](https://github.com/bigDataHell/Kangaroo-/blob/master/Liunx/zookeeper%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8.md)
  
  --------------------------------------------------------------
  ## lucene
  
- [lucene的基本使用](https://github.com/bigDataHell/Kangaroo-/blob/master/SE/lucene.md)
+ * [lucene的基本使用](https://github.com/bigDataHell/Kangaroo-/blob/master/SE/lucene.md)
  
  ## SQL
  
