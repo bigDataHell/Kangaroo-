@@ -60,7 +60,7 @@ WHERE 子句用于规定选择的标准。
 
 结果:
 
-![sql01]()
+![sql01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/sql01.png)
 
 * 实例  LIKE
       * 通配符
