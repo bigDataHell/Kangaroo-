@@ -21,7 +21,13 @@ kafka-topics.sh --zookeeper hadoop-node-1:2181 --describe --topic system_log
 
 ## 控制台消费topic的数据
 
-kafka-console-consumer.sh --zookeeper hadoop-node-1:2181 --from-beginning --topic system_log
+* 从头开始消费数据
+
+kafka-console-consumer.sh --zookeeper hadoop-node-1:2181 `--from-beginning` --topic system_log
+
+* 接着上次消费的位置继续消费
+
+kafka-console-consumer.sh --zookeeper hadoop-node-1:2181  --topic log_monitor
 
 `system_log` : 主题name
 
