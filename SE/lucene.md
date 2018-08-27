@@ -58,7 +58,7 @@
 
   ![lucene02](https://github.com/bigDataHell/Kangaroo-/blob/master/images/lucene02.png)
   
-   ![lucene03](https://github.com/bigDataHell/Kangaroo-/blob/master/images/lucene03.png)
+
 
   在实际的运用中，我们可以对数据库中原始的数据结构（临时表或者商品表），在业务空闲时事先根据左图内容，创建新的文档列表（左图）及倒排索引区域（右图）。
 用户有查询需求时，先访问倒排索引数据区域（右图），得出文档编号后，通过文档文档编号即可快速，准确的通过左图找到具体的文档内容。
@@ -70,6 +70,7 @@
 
 ### 2.1 什么是Lucene
 
+   ![lucene03](https://github.com/bigDataHell/Kangaroo-/blob/master/images/lucene03.png)
 
 * Lucene是一套用于全文检索和搜寻的开源程序库，由Apache软件基金会支持和提供 <br>
 * Lucene提供了一个简单却强大的应用程序接口（API），能够做全文索引和搜寻，在Java开发环境里Lucene是一个成熟的免费开放源代码工具 <br>
