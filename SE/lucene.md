@@ -57,6 +57,8 @@
 **倒排索引**又叫反向索引（右下图）以字或词为关键字进行索引，表中关键字所对应的记录表项，记录了出现这个字或词的所有文档，每一个表项记录该文档的ID和关键字在该文档中出现的位置情况。
 
   ![lucene02](https://github.com/bigDataHell/Kangaroo-/blob/master/images/lucene02.png)
+  
+   ![lucene03](https://github.com/bigDataHell/Kangaroo-/blob/master/images/lucene03.png)
 
   在实际的运用中，我们可以对数据库中原始的数据结构（临时表或者商品表），在业务空闲时事先根据左图内容，创建新的文档列表（左图）及倒排索引区域（右图）。
 用户有查询需求时，先访问倒排索引数据区域（右图），得出文档编号后，通过文档文档编号即可快速，准确的通过左图找到具体的文档内容。
