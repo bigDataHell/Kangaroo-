@@ -36,7 +36,7 @@ SQL 语言声明的是结果集的属性，计算机会根据 SQL 所声明的�
 
 WHERE 子句用于规定选择的标准。
 
-语法: <br>
+* 语法: <br>
          SELECT 列名称 FROM 表名称 WHERE 列 运算符 值
          
   |操作符|描述|
@@ -51,11 +51,12 @@ WHERE 子句用于规定选择的标准。
 |BETWEEN|在某个范围内|
 |LIKE|搜索某种模式|
 
-在某些版本的 SQL 中，操作符 <> 可以写为 !=。
+**在某些版本的 SQL 中，操作符 <> 可以写为 !=。**
 
 * 实例 BETWEEN 
 
 找出字段  `COLUMN_Name` 开头首字母在 a ~ g(包含) 之间并且字段`INTEGER_IDX` > 2 的数据
+
 `SELECT * FROM COLUMNS_V2 WHERE COLUMN_Name BETWEEN 'a' AND 'g' AND INTEGER_IDX > 2;`
 
 结果:
