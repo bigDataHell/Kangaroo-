@@ -48,7 +48,7 @@
 	
  ### 1.5 搜索引擎的原理
  
-  ![]()
+  ![lucene01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/lucene01.png)
   
   爬虫—》抓取网页—》临时库—》处理放到索引区—》提供搜索服务商品表—》处理放到索引区—》提供搜索服务
   
@@ -56,7 +56,7 @@
  
 **倒排索引**又叫反向索引（右下图）以字或词为关键字进行索引，表中关键字所对应的记录表项，记录了出现这个字或词的所有文档，每一个表项记录该文档的ID和关键字在该文档中出现的位置情况。
 
-![]()
+  ![lucene02](https://github.com/bigDataHell/Kangaroo-/blob/master/images/lucene02.png)
 
   在实际的运用中，我们可以对数据库中原始的数据结构（临时表或者商品表），在业务空闲时事先根据左图内容，创建新的文档列表（左图）及倒排索引区域（右图）。
 用户有查询需求时，先访问倒排索引数据区域（右图），得出文档编号后，通过文档文档编号即可快速，准确的通过左图找到具体的文档内容。
@@ -94,8 +94,48 @@ Solr：基于Lucene开发的企业级的搜索引擎产品
 
 
 ## 3 Lucene的基本使用
+ 
+### 3.1 引入依赖
 
-
+``` xml
+dependencies>
+        <!--核心库-->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>5.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+        <!--分词器-->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-common</artifactId>
+            <version>5.2.1</version>
+        </dependency>
+        <!--查询解析器-->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queries</artifactId>
+            <version>5.2.1</version>
+        </dependency>
+        <!--高亮显示-->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-highlighter</artifactId>
+            <version>5.2.1</version>
+        </dependency>
+        <!--ik-analyzer 中文分词器-->
+        <dependency>
+            <groupId>cn.bestwu</groupId>
+            <artifactId>ik-analyzers</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+    </dependencies>
+```
 
 
 

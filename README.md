@@ -29,7 +29,7 @@
 | 数据存储|数据转换|数据计算|分布式协调|分布式调度|SQL|数据结构与算法|异常|Linux|
 |:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 |1|2|3|4|5|6|7|8|9|
-|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|SQL|[algorithms](#algorithms)|[Exception](#exception)|[一键启动脚本](#一键启动脚本)|
+|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|[SQL](#sql)|[algorithms](#algorithms)|[Exception](#exception)|[一键启动脚本](#一键启动脚本)|
 |Hbase|#|hadoop|zookeeper|Mesos|[lucene](#lucene)|#||
 |Cassandra|flume|spark|Consul|yarn|#|#||
 |MonggoDB|RabbitMQ|Filink|Etcd|#|#|#||
@@ -90,17 +90,22 @@
 ---------------------------------------------------------
 ## Exception
 
-[java.lang.NoClassDefFoundError --Maven-scope](https://github.com/bigDataHell/Kangaroo-/blob/master/Exception/%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8.md#javalangnoclassdeffounderror----maven)
+* [java.lang.NoClassDefFoundError --Maven-scope](https://github.com/bigDataHell/Kangaroo-/blob/master/Exception/%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8.md#javalangnoclassdeffounderror----maven)
    
 ------------------------------------------------------
 
 ## 一键启动脚本
 
- [kafka启动脚本](https://github.com/bigDataHell/Kangaroo-/blob/master/Liunx/kafka%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC.md) <br>
- [zookeeper启动脚本](https://github.com/bigDataHell/Kangaroo-/blob/master/Liunx/zookeeper%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8.md)
+ * [kafka启动脚本](https://github.com/bigDataHell/Kangaroo-/blob/master/Liunx/kafka%E5%90%AF%E5%8A%A8%E8%84%9A%E6%9C%AC.md) <br>
+ * [zookeeper启动脚本](https://github.com/bigDataHell/Kangaroo-/blob/master/Liunx/zookeeper%E4%B8%80%E9%94%AE%E5%90%AF%E5%8A%A8.md)
+ 
  --------------------------------------------------------------
  ## lucene
  
- [lucene的基本使用](https://github.com/bigDataHell/Kangaroo-/blob/master/SE/lucene.md)
+ * [lucene的基本使用](https://github.com/bigDataHell/Kangaroo-/blob/master/SE/lucene.md)
+ 
+ ## SQL
+ 
+ * [SQL详解](https://github.com/bigDataHell/Kangaroo-/blob/master/SQL/SQL%E8%AF%A6%E8%A7%A301.md)
  
 

@@ -215,7 +215,7 @@ public class Payment implements Serializable {
                 ", num=" + num +
                 '}';
     }
-
+     // 随机产生订单信息
     public String random() {
         this.orderId = UUID.randomUUID().toString().replaceAll("-", "");
         this.paymentId = UUID.randomUUID().toString().replaceAll("-", "");
