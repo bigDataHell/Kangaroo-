@@ -32,14 +32,17 @@ SQL 语言声明的是结果集的属性，计算机会根据 SQL 所声明的�
 
 ##  limit : 查看特定部分的数据
 
-* 一般是用于select语句中用以从结果集中拿出特定的一部分数据。
+ 一般是用于select语句中用以从结果集中拿出特定的一部分数据。
 
 * 查找前1100条数据
+
 SELECT * FROM tb_item_cat LIMIT 1100;
 
 * 查找第1101条数据,只显示一条.
+
 `SELECT * FROM tb_item_cat LIMIT 1100,1;`
 
 * 查找第1101 ~1103三条数据
+
 `SELECT * FROM tb_item_cat LIMIT 1100,3;`
 
