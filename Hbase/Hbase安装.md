@@ -32,7 +32,8 @@ cd /export/servers/hbase/conf/
 * 2.3  修改第二个配置文件 hbase-site.xml 
 
 > 注意：以下配置集成的是hadoop ha集群。
-如果您的集群没有配置ha，hbase.rootdir 配置项目需要修改：hdfs://master:9000/hbase
+如果您的集群没有配置ha(NameNode的高可用)，hbase.rootdir 配置项目需要修改：hdfs://master:9000/hbase
+
 
 ``` xml
 <configuration>
