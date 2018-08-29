@@ -30,7 +30,7 @@
 |:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 |1|2|3|4|5|6|7|8|9|
 |#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|[SQL](#sql)|[algorithms](#algorithms)|[Exception](#exception)|[一键启动脚本](#一键启动脚本)|
-|Hbase|#|hadoop|zookeeper|Mesos|[lucene](#lucene)|[设计模式](#设计模式)||
+|Hbase|#|hadoop|zookeeper|Mesos|[lucene](#lucene)|[设计模式](#设计模式)|[java](#java)|
 |Cassandra|flume|spark|Consul|yarn|#|#||
 |MonggoDB|RabbitMQ|Filink|Etcd|#|#|#||
 |#|#|[Storm](#storm)|Eureka|#|#|#||
@@ -111,5 +111,9 @@
  ## 设计模式
  
  * [单例模式](https://github.com/bigDataHell/Kangaroo-/blob/master/java/designMode/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F.md)
+ 
+ ## java
+ 
+ * [java回调机制](http://chuansong.me/n/1453687251714)
  
 
