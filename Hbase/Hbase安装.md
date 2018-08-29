@@ -12,11 +12,11 @@
 
 * 1.4 配置环境变量
 
-vi /etc/profile
-\-
-export HBASE_HOME=/export/server/hbase
-export PATH=${HBASE_HOME}/bin:$PATH
-\-
+vi /etc/profile<br>
+\- <br>
+export HBASE_HOME=/export/server/hbase <br>
+export PATH=${HBASE_HOME}/bin:$PATH <br>
+\- <br>
 source /etc/profile
 
 ## 2 修改配置文件
