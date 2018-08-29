@@ -82,7 +82,7 @@ export HBASE_MANAGES_ZK=false
 
  `scp -r  hbase hadoop-node-3:/export/server`
  
- ## 启动集群
+ ## 3 启动集群
  
  启动:
  
@@ -94,13 +94,22 @@ export HBASE_MANAGES_ZK=false
  
  主节点:
  
- ![Hbase01](https://github.com/bigDataHell/Kangaroo-/tree/master/images/Hbase01.png)
+![Hbase01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/Hbase01.png)
  
  从节点 : 
  
-  ![Hbase02](https://github.com/bigDataHell/Kangaroo-/tree/master/images/Hbase02.png)
+![Hbase02](https://github.com/bigDataHell/Kangaroo-/blob/master/images/Hbase02.png)
   
   搭建成功!!!!
+ 
+ ## 4 命令行操作
+ 
+ * 4.1 进入hbase命令行
+ 
+     hbase shell;
+     
+ * list : 查看所有的表
+ 
  
  
  
