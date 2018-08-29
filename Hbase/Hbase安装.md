@@ -61,6 +61,10 @@ cd /export/servers/hbase/conf/
     <name>hbase.zookeeper.property.clientPort</name>
     <value>2181</value>
   </property>
+  <property>
+    <name>hbase.tmp.dir</name>
+    <value>/export/data/hbase/hbase-${user.name</value>
+  </property>
 </configuration>
 ```
 * 2.3   修改第三个配置文件 hbase-env.sh
