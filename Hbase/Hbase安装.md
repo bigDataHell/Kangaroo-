@@ -13,10 +13,10 @@
 * 1.4 配置环境变量
 
 vi /etc/profile
--
+\-
 export HBASE_HOME=/export/server/hbase
 export PATH=${HBASE_HOME}/bin:$PATH
--
+\-
 source /etc/profile
 
 ## 2 修改配置文件
@@ -31,7 +31,7 @@ cd /export/servers/hbase/conf/
       hadoop-node-3
 * 2.3  修改第二个配置文件 hbase-site.xml 
 
-注意：以下配置集成的是hadoop ha集群。
+> 注意：以下配置集成的是hadoop ha集群。
 如果您的集群没有配置ha，hbase.rootdir 配置项目需要修改：hdfs://master:9000/hbase
 
 ``` xml
@@ -67,16 +67,43 @@ cd /export/servers/hbase/conf/
 HBASE_MANAGES_ZK=false 表示，hbase和大家伙公用一个zookeeper集群，而不是自己管理集群。
 
 在配置文件中加入:
--
+\-
 export JAVA_HOME=/export/server/jdk1.8.0_65
 export HBASE_MANAGES_ZK=false
--
+\-
 
 * 2.4 修改第四个配置文件 拷贝hadoop配置文件
 
 拷贝hadoop的配置文件到hbase的配置文件目录
 
 `scp /export/server/hadoop-2.7.4/etc/hadoop/hdfs-site.xml  .`
+
+* 2.5 把Hbane分发到其他节点
+
+ `scp -r  hbase hadoop-node-3:/export/server`
+ 
+ ## 启动集群
+ 
+ 启动:
+ 
+ `start-hbase.sh`
+ 
+ 停止:
+ 
+  `stop-hbase.sh`
+ 
+ 主节点:
+ 
+ ![Hbase01](https://github.com/bigDataHell/Kangaroo-/tree/master/images/Hbase01.png)
+ 
+ 从节点 : 
+ 
+  ![Hbase02](https://github.com/bigDataHell/Kangaroo-/tree/master/images/Hbase02.png)
+  
+  搭建成功!!!!
+ 
+ 
+ 
 
 
 
