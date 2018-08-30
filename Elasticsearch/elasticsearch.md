@@ -60,3 +60,26 @@
         的信息。
         POST http://localhost:9200/_cluster/nodes/_shutdown ：这个命令向集群中
       所有节点发送一个shutdown请求。
+      
+  ## curl 操作
+  
+  * 创建一个索引
+  
+  `curl -XPUT "http://localhost:9200/blog/"`
+  
+  * 插入一个文档
+  
+  * 查询文档
+  
+  `curl -XGET http://localhost:9200/blog/article/1`
+  
+  * 删除索引
+  
+  `curl -XDELETE "http://localhost:9200/blogs/"`
+  
+  ## 使用java操作elasticsearch
+  
+  
+  
+  
+  
