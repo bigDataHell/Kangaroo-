@@ -30,7 +30,7 @@
 |:-----: |:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 |1|2|3|4|5|6|7|8|9|
 |#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|[SQL](#sql)|[algorithms](#algorithms)|[Exception](#exception)|[一键启动脚本](#一键启动脚本)|
-|Hbase|#|hadoop|zookeeper|Mesos|[lucene](#lucene)|[设计模式](#设计模式)|[java](#java)|
+|[Hbase](#hbase)|#|hadoop|zookeeper|Mesos|[lucene](#lucene)|[设计模式](#设计模式)|[java](#java)|
 |Cassandra|flume|spark|Consul|yarn|#|#||
 |MonggoDB|RabbitMQ|Filink|Etcd|#|#|#||
 |#|#|[Storm](#storm)|Eureka|#|#|#||
@@ -115,5 +115,8 @@
  ## java
  
  * [java回调机制](http://chuansong.me/n/1453687251714)
+ ## Hbase
+ 
+ [Hbase搭建及控制台命令](https://github.com/bigDataHell/Kangaroo-/blob/master/Hbase/Hbase%E5%AE%89%E8%A3%85.md)
  
 
