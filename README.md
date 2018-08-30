@@ -91,6 +91,8 @@
 ## Exception
 
 * [java.lang.NoClassDefFoundError --Maven-scope](https://github.com/bigDataHell/Kangaroo-/blob/master/Exception/%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8.md#javalangnoclassdeffounderror----maven)
+
+* [java.lang.StackOverflowError](https://github.com/bigDataHell/Kangaroo-/blob/master/Exception/%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8.md#2-javalangstackoverflowerror-%E5%A0%86%E6%A0%88%E6%BA%A2%E5%87%BA%E9%94%99%E8%AF%AF)
    
 ------------------------------------------------------
 
@@ -103,18 +105,25 @@
  ## lucene
  
  * [lucene的基本使用](https://github.com/bigDataHell/Kangaroo-/blob/master/SE/lucene.md)
+ -----------------------
  
  ## SQL
  
  * [SQL详解](https://github.com/bigDataHell/Kangaroo-/blob/master/SQL/SQL%E8%AF%A6%E8%A7%A301.md)
+ -------------------
  
  ## 设计模式
  
  * [单例模式](https://github.com/bigDataHell/Kangaroo-/blob/master/java/designMode/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F.md)
  
+ ---------------------
+ 
  ## java
  
  * [java回调机制](http://chuansong.me/n/1453687251714)
+ 
+ --------------------------
+ 
  ## Hbase
  
  [Hbase搭建及控制台命令](https://github.com/bigDataHell/Kangaroo-/blob/master/Hbase/Hbase%E5%AE%89%E8%A3%85.md)
