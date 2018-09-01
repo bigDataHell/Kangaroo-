@@ -38,9 +38,9 @@ __模块:__
 
 #### kafka
 
-   * [Kafka面试题](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/kafka/kafka%E9%9D%A2%E8%AF%95%E9%A2%98.md)
-   * [Kafka原理架构](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/kafka/kafka%E5%8E%9F%E7%90%86.md)
-   * [Kafka控制台命令](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/kafka/kafkak%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%91%BD%E4%BB%A4.md)
+   * [Kafka面试题](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/kafka/kafka%E9%9D%A2%E8%AF%95%E9%A2%98.md) <br>
+   * [Kafka原理架构](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/kafka/kafka%E5%8E%9F%E7%90%86.md) <br>
+   * [Kafka控制台命令](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/kafka/kafkak%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%91%BD%E4%BB%A4.md) <br>
    * [KafkaAPI](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/kafka/API.md) 
 
 #### storm
@@ -49,22 +49,22 @@ __模块:__
 
 * 案例 : WordCount
 
-[WordCount](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/storm/case/WordCountDemo)
+    [WordCount](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/storm/case/WordCountDemo)
 
 * 案例 : 实时交易数据统计
 
-[storm代码](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/storm/case/Real-timeTransactionDataStatistics/Storm)
-[kafka代码](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/storm/case/Real-timeTransactionDataStatistics/kafka)
-[分析](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/storm/case/Real-timeTransactionDataStatistics)
+    [storm代码](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/storm/case/Real-timeTransactionDataStatistics/Storm) <br>
+    [kafka代码](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/storm/case/Real-timeTransactionDataStatistics/kafka) <br>
+    [分析](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/storm/case/Real-timeTransactionDataStatistics)
 
 * 案例 : 实时日志监控告警系统
 
-[案例分析](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/storm/case/Real-timeLogMonitoringAlarmSystem)
+    [案例分析](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/storm/case/Real-timeLogMonitoringAlarmSystem)  <br>
   
 
 #### Hbase
 
-* [Hbase安装和控制台命令](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/Hbase/Hbase%E5%AE%89%E8%A3%85.md)
+* [Hbase安装和控制台命令](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/Hbase/Hbase%E5%AE%89%E8%A3%85.md)  <br>
 
 --------------------------------
 ## java
