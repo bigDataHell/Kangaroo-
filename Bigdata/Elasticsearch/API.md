@@ -33,7 +33,9 @@
     }
 
 ```
-## 2、	建立文档
+## 2、	建立文档 
+
+__自动创建索引映射__
 
 #### 方式一: 使用json创建
 
@@ -112,7 +114,119 @@
 
 ```
 
+## 3 搜索文档数据
 
+#### 单个索引
 
+``` java
+  /** 单个索引搜素 */
+  @Test
+  public void getDocuemntData_1() {
+    GetResponse getFields = client.prepareGet("blog", "article", "4").get();
+    System.out.println(getFields.getSourceAsString());
+  }
+
+  
+```
+
+#### 多个索引
+
+``` java
+/** 多个索引搜素 */
+  @Test
+  public void getDocuemntData_2() {
+    MultiGetResponse multiGetItemResponses =
+        client.prepareMultiGet().add("blog", "article", "1")
+            .add("blog", "article", "2", "3")
+            .get();
+    for (MultiGetItemResponse multiGetItemRespons : multiGetItemResponses) {
+        GetResponse response = multiGetItemRespons.getResponse();
+        if(response.isExists()){
+        System.out.println(response.getSourceAsString());
+        }
+    }
+  }
+
+``` 
+
+## 更新文档数据
+
+### 方式一
+
+``` java
+  /** 更新文档数据 */
+  @Test
+  public void updateDoucment_02() throws Exception {
+
+    client
+        .update(
+            new UpdateRequest("blog", "article", "2")
+                .doc(
+                    XContentFactory.jsonBuilder()
+                        .startObject()
+                        .field("id", "1")
+                        .field("title", "更新222测试单元")
+                        .field("content", "更新222测试单元中的每个方法必须可以独立测试，方法间不能有任何依赖")
+                        .endObject()))
+        .get();
+  }
+```
+
+#### 方式二
+``` java
+  /** 更新文档数据 */
+  @Test
+  public void updateDoucment_01() throws Exception {
+    UpdateRequest updateRequest = new UpdateRequest();
+    updateRequest.index("blog"); // 索引名称
+    updateRequest.type("article"); // 文档类型
+    updateRequest.id("1"); // 更新的id
+    updateRequest.doc(
+        XContentFactory.jsonBuilder()
+            .startObject()
+            .field("id", "1")
+            .field("title", "更新测试单元")
+            .field("content", "更新测试单元中的每个方法必须可以独立测试，方法间不能有任何依赖")
+            .endObject());
+    client.update(updateRequest).get();
+  }
+  
+```
+
+#### 方式三
+``` java
+@Test
+  public void updateDoucment_03_upsert() throws Exception {
+
+    // 针对同一个索引,查找到了则更新UpdateRequest中的文档数据,
+    // 查找不到则添加IndexRequest中的文档数据,一个索引id只会对应一个资源
+    // 通过查询,来判断是更新,还是新增.
+
+    // 设置一个查询条件,使用id查询,如果查找不到数据,就会添加IndexRequest中的文档数据
+    IndexRequest indexRequest =
+        new IndexRequest("blog", "article", "5")
+            .source(
+                XContentFactory.jsonBuilder()
+                    .startObject()
+                    .field("id", "2")
+                    .field("title", "有人说你是王老五")
+                    .field("content", "哈哈哈哈")
+                    .endObject());
+
+    // 设置更新的数据,使用ID查询,如果查找到了数据,就会更新UpdateRequest中的文档数据,
+    UpdateRequest updateRequest =
+        new UpdateRequest("blog", "article", "5")
+            .doc(
+                XContentFactory.jsonBuilder()
+                    .startObject()
+                    .field("id", "2")
+                    .field("title", "你是王老五吗?")
+                    .field("content", "你才是王老五!!!")
+                    .endObject())
+            .upsert(indexRequest);
+
+    client.update(updateRequest).get();
+  }
+```
 
 
