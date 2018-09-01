@@ -149,7 +149,7 @@ __自动创建索引映射__
 
 ``` 
 
-## 更新文档数据
+## 4 更新文档数据
 
 ### 方式一
 
@@ -228,5 +228,19 @@ __自动创建索引映射__
     client.update(updateRequest).get();
   }
 ```
+## 5 删除文档数据
+``` java
+  @Test
+  public void deleteData() {
+    // execute().actionGet() = get()
+    DeleteResponse deleteRequestBuilder = client.prepareDelete("blog", "article", "7").get();
+
+    System.out.println("索引名称 : " + deleteRequestBuilder.getIndex());
+    System.out.println("文档类型 : " + deleteRequestBuilder.getType());
+    System.out.println("Id : " + deleteRequestBuilder.getId());
+    System.out.println("版本 : " + deleteRequestBuilder.getVersion());
+  }
+```
+
 
 
