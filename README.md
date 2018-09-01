@@ -23,8 +23,7 @@ __模块:__
 
 #### mapreduce
 
-* 案例
-    * 倒排索引:
+* 案例 : 倒排索引:
     
     [倒排索引原理](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/mapreduce/invertedIndex/remade.md)  
     [Code](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/mapreduce/invertedIndex/InvertedIndex.java)
