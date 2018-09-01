@@ -8,15 +8,15 @@ __模块:__
 ## BigData
 
 | 数据存储|数据转换|数据计算|分布式协调|分布式调度|
-|:-----: |:-----:|:-----:|:-----:|:-----:|
-|1|2|3|4|5|
-|#|[Kafka](#kafka)|[mapreduce](#数据计算)|#|#|
-|[Hbase](#hbase)|#|hadoop|zookeeper|
-|Cassandra|flume|spark|
-|MonggoDB|RabbitMQ|Filink|
-|#|#|[Storm](#storm)|
-|#|#|Hive|#|
-|#|#|Pig|#|#|
+|:-----: |:------:|:-----:|:-------:|:-------:|
+|           1          |       2            |        3              |          4           |          5          |
+|[Hbase](#hbase)       |[Kafka](#kafka)     |[mapreduce](#数据计算)  |  #                   |#                    |
+|Cassandra             |flume               |hadoop                 |zookeeper             |
+|MonggoDB              |RabbitMQ            |spark                  |                       
+|                      |                    |Filink                 |
+|#                     |#                   |[Storm](#storm)        |
+|#                     |#                   |Hive                   |  #                  |
+|#                     |#                   |#                      |#                     |#                     |
 
 
 --------------------------------
