@@ -45,8 +45,26 @@ __模块:__
 
 #### storm
 
+* [storm原理](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/storm/storm.md)
+
+* 案例 : WordCount
+
+[WordCount](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/storm/case/WordCountDemo)
+
+* 案例 : 实时交易数据统计
+
+[storm代码](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/storm/case/Real-timeTransactionDataStatistics/Storm)
+[kafka代码](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/storm/case/Real-timeTransactionDataStatistics/kafka)
+[分析](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/storm/case/Real-timeTransactionDataStatistics)
+
+* 案例 : 实时日志监控告警系统
+
+[案例分析](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/storm/case/Real-timeLogMonitoringAlarmSystem)
+  
+
 #### Hbase
 
+* [Hbase安装和控制台命令](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/Hbase/Hbase%E5%AE%89%E8%A3%85.md)
 
 --------------------------------
 ## java
