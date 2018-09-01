@@ -54,8 +54,20 @@ __模块:__
 ## 常用软件
 --------------------------------
 ## 问题总结
+
+#### 异常
+
+* [java.lang.NoClassDefFoundError --Maven-scope](https://github.com/bigDataHell/Kangaroo-/blob/master/Exception/%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8.md#javalangnoclassdeffounderror----maven)
+
+* [java.lang.StackOverflowError](https://github.com/bigDataHell/Kangaroo-/blob/master/Exception/%E5%B8%B8%E8%A7%81%E5%BC%82%E5%B8%B8.md#2-javalangstackoverflowerror-%E5%A0%86%E6%A0%88%E6%BA%A2%E5%87%BA%E9%94%99%E8%AF%AF)
 --------------------------------
 ## 数据结构与算法
+
+#### 快排
+
+  * [快排](https://github.com/bigDataHell/Kangaroo-/blob/master/dataStructures_algorithms/Quicksort.md)
+
+
 --------------------------------
 
 
