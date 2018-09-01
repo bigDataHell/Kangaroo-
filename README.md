@@ -1,7 +1,7 @@
 # Kangaroo-
 
 
-[BigData](#bigdata) [liunx](#liunx)  [网络编程](#网络编程) [软件应用](#软件应用) [异常处理](#异常处理) 
+[BigData](#bigdata) &emsp; &emsp;  [liunx](#liunx) &emsp;&emsp; [网络编程](#网络编程) &emsp;&emsp;[软件应用](#软件应用) [异常处理](#异常处理) 
 
 ## BigData
 ## liunx
