@@ -40,6 +40,7 @@ public class ProducerDemo {
             for (int i = 0; i < 1000; i++) {
                 String msg = "Message " + i;
                 // 参数: 主题,发送的消息.
+                // 如果发送的是javaBean,先将JavaBean转化为JSON格式的字符串.
                 producer.send(new ProducerRecord<String, String>("string_demo", msg));
                 System.out.println("Sent:" + msg);
                 Thread.sleep(500);
