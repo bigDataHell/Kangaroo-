@@ -1,13 +1,15 @@
 # Kangaroo-
 
+__模块:__
 
-[BigData](#bigdata) &emsp; &emsp;  [liunx](#liunx) &emsp;&emsp; [网络编程](#网络编程) &emsp;&emsp;[软件应用](#软件应用) [异常处理](#异常处理) 
+[BigData](#bigdata) &emsp; &emsp;[java](#java) &emsp; &emsp;[liunx](#liunx) &emsp;&emsp;[网络编程](#网络编程) &emsp;&emsp;[常用软件](#常用软件) [异常处理](#问题总结) 
 
 ## BigData
+## java
 ## liunx
 ## 网络编程
-## 软件应用
-## 异常处理
+## 常用软件
+## 问题总结
 
 # 日常工作总结
  * 换行 \<br\>
