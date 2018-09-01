@@ -96,6 +96,11 @@ __模块:__
  * [kafka启动脚本]()
 --------------------------------
 ## 网络编程
+
+#### http
+
+* [HTTP知识点](https://github.com/bigDataHell/Kangaroo-/tree/master/NetworkProgramming/HTTP)
+
 --------------------------------
 ## 常用软件
 --------------------------------
