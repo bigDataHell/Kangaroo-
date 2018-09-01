@@ -10,13 +10,13 @@ __模块:__
 | 数据存储|数据转换|数据计算|分布式协调|分布式调度|
 |:-----: |:------:|:-----:|:-------:|:-------:|
 |           1          |       2            |        3              |          4           |          5          |
-|[Hbase](#hbase)       |[Kafka](#kafka)     |[mapreduce](#数据计算)  |  #                   |#                    |
-|Cassandra             |flume               |hadoop                 |zookeeper             |
-|MonggoDB              |RabbitMQ            |spark                  |                       
-|                      |                    |Filink                 |
-|#                     |#                   |[Storm](#storm)        |
-|#                     |#                   |Hive                   |  #                  |
-|#                     |#                   |#                      |#                     |#                     |
+|[Hbase](#hbase)       |[Kafka](#kafka)     |[mapreduce](#数据计算)  |zookeeper             |Yarn                 |
+|Cassandra             |flume               |hadoop                 |Consul                |Mesos                |
+|MonggoDB              |RabbitMQ            |spark                  | Etcd                 |                     |          
+|                      |                    |Filink                 | Eureka               |                     |
+|#                     |#                   |[Storm](#storm)        |                      |                     |
+|#                     |#                   |Hive                   |  #                   |                     |
+|#                     |#                   |Pig                    |#                     |#                    |
 
 
 --------------------------------
