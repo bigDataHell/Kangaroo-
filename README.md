@@ -23,6 +23,18 @@ __模块:__
 
 #### mapreduce
 
+* 案例
+    * 倒排索引:
+    
+    [倒排索引原理](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/mapreduce/invertedIndex/remade.md)  
+    [Code](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/mapreduce/invertedIndex/InvertedIndex.java)
+    
+* MapReduce原理
+
+    [MapTask工作机制](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/mapreduce/mapReduce_principle/MapTask%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6.md)<br> 
+    [ReduceTask工作机制](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/mapreduce/mapReduce_principle/ReduceTask%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6.md)
+    
+
 #### flume
 
 #### kafka
@@ -30,7 +42,7 @@ __模块:__
    * [Kafka面试题](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/kafka/kafka%E9%9D%A2%E8%AF%95%E9%A2%98.md)
    * [Kafka原理架构](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/kafka/kafka%E5%8E%9F%E7%90%86.md)
    * [Kafka控制台命令](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/kafka/kafkak%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%91%BD%E4%BB%A4.md)
-   * [KafkaAPI]https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/kafka/API.md) 
+   * [KafkaAPI](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/kafka/API.md) 
 
 #### storm
 
