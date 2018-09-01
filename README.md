@@ -82,7 +82,7 @@ __模块:__
  
 #### 数据库
 
- * [SQL](https://github.com/bigDataHell/Kangaroo-/blob/master/java/database/SQL/SQL%E8%AF%A6%E8%A7%A301.md)
+ * [SQL](https://github.com/bigDataHell/Kangaroo-/tree/master/java/database/SQL)
  
 #### Maven
 
