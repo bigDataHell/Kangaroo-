@@ -7,10 +7,10 @@ __模块:__
 --------------------------------
 ## BigData
 
-| 数据存储|数据转换|数据计算|分布式协调|分布式调度|
-|:-----: |:------:|:-----:|:-------:|:-------:|
-|           1          |       2            |        3              |          4           |          5          |
-|[Hbase](#hbase)       |[Kafka](#kafka)     |[mapreduce](#数据计算)  |zookeeper             |Yarn                 |
+| 数据存储|数据转换|数据计算|分布式协调|分布式调度|分布式搜索引擎|
+|:-----: |:------:|:-----:|:-------:|:-------:|:-------:|
+|           1          |       2            |        3              |          4           |     5 |6|
+|[Hbase](#hbase)       |[Kafka](#kafka)     |[mapreduce](#数据计算)  |zookeeper             |Yarn     |[elasticsearch](#elasticsearch)|
 |Cassandra             |flume               |hadoop                 |Consul                |Mesos                |
 |MonggoDB              |RabbitMQ            |spark                  | Etcd                 |                     |          
 |                      |                    |Filink                 | Eureka               |                     |
@@ -69,6 +69,10 @@ __模块:__
 #### Elasticsearch
 
 * [Elasticsearch概念](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/Elasticsearch)
+* [Elasticsearch和Jackson整合,IK分词器](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/Elasticsearch/API-searchs.md)
+* [Elasticsearch连接客户端,CRUD](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/Elasticsearch/API-CRUD.md)
+* [Elasticsearch所有的搜索方法](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/Elasticsearch/API%E5%90%84%E7%A7%8D%E6%9F%A5%E8%AF%A2.md)
+
 --------------------------------
 
 ## java
