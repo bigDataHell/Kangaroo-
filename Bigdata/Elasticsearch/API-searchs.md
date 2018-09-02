@@ -170,20 +170,20 @@ SearchResponse searchResponse =
 
 问题：如何将Article对象，转换为json数据 ---- Jackson 转换开发包  <br>
 Jackson 是一个 Java 用来处理 JSON 格式数据的类库，性能非常好。 <br>
-    Jackson可以轻松的将Java对象转换成json对象和xml文档，同样也可以将json、xml转换成Java对象。Jackson库于2012.10.8号发布了最新的2.1版。 <br>
-    Jackson源码目前托管于GitHub，地址：https://github.com/FasterXML/ <br>
-    Jackson 2.x介绍 <br>
-    Jackson 2.x版提供了三个JAR包供下载： <br>
+  &emsp;  Jackson可以轻松的将Java对象转换成json对象和xml文档，同样也可以将json、xml转换成Java对象。Jackson库于2012.10.8号发布了最新的2.1版。 <br>
+ &emsp;   Jackson源码目前托管于GitHub，地址：https://github.com/FasterXML/ <br>
+ &emsp;   Jackson 2.x介绍 <br>
+  &emsp;  Jackson 2.x版提供了三个JAR包供下载： <br>
     
-* 1. Core库：streaming parser/generator，即流式的解析器和生成器。
+* 1 Core库：streaming parser/generator，即流式的解析器和生成器。
 下载： <br>
 http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.1.0/jackson-core-2.1.0.jar
 
-* 2. Databind库：ObjectMapper, Json Tree Model，即对象映射器，JSON树模型。
+* 2 Databind库：ObjectMapper, Json Tree Model，即对象映射器，JSON树模型。
 下载： <br>
 http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.1.0/jackson-databind-2.1.0.jar
 
-* 3. Annotations库：databinding annotations，即带注释的数据绑定包。
+* 3 Annotations库：databinding annotations，即带注释的数据绑定包。
 下载： <br>
 http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.1.0/jackson-annotations-2.1.0.jar
 
