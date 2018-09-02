@@ -96,7 +96,48 @@ SearchResponse searchResponse =
 
 	分词（好的）： ElasticSearch、是、一个、基于、Lucene、搜索、服务、服务器  <br>
 	默认单字分词（差的）： ElasticSearch、 是、一、个、基、于、搜、索
+	
+#### 4.1 基于ik分词器 重新创建索引
 
+``` java
+  @Test
+  public void createIndexByIK() {
+    // 创建索引
+    client.admin().indices().prepareCreate("blog2").get();
+    // 删除索引
+    // client.admin().indices().prepareDelete("blog","blog2").get();
+
+  }
+```
+#### 4.2 创建映射
+
+``` java
+    @Test
+    // 映射操作
+    public void createMapping() throws Exception {
+        // 创建索引
+        // client.admin().indices().prepareCreate("blog02").execute().actionGet();
+        // 添加映射
+        XContentBuilder builder = XContentFactory.jsonBuilder()
+            // startObject num = endObject num
+            .startObject()
+            .startObject("article")
+            .startObject("properties")
+            .startObject("id").field("type", "integer").field("store", "yes").endObject()
+            .startObject("title").field("type", "string").field("store", "yes").field("analyzer", "ik").endObject()
+            .startObject("content").field("type", "string").field("store", "yes").field("analyzer", "ik").endObject()
+            .endObject()
+            .endObject()
+            .endObject();
+        // 索引必须已经存在.
+        PutMappingRequest mapping = Requests.putMappingRequest("blog2").type("article").source(builder);
+        client.admin().indices().putMapping(mapping).get();
+    }
+```
+
+#### 结果 : 
+
+![elasticsearch01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/elasticsearch01.png)
 
 
 
