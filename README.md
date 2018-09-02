@@ -2,7 +2,7 @@
 
 __模块:__
 
-[BigData](#bigdata) &emsp; &emsp;[java](#java) &emsp; &emsp;[liunx](#liunx) &emsp;&emsp;[网络编程](#网络编程) &emsp;&emsp;[常用软件](#常用软件) &emsp;&emsp;[问题总结](#问题总结) &emsp;&emsp;[数据结构与算法](#数据结构与算法)
+[BigData](#bigdata) &emsp; &emsp;[java](#java) &emsp; &emsp;[liunx](#liunx) &emsp;&emsp;[网络编程](#网络编程) &emsp;&emsp;[常用软件](#常用软件) &emsp;&emsp;[问题总结](#问题总结) &emsp;&emsp;[数据结构与算法](#数据结构与算法) &emsp;&emsp;[Scala](#scala)
 
 --------------------------------
 ## BigData
@@ -124,7 +124,9 @@ __模块:__
 
 
 --------------------------------
+## Scala
 
+--------------------------------
 
 
 # 日常工作总结
