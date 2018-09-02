@@ -140,7 +140,7 @@ SearchResponse searchResponse =
 ![elasticsearch01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/elasticsearch01.png)
 
 
-## 5 IK文档相关操作 
+## 5 IK和Jackson 文档相关操作 
 
 #### 5.2 创建文档:
 
@@ -191,6 +191,105 @@ http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.1
 核心组件包括：jackson-annotations、jackson-core、jackson-databind。 <br>
 数据格式模块包括：Smile、CSV、XML、YAML。
 
+__2.x版本依赖__
+``` xml
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.8.1</version>
+        </dependency>
+```
+
+``` java
+/** 使用Jackson创建文档 */
+  @Test
+  public void createDocumentByJackson() throws JsonProcessingException {
+
+    Article article =
+        new Article(
+            2,
+            "使用Jackson创建文档",
+            "Jackson可以轻松的将Java对象转换成json对象和xml文档，同样也可以将json、xml转换成Java对象。Jackson库于2012.10.8号发布了最新的2.1版。");
+
+    ObjectMapper mappers = new ObjectMapper();
+    String source = mappers.writeValueAsString(article);
+    System.out.println(source);
+
+    IndexResponse indexResponse =
+        client.prepareIndex("blog2", "article", article.getId().toString()).setSource(source).get();
+
+    // 获取响应信息
+    System.out.println("索引名称 : " + indexResponse.getIndex());
+    System.out.println("文档类型 : " + indexResponse.getType());
+    System.out.println("Id : " + indexResponse.getId());
+    System.out.println("版本 : " + indexResponse.getVersion());
+    System.out.println("是否创建成功 : " + indexResponse.isCreated());
+  }
+```
+
+#### 5.3 修改文档代码
+
+使用Jackson修改
+
+``` java
+
+ Article article =
+        new Article(
+            1,
+            "修改2: 使用Jackson创建文档",
+            "修改2: Jackson可以轻松的将Java对象转换成json对象和xml文档，同样也可以将json、xml转换成Java对象。Jackson库于2012.10.8号发布了最新的2.1版。");
+
+    /** 方案一 */
+//    client
+//        .prepareUpdate("blog2", "article", article.getId().toString())
+//        .setDoc(new ObjectMapper().writeValueAsString(article))
+//        .get();
+    /** 方案二 */
+    client
+        .update(
+            new UpdateRequest("blog2", "article", article.getId().toString())
+                .doc(new ObjectMapper().writeValueAsString(article)))
+        .get();
+``` 
+
+#### 5.4 删除文档代码
+
+``` java
+client.delete(new DeleteRequest("blog2", "article", "1")).get();
+```
+
+## 6 IK分词器自定义词库
+
+* 1 IKAnalyzer.cfg.xml
+
+``` xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>IK Analyzer 扩展配置</comment>
+	<!--用户可以在这里配置自己的扩展字典 -->
+	<entry key="ext_dict">custom/mydict.dic;custom/single_word_low_freq.dic</entry>
+	 <!--用户可以在这里配置自己的扩展停止词字典-->
+	<entry key="ext_stopwords">custom/ext_stopword.dic</entry>
+	<!--用户可以在这里配置远程扩展字典 -->
+	<!-- <entry key="remote_ext_dict">words_location</entry> -->
+	<!--用户可以在这里配置远程扩展停止词字典-->
+	<!-- <entry key="remote_ext_stopwords">words_location</entry> -->
+</properties>
+```
+
+* 2 自定义扩展字典 : mydict.dic
+* 3 停止词字典 : ext_stopword.dic
 
 
 
@@ -199,3 +298,8 @@ http://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.1
 
 
 
+
+
+
+
+ 
