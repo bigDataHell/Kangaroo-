@@ -192,9 +192,12 @@ IncludeUpper(true)：包含下界
 
 ## 9 组合查询（复杂查询）
 
-* must(QueryBuilders) : AND
-* mustNot(QueryBuilders): NOT
-* should(QueryBuilders):OR 
+布尔查询是最常用的组合查询，不仅将多个查询条件组合在一起，并且将查询的结果和结果的评分组合在一起。当查询条件是多个表达式的组合时，布尔查询非常有用，实际上，布尔查询把多个子查询组合（combine）成一个布尔表达式，所有子查询之间的逻辑关系是与（and）；只有当一个文档满足布尔查询中的所有子查询条件时，ElasticSearch引擎才认为该文档满足查询条件。布尔查询支持的子查询类型共有四种，分别是：must，should，must_not和filter：
+
+* must子句：文档必须匹配must查询条件；
+* should子句：文档应该匹配should子句查询的一个或多个；
+* must_not子句：文档不能匹配该查询条件；
+* filter子句：过滤器，文档必须匹配该过滤条件，跟must子句的唯一区别是，filter不影响查询的score；
 
 ``` java
  SearchResponse searchResponse =
@@ -253,6 +256,9 @@ SearchRequestBuilder searchRequestBuilder =
     this.searchValue(hits);
 ```
 ## 12 高亮显示
+
+
+
 
 
 
