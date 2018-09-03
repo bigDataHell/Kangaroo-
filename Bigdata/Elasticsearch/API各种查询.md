@@ -257,7 +257,108 @@ SearchRequestBuilder searchRequestBuilder =
 ```
 ## 12 高亮显示
 
+``` java
+@Test
+  public void highLighter() throws IOException {
 
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    SearchRequestBuilder searchRequestBuilder = client.prepareSearch("blog2").setTypes("article")
+    // .setQuery(QueryBuilders.termQuery("content", "搜索"))
+    // .setQuery(QueryBuilders.boolQuery().must(QueryBuilders.))
+     .addSort("id", SortOrder.ASC).setFrom(0).setSize(100);
+
+    // 设置查询条件
+    QueryStringQueryBuilder queryStringQueryBuilder = QueryBuilders.queryStringQuery("快乐");
+    // 按照 "搜索" 完成,同时在title字段和content字段同时完成高亮.
+    QueryStringQueryBuilder queryBuilder = queryStringQueryBuilder.field("title").field("content");
+
+    // 添加高亮的字段
+    searchRequestBuilder.addHighlightedField("content");
+    searchRequestBuilder.addHighlightedField("title");
+    // 添加前缀
+    searchRequestBuilder.setHighlighterPreTags("<em>");
+    // 添加后缀
+    searchRequestBuilder.setHighlighterPostTags("</em>");
+    // 设置摘要,数据显示的时候,只显示高亮次数多的区域
+    int size = 20;
+    searchRequestBuilder.setHighlighterFragmentSize(size);
+
+    // SearchResponse searchResponse = searchRequestBuilder.execute().actionGet(); // == get();
+
+    SearchResponse searchResponse =
+        searchRequestBuilder.setQuery(QueryBuilders.boolQuery().must(queryBuilder)).get();
+
+    SearchHits hits = searchResponse.getHits();
+
+    // System.out.println("\n" + "查询结果条数 : " + hits.getTotalHits() + "\n");
+
+    Iterator<SearchHit> iterator = hits.iterator();
+
+    while (iterator.hasNext()) {
+      SearchHit searchHit = iterator.next();
+      // System.out.println("\n" + searchHit.getSourceAsString() + "\n");
+
+      // 将高亮的处理后的结果返回,将返回的内容放置到原有的数据结果中
+      Map<String, HighlightField> highlightFields = searchHit.getHighlightFields();
+      // System.out.println(highlightFields);
+      // 如果有高亮的结果,就返回对应的值,如果没有高亮的结果,就返回null
+      HighlightField contentHighlightField = highlightFields.get("content");
+      HighlightField titleHighlightField = highlightFields.get("title");
+
+      // 将json转换为对象
+      Article article = objectMapper.readValue(searchHit.getSourceAsString(), Article.class);
+
+      // System.out.println(contentHighlightField);
+      // System.out.println(titleHighlightField);
+      if (contentHighlightField != null) {
+        String content = "";
+        Text[] fragments = contentHighlightField.fragments(); // fragments : 片段
+        // 用来读取高亮的结果
+        for (Text text : fragments) {
+          content += text;
+        }
+        if (article != null && !"".equals(content)) {
+          article.setContent(content);
+        }
+      }else { //如果等于null,只显示前 size个字符串
+          if(article.getContent().length() > size){
+                article.setContent(article.getContent().substring(0,size));
+          }
+      }
+
+      if (titleHighlightField != null) {
+        String title = "";
+        Text[] fragments = titleHighlightField.fragments(); // fragments : 片段
+        // 用来读取高亮的结果
+        for (Text text : fragments) {
+          title += text;
+        }
+
+        if (article != null && !"".equals(title)) {
+          article.setTitle(title);
+        }
+      }else { //如果等于null,只显示前 size个字符串
+          if(article.getTitle().length() > size){
+              article.setTitle(article.getTitle().substring(0,size));
+          }
+      }
+
+      System.out.println(article.toString());
+      // 获取每个字段的值
+      //      System.out.println("id:" + searchHit.getSource().get("id"));
+      //      System.out.println("title:" + searchHit.getSource().get("title"));
+      //      System.out.println("content:" + searchHit.getSource().get("content"));
+      //      System.out.println("------------------------------------------------");
+      // 下边是干啥的?
+      for (Iterator<SearchHitField> ite = searchHit.iterator(); ite.hasNext(); ) {
+        SearchHitField next = ite.next();
+        System.out.println(next.getValues());
+      }
+    }
+  }
+  ``` 
+  
 
 
 
