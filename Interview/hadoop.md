@@ -51,11 +51,26 @@ Hadoop显式的支持二次排序，在Configuration类中有个setGroupingCompa
 
 ## 8 请简述mapreduce中，combiner，partition作用？
 
-## HDFS的架构
+##  9 HDFS的架构
 
 master/slave  架构
 HDFS 采用 master/slave 架构。一般一个 HDFS 集群是有一个 Namenode 和一
-定数目的 Datanode 组成。Namenode 是 HDFS 集群主节点，Datanode 是 HD
+定数目的 Datanode 组成。Namenode 是 HDFS 集群主节点，Datanode 是 HDFS 集群
+从节点，两种角色各司其职，共同协调完成分布式的文件存储服务。
+
+## NameNode的作用
+
+ 我们把目录结构及文件分块位置信息叫做元数据。Namenode 负责维护整个
+hdfs 文件系统的目录树结构，以及每一个文件所对应的 block 块信息（block 的
+id，及所在的 datanode 服务器）。
+
+## Datanode  数据存储
+
+文件的各个 block 的具体存储管理由 datanode 节点承担。每一个 block 都
+可以在多个 datanode 上。Datanode 需要定时向 Namenode 汇报自己持有的 block
+信息。
+存储多个副本（副本数量也可以通过参数设置 dfs.replication，默认是 3）。
+
 
 
 
