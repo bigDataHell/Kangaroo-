@@ -8,4 +8,4 @@
 * Spark MLlib		//机器学习
 * Spark graph		//图计算
 
-* DAG		//direct acycle graph,有向无环图。
+DAG			//direct acycle graph,有向无环图。
