@@ -440,6 +440,106 @@ Scala的集合有三大类：`序列Seq`、`Set`、`映射Map`，所有的集合
 
 * 可变的序列  import scala.collection.mutable._
 
+``` scala
+    //构建一个可变的列表,初始有3个元素1,2,3
+    val list0 = ListBuffer[Int](1, 2, 3)
+
+    //创建一个空的可变列表
+    val list1 = new ListBuffer[Int]
+
+    //向lst1中追加元素，注意：没有生成新的集合
+    var list2 = list0 += 4
+    println(list0 == list2)
+    list1.append(5)
+
+    //将list1中的元素加入到list0中,注意：没有生成新的集合
+    list0 ++= list1
+
+    //将list0和list1合并成一个新的ListBuffer 注意：生成了一个集合
+    val list3 = list0 ++ list1
+    println(list0 == list3)
+    println(list1 == list3)
+
+    //将元素追加到list0的后面生成一个新的集合
+    val list4 = list0 :+ 5
+    println(list0 == list4)
+
+    //删除元素,注意：没有生成新的集合
+    val list5 = ListBuffer[Int](1, 2, 3, 4, 5)
+    list5 -= 3
+
+    //删除一个集合列表,生成了一个新的集合
+    val list6 = list0 -- List(1, 2)
+
+    //把可变list 转换成不可变的list 直接加上toList
+    val list7 = list6.toList
+    println(list7 == list6)
+
+    //把可变list 转变数组用toArray
+    val list8 = list6.toArray
+
+    println(list0)
+    println(list1)
+    println(list3)
+    println(list4)
+    println(list5)
+    println(list6)
+    println(list7)
+    println(list8.toBuffer)
+``` 
+
+#### 6.2 set
+
+* 不可变的set
+
+Set代表一个没有重复元素的集合；将重复元素加入Set是没有用的，而且 Set 是不保证插入顺序的，即 Set 中的元素是乱序的。
+
+定义：val set=Set(元素,元素,.....)
+
+``` scala
+    val set = Set(1, 2, 4, 3, 5, 4)
+
+    // 获取元素个数.
+    println(set.size)
+
+    //集合最小值/最大值
+    println(set.min)
+    println(set.max)
+
+    //将元素和set合并生成一个新的set，原有set不变
+    val set1 = set + 8 + 9
+
+    val set2 = Set(7, 8, 9)
+
+    //两个集合的交集
+    val set3 = set1 & set2
+
+    //两个集合的并集
+    val set4 = set1 ++ set2
+
+    //在第一个set基础上去掉第二个set中存在的元素
+    val set01 = Set(1, 3, 5, 7, 9)
+    val set02 = Set(1, 3, 6, 4, 4, 9)
+    //val set5 = set01 -- set02
+    val set5 = set01.diff(set02)
+
+    //返回第一个不同于第二个set的元素集合
+    var set6 = set01 &~ set02
+
+    //计算符合条件的元素个数
+    val set03 = Set("1", "12", "123", "1234", "12345")
+    val set7 = set03.count(_.length > 2)
+
+    //取子set(2,5为元素位置, 从0开始，包含头不包含尾)
+    val set8 = set.slice(2,5)
+
+    //迭代所有的子set，取指定的个数组合
+    set2.subsets(2).foreach(x=>println(x))
+``` 
+
+* 可变的set
+
+
 
 
 
