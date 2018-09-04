@@ -134,6 +134,8 @@ __模块:__
 --------------------------------
 ## Scala
 
+[Scala基础](https://github.com/bigDataHell/Kangaroo-/tree/master/Scala)
+
 --------------------------------
 
 
