@@ -4,7 +4,7 @@
 
 	Spark core		//核心模块
 	Spark SQL		//SQL
-	Spark Streaming	//流计算
+	Spark Streaming	/	/流计算
 	Spark MLlib		//机器学习
 	Spark graph		//图计算
 
