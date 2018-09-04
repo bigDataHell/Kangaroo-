@@ -557,10 +557,72 @@ Set代表一个没有重复元素的集合；将重复元素加入Set是没有�
     println(set)
     
  ```
+#### 6.3 Map
+
+* 不可变的Map
+
+``` scala
+// 1 定义Map
+    val map = Map(1 ->"one",2 -> "two",3 -> "three",4 -> "four")
+    // 2 利用元组构建
+    val mapByTuble = Map((5,"five"),(6,"six"),(7,"seven"))
+
+    // 获取值
+    println(map(3))
+
+    //拿到所有的key
+    val allKey = map.keySet
+    for( i <- allKey) {
+      print(i+" : "+map(i)+"\n")
+    }
+
+    //通过key获取value 有key对应的值则返回，没有就返回默认值0，
+    val temp = map.getOrElse(4,0)
+    println(temp)
+```
+
+* 可变的Map
+
+``` scala
+    val map = mutable.HashMap(1 -> "one", 2 -> "two", 3 -> "three", 4 -> "four")
+
+    //添加键值对
+    map += (5 -> "five")
+    //添加多个键值对
+    map += (5 -> "five", 6 -> "six")
+
+    //显示所有的key 下面两个都可以
+    map.keys
+    map.keySet
+
+    //通过key获取value 有key对应的值则返回，没有就返回默认值0，
+    println(map.getOrElse(6, 0))
+
+    //更新键值对
+    map(2) = "两"
+
+    //更新多个键值对
+    map += (3 -> "叁",6 -> "⑥")
+
+    //删除key
+    map -= 6
+    map.remove(6)
+
+    //遍历map : 模式匹配
+    for((x,y) <- map ) println(x+" -> "+y)
+    println("-------------------------------")
+
+    // 遍历map : 通过foreach
+
+    map.foreach{case (x,y) => println(x+" -> "+y)}
 
 
-
-
+    println("-------------------------------")
+    // 遍历map
+    for (i <- map.keySet) {
+      println(i + " : " + map(i))
+    }
+```
 
 
 
