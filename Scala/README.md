@@ -6,7 +6,7 @@ Java 程序。
 
 官网 : http://www.scala-lang.org
 
-## 2 环境搭建
+__环境搭建__
 
 * 下载安装包
 `https://www.scala-lang.org/download/2.11.8.html`
@@ -144,6 +144,26 @@ for循环语法结构：for (i <- 表达式/数组/集合)
 
 a.+(b)<br>
 a 方法 b可以写成 a.方法(b)
+
+#### 2.7 定义方法
+
+``` scala
+
+    //可以不指定返回值的类型
+    def method(x: Int, y: Int) = {
+      val c = x * y
+      c
+    }
+
+    // 递归方法必须指定返回值类型
+    def method2(x:Int): Int = {
+      if(x == 1) 1
+      else method2(x-1) * x
+    }
+    
+ ``` 
+ ####  2.8 定义函数
+
 
 
 
