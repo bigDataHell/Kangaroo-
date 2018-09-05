@@ -8,14 +8,14 @@
 * field 必须要被定义成 val 的形式才能被继承，并且还要使用 override 关键字。 因为 var 修饰的 field 是可变的，在子类中可直接引用被赋值，不需要被继承；即 val 修饰的才允许被继承，var 修饰的只允许被引用。继承就是改变、覆盖的意思。
 * Java 中的访问控制权限，同样适用于 Scala
 
-|内部类|本包|子类| 外部包|
-|:---:|:---:|:---:|:---:|
+ ||内部类|本包|子类| 外部包|
+|:---:|:---:|:---:|:---:|:---:|
 |public|√|√|√|√|
-|protected|√|√|√|√|
+|protected|√|√|√|x|
 |default|√|√|x|x|
 |private|√|√|x|x|
 
-``` scal
+``` scala
 class Person {
   val name = "super"
   def getName = this.name
@@ -41,7 +41,7 @@ class Student extends Person {
 * 此外，在子类覆盖父类方法后，如果在子类中要调用父类中被覆盖的方法，则必须要使用 super 关键字，显示的指出要调用的父类方法。
 
 
-``` scal
+``` scala
 class Person1 {
   //只能类内部使用
   private val name = "leo"
@@ -104,8 +104,8 @@ object Student4{
 * 在实际的开发中，比如 spark 源码中，大量的地方使用了模式匹配的语法进行类型的判断，这种方式更加地简洁明了，而且代码的可维护性和可扩展性也非常高；
 * 使用模式匹配，功能性上来说，与 isInstanceOf 的作用一样，__主要判断是否为该类或其子类的对象即可，不是精准判断。__
 * 等同于 Java 中的 switch case 语法；
-``` scal
 
+``` scala
 class Person5 {}
 class Student5 extends Person5
 object Student5{
