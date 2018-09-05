@@ -25,3 +25,52 @@
 
 ## 3 案例
 
+``` scala
+class Super
+
+class Sub extends Super
+
+//协变
+class Temp1[+A](title: String)
+
+//逆变
+class Temp2[-A](title: String)
+
+//非变
+class Temp3[A](title: String)
+
+object Covariance_demo {
+  def main(args: Array[String]) {
+
+    //支持协变 Temp1[Sub]还是Temp1[Super]的子类
+    // 将子类的引用给父类
+    val t1: Temp1[Super] = new Temp1[Sub]("hello scala!!!")
+
+    //支持逆变 Temp1[Super]是Temp1[Sub]的子类
+    val t2: Temp2[Sub] = new Temp2[Super]("hello scala!!!")
+
+    //支持非变 Temp3[Super]与Temp3[Sub]没有从属关系，如下代码会报错
+    //val t3: Temp3[Sub] = new Temp3[Super]("hello scala!!!")
+    //val t4: Temp3[Super] = new Temp3[Sub]("hello scala!!!")
+    println(t1.toString)
+    println(t2.toString)
+  }
+}
+```
+
+## 3 上界、下界介绍
+
+在指定泛型类型时，有时需要界定泛型类型的范围，而不是接收任意类型。比如，要求某个泛型类型，必须是某个类的子类，这样在程序中就可以放心的调用父类的方法，程序才能正常的使用与运行。此时，就可以使用上下边界Bounds的特性； 
+
+__Scala的上下边界特性允许泛型类型是某个类的子类，或者是某个类的父类；__
+
+
+(1) U >: T
+
+__这是类型下界的定义，也就是U必须是类型T的父类(或本身，自己也可以认为是自己的父类)。__
+
+(2) S <: T
+
+__这是类型上界的定义，也就是S必须是类型T的子类（或本身，自己也可以认为是自己的子类)。__
+
+
