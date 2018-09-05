@@ -140,6 +140,8 @@ __模块:__
 * [Scala中面向对象编程之trait](https://github.com/bigDataHell/Kangaroo-/blob/master/Scala/Scala-trait.md)
 * [Scala 协变,逆变,非变 上下界](https://github.com/bigDataHell/Kangaroo-/blob/master/Scala/Scala-%E5%8D%8F%E5%8F%98-%E4%B8%8A%E4%B8%8B%E7%95%8C.md)
 
+* [Scala Actor并发编程](https://github.com/bigDataHell/Kangaroo-/blob/master/Scala/ScalaActor%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B.md)
+
 --------------------------------
 
 
