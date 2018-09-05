@@ -134,11 +134,11 @@ __模块:__
 --------------------------------
 ## Scala
 
-[Scala 基础,方法,函数,数组,集合,元组,映射](https://github.com/bigDataHell/Kangaroo-/tree/master/Scala)
-[Scala 类 对象继承 特质](https://github.com/bigDataHell/Kangaroo-/blob/master/Scala/Scala-%E7%B1%BB-%E5%AF%B9%E8%B1%A1.md)
-[Scala 模式匹配和样例类](https://github.com/bigDataHell/Kangaroo-/blob/master/Scala/Scala-%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D%E5%92%8C%E6%A0%B7%E4%BE%8B%E7%B1%BB.md)
-[Scala中面向对象编程之trait](https://github.com/bigDataHell/Kangaroo-/blob/master/Scala/Scala-trait.md)
-[Scala 协变,逆变,非变 上下界](https://github.com/bigDataHell/Kangaroo-/blob/master/Scala/Scala-%E5%8D%8F%E5%8F%98-%E4%B8%8A%E4%B8%8B%E7%95%8C.md)
+* [Scala 基础,方法,函数,数组,集合,元组,映射](https://github.com/bigDataHell/Kangaroo-/tree/master/Scala) 
+* [Scala 类 对象继承 特质](https://github.com/bigDataHell/Kangaroo-/blob/master/Scala/Scala-%E7%B1%BB-%E5%AF%B9%E8%B1%A1.md)
+* [Scala 模式匹配和样例类](https://github.com/bigDataHell/Kangaroo-/blob/master/Scala/Scala-%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D%E5%92%8C%E6%A0%B7%E4%BE%8B%E7%B1%BB.md)
+* [Scala中面向对象编程之trait](https://github.com/bigDataHell/Kangaroo-/blob/master/Scala/Scala-trait.md)
+* [Scala 协变,逆变,非变 上下界](https://github.com/bigDataHell/Kangaroo-/blob/master/Scala/Scala-%E5%8D%8F%E5%8F%98-%E4%B8%8A%E4%B8%8B%E7%95%8C.md)
 
 --------------------------------
 
