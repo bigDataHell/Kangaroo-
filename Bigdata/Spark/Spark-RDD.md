@@ -149,6 +149,7 @@ object WordCount01 extends  App{
 ## 5 按照key进行分区 : groupByKey
 
 * 数据
+
 		1 tom1 23 shandong
 		2 tom2 43 shandong
 		3 tom3 2 shanghai
