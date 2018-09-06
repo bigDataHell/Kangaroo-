@@ -32,14 +32,14 @@ Actor可以看作是一个个独立的实体，他们之间是毫无关联的。
 
 ## 4 发送消息的方式
 
-!	      发送异步消息，没有返回值。 <br>
-!?	    发送同步消息，等待返回值。 <br>
-!!	    发送异步消息，返回值是 Future[Any]。
+`!`	      发送异步消息，没有返回值。 <br>
+`!?`	    发送同步消息，等待返回值。 <br>
+`!!`	    发送异步消息，返回值是 Future[Any]。
 
 注意：Future 表示一个异步操作的结果状态，可能还没有实际完成的异步任务的结果 <br>
       Any  是所有类的超类，Future[Any]的泛型是异步操作结果的类型。
 
-## 5 第一个例子
+## 5 actor并发编程
 
 怎么实现actor并发编程：
 
@@ -48,6 +48,68 @@ Actor可以看作是一个个独立的实体，他们之间是毫无关联的。
 * 3、调用Actor的start方法执行Actor
 * 4、当act方法执行完成，整个程序运行结束
 
+``` scala
+
+class Actor01 extends Actor {
+  // 重写act方法
+  override def act(): Unit = {
+    for (i <- 1 to 100) {
+      println("actor : " + i)
+    }
+  }
+}
+
+class Actor02 extends  Actor{
+  override def act(): Unit = {
+    for (i <- 1 to 100){
+      println( "actor02 : ---"+i)
+
+    }
+  }
+}
+
+object MyActor extends  App{
+  //创建actor实例对象
+  val actor = new Actor01
+  val actor2 = new Actor02
+  // 启动actor
+  actor.start()
+  actor2.start()
+
+}
+
+```
+说明：上面分别调用了两个单例对象的start()方法，他们的act()方法会被执行，相同与在java中开启了两个线程，线程的run()方法会被执行 <br>
+注意：这两个Actor是并行执行的，act()方法中的for循环执行完成后actor程序就退出了
+
+## 6 actor发送、接受消息
+
+怎么实现actor发送、接受消息
+
+* 1、定义一个class或者是object继承Actor特质，注意导包import scala.actors.Actor
+* 2、重写对应的act方法
+* 3、调用Actor的start方法执行Actor
+* 4、通过不同发送消息的方式对actor发送消息
+* 5、act方法中通过receive方法接受消息并进行相应的处理
+* 6、act方法执行完成之后，程序退出
+
+``` scala
+class Actor02 extends Actor{
+  override def act(): Unit = {
+    receive{
+      case "start" => println("start.........")
+    }
+  }
+}
+
+object  MyActor3 extends App{
+  val actor02 = new Actor02
+  actor02.start()
+  // 发送异步消息,无返回
+  actor02 ! "start"
+}
+```
+## 7 actor发送、接受消息
 
 
 
