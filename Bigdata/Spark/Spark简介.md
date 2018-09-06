@@ -73,6 +73,70 @@
 	
 	SparkConf:
 		spark配置对象，设置Spark应用各种参数，kv形式。
+## wordCount-java
 
+* local模式 
+
+``` java
+public class WordCount_Java {
+
+  public static void main(String[] args) {
+
+    // 1 创建sparkConf对象
+    SparkConf sparkConf = new SparkConf();
+    //sparkConf.setAppName("wordCountJava");
+    sparkConf.setMaster("local");
+
+    // 2 创建 java sc
+    JavaSparkContext sc = new JavaSparkContext(sparkConf);
+
+    // 3 加载文本文件
+    // JavaRDD<String> rdd1 = sc.textFile("D:\\wordcount\\input\\1.txt");
+    JavaRDD<String> rdd1 = sc.textFile(args[0]);
+
+    // 4 压扁
+    JavaRDD<String> rdd2 = rdd1.flatMap(new FlatMapFunction<String, String>() {
+      public Iterator<String> call(String s) throws Exception {
+        List list = new ArrayList<String>();
+        String[] split = s.split(" ");
+        for (String word : split) {
+          list.add(word);
+        }
+        return list.iterator();
+      }
+    });
+
+    // 5 映射 把单词转化为键值对
+    JavaPairRDD<String, Integer> rdd3 = rdd2
+        .mapToPair(new PairFunction<String, String, Integer>() {
+
+          public Tuple2<String, Integer> call(String s) throws Exception {
+            return new Tuple2<String, Integer>(s, 1);
+          }
+        });
+
+    // 6 reduce化简 统计
+    JavaPairRDD<String, Integer> rdd4 = rdd3
+        .reduceByKey(new Function2<Integer, Integer, Integer>() {
+          public Integer call(Integer v1, Integer v2) throws Exception {
+            return v1 + v2;
+          }
+        });
+
+    // 二元元组 ???????????????????
+    List<Tuple2<String, Integer>> list = rdd4.collect();
+
+    for (Tuple2<String, Integer> t : list) {
+      System.out.println(t._1() + " : " + t._2());
+    }
+  }
+}
+``` 
+* 打包,上传jar包
+* spark-submit --master local --name wordCountJava --class cn.hzh.wordCount.Java.WordCount_Java spark-wordCount-1.0-SNAPSHOT.jar /root/test.txt
+
+## wordCount-集群
+
+* spark-submit  --master spark://hadoop-node-1:7077 --name MyWordCount --class cn.hzh.wordCount.Java.WordCount_Java spark-wordCount-1.0-SNAPSHOT.jar hdfs://hadoop-node-1:9000/user/spark/test.txt
 	
 
