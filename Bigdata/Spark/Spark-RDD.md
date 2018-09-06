@@ -84,8 +84,9 @@ sc.textFile(path,defaultMinPartitions)			//1,2
 							再分区并在分区内进行排序
 
 
-RDD Action
+## 3 RDD Action
 ------------------
+
 	collect()								//收集rdd元素形成数组.
 	count()									//统计rdd元素的个数
 	reduce()								//聚合,返回一个值。
@@ -101,6 +102,98 @@ RDD Action
 
 	countByKey()								//按照key,统计每个key下value的个数.
 	
+
+## 4 统计单词出现次数
+
+``` scala
+object WordCount01 extends  App{
+
+  val conf = new SparkConf()
+  conf.setAppName("wordCount")
+  conf.setMaster("local[2]")
+
+  val sc = new SparkContext(conf)
+
+  // 读取文件,按行读取, 两个分区.
+  val rdd1 = sc.textFile("D:\\wordcount\\input\\1.txt", 2)
+
+  println("rdd1 : " + rdd1.getClass.getSimpleName)
+
+  //统计单词出现次数方式一
+  val num = rdd1.map(_.split(" ").length).reduce(_ + _)
+  println("单词出现次数为 : " + num)
+
+  // 切割
+  val rdd2 = rdd1.flatMap(_.split(" "))
+  // 统计所有单词数量方式二
+  println("单词出现次数: "+rdd2.count())
+
+  // 映射
+  val rdd3 = rdd2.map((_,1))
+
+  //统计不同的单词出现次数
+  val rdd4 =rdd3.reduceByKey(_+_)
+
+  // 统计所有单词数量方式三
+  // 获取tuple的value
+  val count = rdd4.map(_._2).reduce(_+_)
+  println("单词出现次数: "+count)
+
+  val arr = rdd4.collect()
+
+  println("不重复的单词数量 : "+rdd4.count())
+
+  arr.foreach(e => println(e))
+}
+``` 
+## 5 按照key进行分区 : groupByKey
+
+* 数据
+		1 tom1 23 shandong
+		2 tom2 43 shandong
+		3 tom3 2 shanghai
+		4 tom4 45 beijing
+		5 tom5 67 henan
+		6 tom6 34 henan
+		7 tom8 12 shandong
+		8 tom9 56 hebei
+
+* 按照地区对数据进行分类
+``` scala
+object GroupByKeyDemo1 {
+
+  def main(args: Array[String]): Unit = {
+    val conf = new SparkConf()
+
+    conf.setAppName("GroupByKeyDemo1")
+    conf.setMaster("local[2]")
+
+    val sc = new SparkContext(conf)
+
+    val rdd1 = sc.textFile("D:\\wordcount\\input\\2.txt",2)
+
+    val rdd2 = rdd1.map(line => {
+      //取出省份
+      val key = line.split(" ")(3)
+      // 返回键值对 (胜,line)
+      (key,line)
+    })
+
+    var rdd3 = rdd2.groupByKey()
+
+    println("地区数量 : "+rdd3.count())
+
+    rdd3.collect().foreach(t =>{
+      val key = t._1
+
+      println("地区 : "+key +" 人数 : "+t._2.size)
+      for ( e <- t._2){
+        println(e)
+      }
+    })
+  }
+}
+``` 
 
 spark集成hadoop ha
 -------------------------
