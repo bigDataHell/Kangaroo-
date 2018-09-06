@@ -1,6 +1,6 @@
 # Spark
 
-##运行模式
+## 运行模式
 
 #### 并行
 
@@ -37,8 +37,7 @@
 
 	[SparkContext]
 		Spark程序的入口点，封装了整个spark运行环境的信息。
-		Spark功能的主要入口点。代表到Spark集群的连接，可以创建RDD、累加器和广播变量.
-		每个JVM只能激活一个SparkContext对象，在创建sc之前需要stop掉active的sc。
+	
 
 	[RDD]
 		resilient distributed dataset,弹性分布式数据集。等价于集合。
