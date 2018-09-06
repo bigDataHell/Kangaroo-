@@ -75,6 +75,7 @@ sc.textFile(path,defaultMinPartitions)			//1,2
 
 	cogroup						协分组
 							(K,V).cogroup(K,W) =>(K,(Iterable<V>,Iterable<!-- <W> -->)) 
+							
 	cartesian(otherDataset)				笛卡尔积,RR[T] RDD[U] => RDD[(T,U)]
 
 	pipe						将rdd的元素传递给脚本或者命令，执行结果返回形成新的RDD
@@ -195,6 +196,57 @@ object GroupByKeyDemo1 {
   }
 }
 ``` 
+
+## 6 join  关联查询
+
+* students.txt 
+
+		1 zhangsan 
+		2 lisi
+		3 wangwu
+		4 dabai
+		5 xiaobai
+		6 feixue
+
+* scores.txt
+	
+		1 300
+		2 888
+		3 88
+		4 99
+		5 500
+		6 256
+``` scala
+object JoinDemo extends App {
+
+  val conf = new SparkConf()
+  conf.setAppName("JOIN")
+  conf.setMaster("local")
+
+  val sc = new SparkContext(conf)
+
+  // 名单
+  val nameRdd1 = sc.textFile("D:\\wordcount\\input\\students.txt")
+  val nameRdd2 = nameRdd1.map(line => {
+    val arr = line.split(" ")
+    //返回tuple
+    (arr(0).toInt, arr(1))
+  })
+
+  // 分数
+  val scoreRdd1 = sc.textFile("D:\\wordcount\\input\\scores.txt")
+  val scoreRdd2 = scoreRdd1.map(line => {
+    val arr = line.split(" ")
+    //返回tuple
+    (arr(0).toInt, arr(1).toInt)
+  })
+
+  val rdd = nameRdd2.join(scoreRdd2).sortByKey()
+  rdd.collect().foreach(t => {
+    println(t._1 + " : " + t._2._1 + " : "+t._2._2)
+  })
+}
+```  
 
 spark集成hadoop ha
 -------------------------
