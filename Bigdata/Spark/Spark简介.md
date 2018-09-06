@@ -41,3 +41,38 @@
 
 	[RDD]
 		resilient distributed dataset,弹性分布式数据集。等价于集合。
+		
+		
+## spark实现word count
+
+	//加载文本文件,以换行符方式切割文本. : Array(hello  world2,hello world2 ,...)
+	val rdd1 = sc.textFile("/home/centos/test.txt");
+
+	//单词统计1
+	$scala>val rdd1 = sc.textFile("/home/centos/test.txt")
+	$scala>val rdd2 = rdd1.flatMap(line=>line.split(" "))
+	$scala>val rdd3 = rdd2.map(word = > (word,1))
+	$scala>val rdd4 = rdd3.reduceByKey(_ + _)
+	$scala>rdd4.collect
+
+	//单词统计2
+	sc.textFile("/home/centos/test.txt").flatMap(_.split(" ")).map((_,1)).reduceByKey(_ + _).collect
+
+	//统计所有含有wor字样到单词个数。filter
+
+	//过滤单词
+	sc.textFile("/root/test.txt").flatMap(_.split(" ")).filter(_.contains("wor")).map((_,1)).reduceByKey(_ + _).collect
+
+
+
+[API]
+
+	SparkContext:
+		Spark功能的主要入口点。代表到Spark集群的连接，可以创建RDD、累加器和广播变量.
+		每个JVM只能激活一个SparkContext对象，在创建sc之前需要stop掉active的sc。
+	
+	SparkConf:
+		spark配置对象，设置Spark应用各种参数，kv形式。
+
+	
+
