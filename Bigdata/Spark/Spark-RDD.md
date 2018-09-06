@@ -248,6 +248,91 @@ object JoinDemo extends App {
 }
 ```  
 
+## 7 cogroup  协分组
+
+* cogroup01.txt
+
+		heinan 44
+		heinan 22
+		heinan 33 
+		heinan 66
+		heinan 45
+		heibei 44
+		heibei 45
+		heibei 88
+		heibei 43
+* cogroup02.txt
+
+	heinan tom1
+	heinan tom2
+	heinan tom3
+	heibei jree2
+	heibei jree4
+	shandong luss
+	
+
+``` scala
+object cogroupDemo {
+  def main(args: Array[String]): Unit = {
+    val conf = new SparkConf()
+    conf.setAppName("cogroup")
+    conf.setMaster("local[2]")
+
+    val sc = new SparkContext(conf)
+
+    val rdd1 = sc.textFile("D:\\wordcount\\input\\cogroup01.txt")
+    // k v
+    val rdd2 = rdd1.map(line => {
+      val arr = line.split(" ")
+      //返回tuple
+      (arr(0),arr(1))
+    })
+    
+    val rdd3 = sc.textFile("D:\\wordcount\\input\\cogroup02.txt")
+    // k w
+    val rdd4 = rdd3.map(line => {
+      val arr = line.split(" ")
+      //返回tuple
+      (arr(0),arr(1))
+    })
+    val rdd = rdd2.cogroup(rdd4)
+    rdd.collect().foreach(t => {
+      println(t._1 +" :============ " )
+      // t._2 还是一个元组
+      for( e <- t._2._1) println(e)
+      for( e <- t._2._2) println(e)
+    })
+  }
+}
+``` 
+
+## 8 cartesian 笛卡儿积
+
+``` scala
+object CartesianDemo extends App{
+
+  val conf = new SparkConf()
+  conf.setAppName("cogroup")
+  conf.setMaster("local[2]")
+
+  val sc = new SparkContext(conf)
+  // parallelize : 并行
+  val rdd1 = sc.parallelize(Array("dabai","xiaobai","dahei","xiaohei"))
+  val rdd2 = sc.parallelize(Array("傻","白","甜","晕"))
+
+  val rdd =rdd1.cartesian(rdd2)
+  println("数量 : "+rdd.count())
+  rdd.collect().foreach( e =>{
+    println(e._1 +" : "+e._2)
+  })
+}
+```
+
+## 9 pipe
+
+不会用............
+
+
 spark集成hadoop ha
 -------------------------
 	1.复制core-site.xml + hdfs-site.xml到spark/conf目录下
