@@ -89,16 +89,16 @@ sc.textFile(path,defaultMinPartitions)			//1,2
 							
 
 
-## 3 RDD Action
+## 3 RDD Action(动作)
 ------------------
 
 	collect()								//收集rdd元素形成数组.
 	count()									//统计rdd元素的个数
 	reduce()								//聚合,返回一个值。
 	first									//取出第一个元素take(1)
-	take									//
+	take									//传入一个int类型的参数,返回前N个RDD的元素
 	takeSample (withReplacement,num, [seed])
-	takeOrdered(n, [ordering])
+	takeOrdered(n, [ordering])						// 返回并排序
 	
 	saveAsTextFile(path)							//保存到文件
 	saveAsSequenceFile(path)						//保存成序列文件
