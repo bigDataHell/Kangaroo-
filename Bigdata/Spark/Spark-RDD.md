@@ -70,7 +70,7 @@ sc.textFile(path,defaultMinPartitions)			//1,2
 									按照key进行聚合
 	key:String U:Int = 0
 
-	sortByKey					排序
+	sortByKey					排序,分区会影响排序. 把所有数据汇总到一个分区在排序或者 rdd.collect()之后在排序
 
 	join(otherDataset, [numTasks])			连接,(K,V).join(K,W) =>(K,(V,W)) 
 
