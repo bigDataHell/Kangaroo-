@@ -59,6 +59,7 @@ sc.textFile(path,defaultMinPartitions)			//1,2
 							union select * from id persons where id > 29 ;
 
 	intersection					交集,提取两个rdd中都含有的元素。
+	
 	distinct([numTasks]))				去重,去除重复的元素。
 
 	groupByKey()					(K,V) => (K,Iterable<V>)
@@ -73,16 +74,19 @@ sc.textFile(path,defaultMinPartitions)			//1,2
 
 	join(otherDataset, [numTasks])			连接,(K,V).join(K,W) =>(K,(V,W)) 
 
-	cogroup						协分组
-							(K,V).cogroup(K,W) =>(K,(Iterable<V>,Iterable<!-- <W> -->)) 
+	cogroup						协分组 (K,V).cogroup(K,W) =>(K,(Iterable<V>,Iterable<!-- <W> -->))
+							 
 							
 	cartesian(otherDataset)				笛卡尔积,RR[T] RDD[U] => RDD[(T,U)]
 
 	pipe						将rdd的元素传递给脚本或者命令，执行结果返回形成新的RDD
+	
 	coalesce(numPartitions)				减少分区
+	
 	repartition					可增可减
-	repartitionAndSortWithinPartitions(partitioner)
-							再分区并在分区内进行排序
+	
+	repartitionAndSortWithinPartitions(partitioner) 再分区并在分区内进行排序
+							
 
 
 ## 3 RDD Action
