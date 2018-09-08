@@ -230,7 +230,70 @@ object MainActor {
 
 ## 9  WordCount 实战
 
+需求： <br>
+用actor并发编程写一个单机版的下，将多个文件作为输入，计算完成后将多个任务汇总，得到最终的结果。
 
+大致的思想步骤：
+
+1、通过loop +react 方式去不断的接受消息 <br>
+2、利用case class样例类去匹配对应的操作 <br>
+3、其中scala中提供了文件读取的接口Source,通过调用其fromFile方法去获取文件内容 <br>
+4、将每个文件的单词数量进行局部汇总，存放在一个ListBuffer中 <br>
+5、最后将ListBuffer中的结果进行全局汇总。
+
+
+
+### 单文件统计
+
+``` scala
+
+case class SubmitTask(str: String)
+
+class Task extends Actor {
+  override def act(): Unit = {
+
+    loop {
+      react {
+        case "start" => println("start........")
+        case SubmitTask(fileName) => {
+
+          //val count = Source.fromFile(fileName).mkString.split("\r\n").flatMap(_.split(" ")).map((_,1)).groupBy(_._1).mapValues(_.length)
+          // println(count)
+
+
+          //1 利用Source读取文件内容
+          val content = Source.fromFile(fileName).mkString
+          //println(content)
+          // 2 按照换行符切分, windows下的换行符 \r\n .linxu下文件的换行符 \n
+          var lines: Array[String] = content.split("\r\n")
+
+          // 3 切分每一行,获取单词
+          val words: Array[String] = lines.flatMap(_.split(" "))
+
+          // 4 创建映射
+          val map: Array[(String, Int)] = words.map((_, 1))
+
+          // 5 按照key聚合
+          val groupWord: Map[String, Array[(String, Int)]] = map.groupBy(_._1)
+
+          // 6 统计次数
+          val count = groupWord.mapValues(_.length)
+          count.foreach(e => println(e))
+
+        }
+      }
+    }
+  }
+}
+
+object WordCount extends App {
+  val task = new Task
+  task.start()
+  task !! SubmitTask("D:\\wordcount\\input\\2.txt")
+
+}
+```
+### 3 多文件统计
 
 
 
