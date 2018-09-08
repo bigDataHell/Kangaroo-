@@ -293,8 +293,77 @@ object WordCount extends App {
 
 }
 ```
-### 3 多文件统计
+### 10 多文件统计
 
+``` scala
+case class SubmitTask(str: String)
 
+case class ResultTask(result: Map[String, Int])
+
+/**
+  * Created by Asus on 2018/9/8.
+  */
+class Task extends Actor {
+
+  override def act(): Unit = {
+    loop {
+      react {
+        case SubmitTask(fileName) => {
+
+          val result = Source.fromFile(fileName).mkString.split("\r\n").flatMap(_.split(" ")).map((_,1)).groupBy(_._1).mapValues(_.length)
+
+          sender ! ResultTask(result)
+
+        }
+      }
+    }
+  }
+}
+
+object WordCount extends App {
+
+  // 数据
+  val files = Array("D:\\wordcount\\input\\cogroup01.txt", "D:\\wordcount\\input\\1.txt",
+    "D:\\wordcount\\input\\2.txt")
+
+  // 定义一个set集合,用来存放futrue
+  val replaySet = new mutable.HashSet[Future[Any]]
+  // 定义一个list集合,存放真正可用的数据
+  val taskList = new mutable.ListBuffer[ResultTask]
+
+  val task = new Task
+  task.start()
+
+  for (str <- files) {
+    // 返回数据
+    val result: actors.Future[Any] = task !! SubmitTask(str)
+    //将返回结果添加到set集合中
+    replaySet += result
+
+  }
+
+  //遍历set集合
+  while (replaySet.size > 0) {
+
+    // 过滤出处理完成的数据
+    var toCompleted: mutable.HashSet[Future[Any]] = replaySet.filter(_.isSet)
+
+    for (t <- toCompleted) {
+      // 获取Futrue中正真的数据
+      println(t.toString()+"=========")
+      val apply: Any = t.apply()
+      println(apply.toString+"====================apply")
+      // 强转
+      taskList += apply.asInstanceOf[ResultTask]
+      // 在set集合中移除掉已经添加到list集合中的Futrue数据
+      replaySet -= t
+    }
+  }
+  // result是ResultTask对象的一个属性
+  val finalResult = taskList.map(_.result).flatten.groupBy(_._1)
+      .mapValues(x => x.foldLeft(0)(_ + _._2))
+  finalResult.foreach(e => println(e))
+}
+```
 
 
