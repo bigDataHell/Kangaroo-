@@ -98,3 +98,151 @@ object ClosureDemo {
 
 ```
 
+## 4 隐式转换和隐式参数
+
+#### 4.1	  隐式转换
+
+Scala提供的隐式转换和隐式参数功能，是非常有特色的功能。是Java等编程语言所没有的功能。它可以允许你手动指定，将某种类型的对象转换成其他类型的对象或者是给一个类增加方法。通过这些功能，可以实现非常强大、特殊的功能。
+
+Scala的隐式转换，其实最核心的就是定义隐式转换方法，即implicit conversion function。定义的隐式转换方法，只要在编写的程序内引入，就会被Scala自动使用。Scala会根据隐式转换方法的签名，在程序中使用到隐式转换方法接收的参数类型定义的对象时，会自动将其传入隐式转换方法，转换为另外一种类型的对象并返回。这就是“隐式转换”。其中所有的隐式值和隐式方法必须放到object中。
+
+然而使用Scala的隐式转换是有一定的限制的，总结如下：
+
+* implicit关键字只能用来修饰方法、变量（参数)。
+* 隐式转换的方法在当前范围内才有效。如果隐式转换不在当前范围内定义（比如定义在另一个类中或包含在某个对象中），那么必须通过import语句将其导。
+
+#### 4.2 隐式参数
+
+所谓的隐式参数，指的是在函数或者方法中，定义一个用implicit修饰的参数，此时Scala会尝试找到一个指定类型的，用implicit修饰的参数，即隐式值，并注入参数。
+
+Scala会在两个范围内查找：
+
+* 当前作用域内可见的val或var定义的隐式变量；
+* 	一种是隐式参数类型的伴生对象内的隐式值；
+
+#### 4.3隐式转换方法作用域与导入
+
+（1）Scala默认会使用两种隐式转换，一种是源类型，或者目标类型的伴生对象内的隐式转换方法；一种是当前程序作用域内的可以用唯一标识符表示的隐式转换方法。
+
+（2）如果隐式转换方法不在上述两种情况下的话，那么就必须手动使用import语法引入某个包下的隐式转换方法，比如`import test._`。通常建议，仅仅在需要进行隐式转换的地方，用import导入隐式转换方法，这样可以缩小隐式转换方法的作用域，避免不需要的隐式转换。
+
+#### 4.4隐式转换的时机
+
+（1）当对象调用类中不存在的方法或成员时，编译器会自动将对象进行隐式转换
+（2）当方法中的参数的类型与目标类型不一致时 
+
+#### 4.5 隐式转换和隐式参数案例
+
+
+* 案例一 : （让File类具备RichFile类中的read方法）
+
+``` scala
+object MyPredef{
+  //定义隐式转换方法
+  implicit def file2RichFile(file: File)=new RichFile(file)
+}
+class RichFile(val f:File) {
+  def read()=Source.fromFile(f).mkString
+}
+object RichFile{
+  def main(args: Array[String]) {
+    val f=new File("D:\\wordcount\\input\\3.txt")
+    //使用import导入隐式转换方法
+    import MyPredef._
+    //通过隐式转换，让File类具备了RichFile类中的方法
+    val content=f.read()
+    println(content)
+
+  }
+}
+
+```
+
+* 案例二 （超人变身）
+``` scala
+class Man(val name:String)
+class SuperMan(val name: String) {
+  def heat=print("超人打怪兽")
+}
+object SuperMan{
+  //隐式转换方法
+  implicit def man2SuperMan(man:Man)=new SuperMan(man.name)
+  def main(args: Array[String]) {
+    val hero=new Man("hero")
+    //Man具备了SuperMan的方法
+    hero.heat
+  }
+}
+```
+
+* 案例三 (重要) （一个类隐式转换成具有相同方法的多个类）
+
+``` scala
+class A(c:C) {
+  def readBook(): Unit ={
+    println("A说：好书好书...")
+  }
+}
+class B(c:C){
+  def readBook(): Unit ={
+    println("B说：看不懂...")
+  }
+  def writeBook(): Unit ={
+    println("B说：不会写...")
+  }
+}
+class C
+
+object AB{
+  //创建一个类的2个类的隐式转换
+  implicit def C2A(c:C)=new A(c)
+  implicit def C2B(c:C)=new B(c)
+}
+object B{
+  def main(args: Array[String]) {
+    //导包
+    //1. import AB._ 会将AB类下的所有隐式转换导进来
+    //2. import AB._C2A 只导入C类到A类的的隐式转换方法
+    //3. import AB._C2B 只导入C类到B类的的隐式转换方法
+    import AB._
+
+    val c=new C
+    //由于A类与B类中都有readBook()，只能导入其中一个，否则调用共同方法时代码报错
+    //c.readBook()
+    //C类可以执行B类中的writeBook()
+    c.writeBook()
+  }
+}
+
+```
+* 案例四  （员工领取薪水）
+
+``` scala
+object Company{
+  //在object中定义隐式值    注意：同一类型的隐式值只允许出现一次，否则会报错
+  implicit  val aaa="zhangsan"
+  implicit  val bbb=10000.00
+}
+class Boss {
+  //注意参数匹配的类型   它需要的是String类型的隐式值
+  def callName()(implicit name:String):String={
+    name+" is coming !"
+  }
+  //定义一个用implicit修饰的参数
+  //注意参数匹配的类型    它需要的是Double类型的隐式值
+  def getMoney()(implicit money:Double):String={
+    " 当月薪水："+money
+  }
+}
+object Boss extends App{
+  //使用import导入定义好的隐式值，注意：必须先加载否则会报错
+  import Company._
+  val boss =new Boss
+  // 如果传参则报错
+  println(boss.callName()+boss.getMoney())
+
+}
+```
+
+
+
