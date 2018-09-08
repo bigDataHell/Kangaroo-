@@ -109,7 +109,129 @@ object  MyActor3 extends App{
   actor02 ! "start"
 }
 ```
-## 7 actor发送、接受消息
+## 7 actor循环接受消息
+
+``` scala
+class Actor02 extends Actor{
+  override def act(): Unit = {
+
+    while (true){
+      receive{
+
+        case "stop" => println( "stop.....")
+        case "start" => println("start....")
+      }
+    }
+
+  }
+}
+
+object Actor02 extends App{
+
+  val actor02 = new Actor02
+
+  actor02.start();
+
+  actor02 ! "start"
+  actor02 ! "stop"
+
+}
+
+```
+
+## 8 react方法不断接受消息
+
+使用react方法代替receive方法去接受消息 <br>
+好处：react方式会复用线程，避免频繁的线程创建、销毁和切换。比receive更高效 <br>
+注意:  react 如果要反复执行消息处理，react外层要用loop，不能用while <br>
+
+```  scala
+class Actor03 extends Actor {
+
+  override def act(): Unit = {
+    loop {
+      receive {
+        case "start" => println("start.........")
+        case "stop" => println("stop.........")
+      }
+    }
+  }
+}
+
+object Actor03 {
+  def main(args: Array[String]): Unit = {
+    val actor03 = new Actor03
+    actor03.start()
+    actor03 ! "start"
+    actor03 ! "stop"
+  }
+}
+
+``` 
+
+## 8  结合case class样例类发送消息和接受消息
+
+* 1、将消息封装在一个样例类中
+* 2、通过匹配不同的样例类去执行不同的操作
+* 3、Actor可以返回消息给发送方。通过sender方法向当前消息发送方返回消息
+
+``` scala
+case class SyncMessage(id:Int,msg:String)//同步消息
+case class AsyncMessage(id:Int,msg:String)//异步消息
+case class ReplyMessage(id:Int,msg:String)//返回结果消息
+
+class MsgActor extends Actor{
+  override def act(): Unit ={
+    loop{
+      react{
+        case "start"=>{println("starting....")}
+
+        case SyncMessage(id,msg)=>{
+          println(s"id:$id, SyncMessage: $msg")
+          Thread.sleep(2000)
+          sender !ReplyMessage(1,"finished...")
+        }
+        case AsyncMessage(id,msg)=>{
+          println(s"id:$id,AsyncMessage: $msg")
+          // Thread.sleep(2000)
+          sender !ReplyMessage(3,"finished...")
+          Thread.sleep(2000)
+        }
+
+      }
+    }
+  }
+}
+
+object MainActor {
+  def main(args: Array[String]): Unit = {
+    val mActor=new MsgActor
+    mActor.start()
+    mActor!"start"
+
+    //同步消息 有返回值
+    val reply1= mActor!?SyncMessage(1,"我是同步消息")
+    println(reply1)
+    println("===============================")
+    //异步无返回消息
+    val reply2=mActor!AsyncMessage(2,"我是异步无返回消息")
+
+    println("===============================")
+    //异步有返回消息
+    val reply3=mActor!!AsyncMessage(3,"我是异步有返回消息")
+    //Future的apply()方法会构建一个异步操作且在未来某一个时刻返回一个值
+    val result=reply3.apply()
+    println(result)
+
+  }
+}
+
+```
+
+## 9  WordCount 实战
+
+
+
 
 
 
