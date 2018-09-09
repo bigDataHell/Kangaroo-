@@ -545,7 +545,7 @@ class WorkerInfo(val workerId: String, val memory: Int, val cores: Int) {
 
 #### 4.2 测试 
 
-配置3个worker的configuration(组态),只要使每个worker的端口号即可
+配置3个worker的configuration(组态),只要使每个worker的端口号不同即可
 
 ![01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/actor06.png)
 
