@@ -43,7 +43,7 @@
 		resilient distributed dataset,弹性分布式数据集。等价于集合。
 		
 		
-## spark实现word count
+## word count-Scanla
 
 	//加载文本文件,以换行符方式切割文本. : Array(hello  world2,hello world2 ,...)
 	val rdd1 = sc.textFile("/home/centos/test.txt");
