@@ -109,7 +109,261 @@ object  MyActor3 extends App{
   actor02 ! "start"
 }
 ```
-## 7 actor发送、接受消息
+## 7 actor循环接受消息
 
+``` scala
+class Actor02 extends Actor{
+  override def act(): Unit = {
+
+    while (true){
+      receive{
+
+        case "stop" => println( "stop.....")
+        case "start" => println("start....")
+      }
+    }
+
+  }
+}
+
+object Actor02 extends App{
+
+  val actor02 = new Actor02
+
+  actor02.start();
+
+  actor02 ! "start"
+  actor02 ! "stop"
+
+}
+
+```
+
+## 8 react方法不断接受消息
+
+使用react方法代替receive方法去接受消息 <br>
+好处：react方式会复用线程，避免频繁的线程创建、销毁和切换。比receive更高效 <br>
+注意:  react 如果要反复执行消息处理，react外层要用loop，不能用while <br>
+
+```  scala
+class Actor03 extends Actor {
+
+  override def act(): Unit = {
+    loop {
+      receive {
+        case "start" => println("start.........")
+        case "stop" => println("stop.........")
+      }
+    }
+  }
+}
+
+object Actor03 {
+  def main(args: Array[String]): Unit = {
+    val actor03 = new Actor03
+    actor03.start()
+    actor03 ! "start"
+    actor03 ! "stop"
+  }
+}
+
+``` 
+
+## 8  结合case class样例类发送消息和接受消息
+
+* 1、将消息封装在一个样例类中
+* 2、通过匹配不同的样例类去执行不同的操作
+* 3、Actor可以返回消息给发送方。通过sender方法向当前消息发送方返回消息
+
+``` scala
+case class SyncMessage(id:Int,msg:String)//同步消息
+case class AsyncMessage(id:Int,msg:String)//异步消息
+case class ReplyMessage(id:Int,msg:String)//返回结果消息
+
+class MsgActor extends Actor{
+  override def act(): Unit ={
+    loop{
+      react{
+        case "start"=>{println("starting....")}
+
+        case SyncMessage(id,msg)=>{
+          println(s"id:$id, SyncMessage: $msg")
+          Thread.sleep(2000)
+          sender !ReplyMessage(1,"finished...")
+        }
+        case AsyncMessage(id,msg)=>{
+          println(s"id:$id,AsyncMessage: $msg")
+          // Thread.sleep(2000)
+          sender !ReplyMessage(3,"finished...")
+          Thread.sleep(2000)
+        }
+
+      }
+    }
+  }
+}
+
+object MainActor {
+  def main(args: Array[String]): Unit = {
+    val mActor=new MsgActor
+    mActor.start()
+    mActor!"start"
+
+    //同步消息 有返回值
+    val reply1= mActor!?SyncMessage(1,"我是同步消息")
+    println(reply1)
+    println("===============================")
+    //异步无返回消息
+    val reply2=mActor!AsyncMessage(2,"我是异步无返回消息")
+
+    println("===============================")
+    //异步有返回消息
+    val reply3=mActor!!AsyncMessage(3,"我是异步有返回消息")
+    //Future的apply()方法会构建一个异步操作且在未来某一个时刻返回一个值
+    val result=reply3.apply()
+    println(result)
+
+  }
+}
+
+```
+
+## 9  WordCount 实战
+
+需求： <br>
+用actor并发编程写一个单机版的下，将多个文件作为输入，计算完成后将多个任务汇总，得到最终的结果。
+
+大致的思想步骤：
+
+1、通过loop +react 方式去不断的接受消息 <br>
+2、利用case class样例类去匹配对应的操作 <br>
+3、其中scala中提供了文件读取的接口Source,通过调用其fromFile方法去获取文件内容 <br>
+4、将每个文件的单词数量进行局部汇总，存放在一个ListBuffer中 <br>
+5、最后将ListBuffer中的结果进行全局汇总。
+
+
+
+### 单文件统计
+
+``` scala
+
+case class SubmitTask(str: String)
+
+class Task extends Actor {
+  override def act(): Unit = {
+
+    loop {
+      react {
+        case "start" => println("start........")
+        case SubmitTask(fileName) => {
+
+          //val count = Source.fromFile(fileName).mkString.split("\r\n").flatMap(_.split(" ")).map((_,1)).groupBy(_._1).mapValues(_.length)
+          // println(count)
+
+
+          //1 利用Source读取文件内容
+          val content = Source.fromFile(fileName).mkString
+          //println(content)
+          // 2 按照换行符切分, windows下的换行符 \r\n .linxu下文件的换行符 \n
+          var lines: Array[String] = content.split("\r\n")
+
+          // 3 切分每一行,获取单词
+          val words: Array[String] = lines.flatMap(_.split(" "))
+
+          // 4 创建映射
+          val map: Array[(String, Int)] = words.map((_, 1))
+
+          // 5 按照key聚合
+          val groupWord: Map[String, Array[(String, Int)]] = map.groupBy(_._1)
+
+          // 6 统计次数
+          val count = groupWord.mapValues(_.length)
+          count.foreach(e => println(e))
+
+        }
+      }
+    }
+  }
+}
+
+object WordCount extends App {
+  val task = new Task
+  task.start()
+  task !! SubmitTask("D:\\wordcount\\input\\2.txt")
+
+}
+```
+### 10 多文件统计
+
+``` scala
+case class SubmitTask(str: String)
+
+case class ResultTask(result: Map[String, Int])
+
+/**
+  * Created by Asus on 2018/9/8.
+  */
+class Task extends Actor {
+
+  override def act(): Unit = {
+    loop {
+      react {
+        case SubmitTask(fileName) => {
+
+          val result = Source.fromFile(fileName).mkString.split("\r\n").flatMap(_.split(" ")).map((_,1)).groupBy(_._1).mapValues(_.length)
+
+          sender ! ResultTask(result)
+
+        }
+      }
+    }
+  }
+}
+
+object WordCount extends App {
+
+  // 数据
+  val files = Array("D:\\wordcount\\input\\cogroup01.txt", "D:\\wordcount\\input\\1.txt",
+    "D:\\wordcount\\input\\2.txt")
+
+  // 定义一个set集合,用来存放futrue
+  val replaySet = new mutable.HashSet[Future[Any]]
+  // 定义一个list集合,存放真正可用的数据
+  val taskList = new mutable.ListBuffer[ResultTask]
+
+  val task = new Task
+  task.start()
+
+  for (str <- files) {
+    // 返回数据
+    val result: actors.Future[Any] = task !! SubmitTask(str)
+    //将返回结果添加到set集合中
+    replaySet += result
+
+  }
+
+  //遍历set集合
+  while (replaySet.size > 0) {
+
+    // 过滤出处理完成的数据
+    var toCompleted: mutable.HashSet[Future[Any]] = replaySet.filter(_.isSet)
+
+    for (t <- toCompleted) {
+      // 获取Futrue中正真的数据
+      println(t.toString()+"=========")
+      val apply: Any = t.apply()
+      println(apply.toString+"====================apply")
+      // 强转
+      taskList += apply.asInstanceOf[ResultTask]
+      // 在set集合中移除掉已经添加到list集合中的Futrue数据
+      replaySet -= t
+    }
+  }
+  // result是ResultTask对象的一个属性
+  val finalResult = taskList.map(_.result).flatten.groupBy(_._1)
+      .mapValues(x => x.foldLeft(0)(_ + _._2))
+  finalResult.foreach(e => println(e))
+}
+```
 
 
