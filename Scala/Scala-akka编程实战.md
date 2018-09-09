@@ -57,7 +57,7 @@ ActorSystem：在Akka中，ActorSystem是一个重量级的结构，他需要分
 
 __注意 : 在运行后会报错,要给main方法传参,具体设置看图:__ 
 
-![03](https://github.com/bigDataHell/Kangaroo-/blob/master/images/Actor03.png)
+![03](https://github.com/bigDataHell/Kangaroo-/blob/master/images/actor03.png)
 
 #### POM
 ```xml
