@@ -10,12 +10,13 @@
 
 #### 2.1 需求
 
-![01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/actor01.png)
 
 目前大多数的分布式架构底层通信都是通过RPC实现的，RPC框架非常多，比如前我们学过的Hadoop项目的RPC通信框架，但是Hadoop在设计之初就是为了运行长达数小时的批量而设计的，在某些极端的情况下，任务提交的延迟很高，所以Hadoop的RPC显得有些笨重。
 Spark 的RPC是通过Akka类库实现的，Akka用Scala语言开发，基于Actor并发模型实现，Akka具有高可靠、高性能、可扩展等特点，使用Akka可以轻松实现分布式RPC功能。
 
 #### 2.2Akka简介
+
+![01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/actor01.png)
 
 Akka基于Actor模型，提供了一个用于构建可扩展的（Scalable）、弹性的（Resilient）、快速响应的（Responsive）应用程序的平台。
 Actor模型：在计算机科学领域，Actor模型是一个并行计算（Concurrent Computation）模型，它把actor作为并行计算的基本元素来对待：为响应一个接收到的消息，一个actor能够自己做出一些决策，如创建更多的actor，或发送更多的消息，或者确定如何去响应接收到的下一个消息。
@@ -26,17 +27,19 @@ Actor是Akka中最核心的概念，它是一个封装了状态和行为的对�
 * （2）、提供了异步非阻塞的、高性能的事件驱动编程模型
 * （3）、超级轻量级事件处理（每GB堆内存几百万Actor）
 
-## 3.项目实现
 
-### 3.1.	 实战一：
+
+## 3  实战一：
 
 利用Akka的actor编程模型，实现2个进程间的通信。
 
-![01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/actor02.png)
+![01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/actor05.png)
 
-#### 3.1.1.	 架构图
+#### 3.1.	 架构图
+
+![01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/actor02.png)
  
-#### 3.1.2.	 重要类介绍
+#### 3.2.	 重要类介绍
 ActorSystem：在Akka中，ActorSystem是一个重量级的结构，他需要分配多个线程，所以在实际应用中，ActorSystem通常是一个单例对象，我们可以使用这个ActorSystem创建很多Actor。
 
 注意：
@@ -45,16 +48,111 @@ ActorSystem：在Akka中，ActorSystem是一个重量级的结构，他需要分
 * （2）、ActorSystem是一个单例对象
 * （3）、actor负责通信
 
-#### 3.1.3.	 Actor
+#### 3.3.	 Actor
 
 在Akka中，Actor负责通信，在Actor中有一些重要的生命周期方法。
 
 * （1）preStart()方法：该方法在Actor对象构造方法执行后执行，整个Actor生命周期中仅执行一次。
 * （2）receive()方法：该方法在Actor的preStart方法执行完成后执行，用于接收消息，会被反复执行。
 
-__注意 : 在运行后会报错,要给main方法传参,具体设置看图: 
+__注意 : 在运行后会报错,要给main方法传参,具体设置看图:__ 
 
 ![03](https://github.com/bigDataHell/Kangaroo-/blob/master/images/Actor03.png)
+
+#### POM
+```xml
+
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <encoding>UTF-8</encoding>
+    <scala.version>2.11.8</scala.version>
+    <scala.compat.version>2.11</scala.compat.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.typesafe.akka</groupId>
+      <artifactId>akka-actor_2.11</artifactId>
+      <version>2.3.14</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.typesafe.akka</groupId>
+      <artifactId>akka-remote_2.11</artifactId>
+      <version>2.3.14</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <sourceDirectory>src/main/scala</sourceDirectory>
+    <testSourceDirectory>src/test/scala</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>3.2.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <args>
+                <arg>-dependencyfile</arg>
+                <arg>${project.build.directory}/.scala_dependencies</arg>
+              </args>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.4.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+              <transformers>
+                <transformer
+                  implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                  <resource>reference.conf</resource>
+                </transformer>
+                <transformer
+                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass></mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+```
 
 #### Master
 
@@ -184,3 +282,14 @@ object Worker {
 
 
 ```
+##  4	实战二
+
+使用Akka实现一个简易版的spark通信框架
+
+![01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/actor04.png)
+
+#### 4.1 代码开发
+
+
+
+
