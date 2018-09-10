@@ -21,7 +21,6 @@ System)。
 的 Master 处于 Standby 状态。将 spark 集群连接到同一个 ZooKeeper 实例并启
 动多个 Master，利用 zookeeper 提供的选举和状态保存功能，可以使一个 Master
 被选举成活着的 master，而其他 Master 处于 Standby 状态。如果现任 Master
-北京市昌平区建材城西路金燕龙办公楼一层 电话：400-618-9090
 死去，另一个 Master 会通过选举产生，并恢复到旧的 Master 状态，然后恢复调
 度。整个恢复过程可能要 1-2 分钟。
 
@@ -54,6 +53,6 @@ spark.deploy.zookeeper.dir：保存集群元数据信息的文件、目录。
 
 注意：
 
-在普通模式下启动 spark 集群，只需要在主机上面执行 start-all.sh 就可以了。 <br>
+__在普通模式下启动 spark 集群，只需要在主机上面执行 start-all.sh 就可以了。 <br>
 在高可用模式下启动 spark 集群，先需要在任意一台节点上启动 start-all.sh 命令。 <br>
-然后在另外一台节点上单独启动 master。命令 start-master.sh。
+然后在另外一台节点上单独启动 master。命令 start-master.sh__。
