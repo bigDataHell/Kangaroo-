@@ -56,10 +56,10 @@
  
 #### 运行 spark-shell  指定具体的 master  地址
 
-* （1）需求:
+（1）需求:
 spark-shell 运行时指定具体的 master 地址，读取 HDFS 上的数据，做单词计数，然后将结果保存在 HDFS 上。
 
-*（2）执行启动命令：
+（2）执行启动命令：
 `spark-shell \
 --master spark://hdp-node-01:7077 \
 --executor-memory 1g \
@@ -72,7 +72,7 @@ spark-shell 运行时指定具体的 master 地址，读取 HDFS 上的数据，
 --total-executor-cores 2 指定整个集群使用的 cup 核数为 2 个 <br>
 
 注意：
-如果启动 spark shell 时没有指定 master 地址，但是也可以正常启动 spark shell <br>
+如果启动 spark shell 时没有指定 master 地址，但是也可以正常启动 spark shell 
 和执行 spark shell 中的程序，其实是启动了 spark 的 local 模式，
  
 ## word count : scala-shell
