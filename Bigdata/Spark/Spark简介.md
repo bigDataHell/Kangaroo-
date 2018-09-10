@@ -1,6 +1,6 @@
 # Spark
 
-## 运行模式
+##  1 运行模式
 
 #### 并行
 
@@ -11,7 +11,7 @@
 
 * 并发执行。
 
-## Spark特点
+## 2 Spark特点
 
 	Lightning-fast cluster computing。
 	快如闪电的集群计算。
@@ -32,6 +32,7 @@
 	Spark graph		//图计算
 
 	DAG		//direct acycle graph,有向无环图。
+	
 
 ### API
 
@@ -42,8 +43,39 @@
 	[RDD]
 		resilient distributed dataset,弹性分布式数据集。等价于集合。
 		
-		
-## word count-Scanla
+## 3 集群启动, UI
+
+ * 启动 
+` start-all.sh`
+ * 停止
+ `stop-all.sh`
+ * 集群UI
+ `http://hadoop-node-1:8080`
+ * 单节点UI
+ `http://hadoop-node-1:4040`
+ 
+#### 运行 spark-shell  指定具体的 master  地址
+
+* （1）需求:
+spark-shell 运行时指定具体的 master 地址，读取 HDFS 上的数据，做单词计数，然后将结果保存在 HDFS 上。
+
+*（2）执行启动命令：
+`spark-shell \
+--master spark://hdp-node-01:7077 \
+--executor-memory 1g \
+--total-executor-cores 2`
+
+* 参数说明：
+
+--master spark://hdp-node-01:7077 指定 Master 的地址 <br>
+--executor-memory 1g 指定每个 worker 可用内存为 1g <br>
+--total-executor-cores 2 指定整个集群使用的 cup 核数为 2 个 <br>
+
+注意：
+如果启动 spark shell 时没有指定 master 地址，但是也可以正常启动 spark shell <br>
+和执行 spark shell 中的程序，其实是启动了 spark 的 local 模式，
+ 
+## word count : scala-shell
 
 	//加载文本文件,以换行符方式切割文本. : Array(hello  world2,hello world2 ,...)
 	val rdd1 = sc.textFile("/home/centos/test.txt");
