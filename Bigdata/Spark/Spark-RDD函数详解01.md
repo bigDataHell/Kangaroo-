@@ -110,7 +110,10 @@ def doStuff(rdd: RDD[String]): RDD[String] = {
 }
 ```
 
-## 4 理解闭包(重点)
+### 3.2 理解闭包(重点)
+
+闭包是一个函数，返回值依赖于声明在函数外部的一个或多个变量。
+闭包通常来讲可以简单的认为是可以访问不在当前作用域范围内的一个函数。
 
 在集群中执行代码时，一个关于 Spark 更难的事情是理解的变量和方法的范围和生命周期。
 
@@ -130,7 +133,7 @@ rdd.foreach(x => counter += x)
  
 println("Counter value: " + counter)
 
-``` scala
+``` 
 
 本地  VS 集群模式
 
@@ -150,6 +153,21 @@ __打印 RDD 的元素__
 
 
 
+### 3.4 使用 Key-Value 对工作
+
+虽然大多数 Spark 操作工作在包含任何类型对象的 RDDs 上，只有少数特殊的操作可用于 Key-Value 对的 RDDs。最常见的是分布式 “shuffle” 操作，如通过元素的 key 来进行 grouping 或 aggregating 操作。
+
+在 Scala 中，这些操作时自动可用于包含 Tuple2 对象的 RDDs（在语言中内置的元组，通过简单的写 (a, b) ）。在 PairRDDFunctions 类中该 Key-Value 对的操作有效的，其中围绕元组的 RDD 自动包装。
+
+例如，下面的代码使用的 Key-Value 对的 reduceByKey 操作统计文本文件中每一行出现了多少次 : 
+``` scala
+val lines = sc.textFile("data.txt")
+val pairs = lines.map(s => (s, 1))
+val counts = pairs.reduceByKey((a, b) => a + b)
+```
+我们也可以使用 counts.sortByKey() ，例如，在对按字母顺序排序，最后 counts.collect() 把他们作为一个数据对象返回给的驱动程序。
+
+注意 : 使用自定义对象作为 Key-Value 对操作的 key 时，您必须确保自定义 equals() 方法有一个 hashCode() 方法相匹配。有关详情，请参见这是 Object.hashCode() documentation 中列出的约定
 
 
 
