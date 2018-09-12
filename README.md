@@ -25,6 +25,7 @@ __模块:__
 * [简介](https://github.com/bigDataHell/Kangaroo-/tree/master/Bigdata/Spark)
 * [sortBy和sortByKey详解](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/Spark/sortBy%E5%92%8CsortByKey%E8%AF%A6%E8%A7%A3.md)
 * [RDD : 弹性分布式数据集](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/Spark/Spark-RDD.md)
+* [面试题](https://github.com/bigDataHell/Kangaroo-/blob/master/Bigdata/Spark/%E9%9D%A2%E8%AF%95%E9%A2%98.md)
 
 #### hadoop
 
