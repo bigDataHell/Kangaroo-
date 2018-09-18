@@ -101,9 +101,9 @@ UpdateStateByKey用于记录历史记录，保存上次的状态
 •	window length - The duration of the window (3 in the figure) <br>
 •	slide interval - The interval at which the window-based operation is performed (2 in the figure).  
 
-a.窗口大小，一段时间内数据的容器。
+a.  窗口大小，一段时间内数据的容器。
 
-b.滑动间隔，每隔多久计算一次。
+b.  滑动间隔，每隔多久计算一次。
 
 
 
@@ -139,11 +139,49 @@ Output Operations可以将DStream的数据输出到外部的数据库或文件�
 
 `yum install -y nc`
 
-*（2）通过netcat工具向指定的端口发送数据
+* （2）通过netcat工具向指定的端口发送数据
 
- 	nc -lk 9999 
+ `	nc -lk 9999  `
   
-*（3）编写Spark Streaming程序
+* （ 3）编写Spark Streaming程序
+
+``` scala
+package cn.hzh.streaming
+
+import org.apache.spark.streaming.dstream.{DStream, ReceiverInputDStream}
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.{SparkConf, SparkContext}
+
+/**
+  * sparkStreming流式处理接受socket数据，实现单词统计
+  */
+object SparkStreamingTCP {
+
+  def main(args: Array[String]): Unit = {
+    //配置sparkConf参数 设置master的lcoal[N] N必须大于 1 一个线程负责接收数据,其他线程处理数据
+    val sparkConf: SparkConf = new SparkConf().setAppName("SparkStreamingTCP").setMaster("local[2]")
+    //构建sparkContext对象
+    val sc: SparkContext = new SparkContext(sparkConf)
+    //设置日志输出级别
+    sc.setLogLevel("WARN")
+    //构建StreamingContext对象，每个批处理的时间间隔
+    val scc: StreamingContext = new StreamingContext(sc, Seconds(5))
+    //注册一个监听的IP地址和端口  用来收集数据
+    val lines: ReceiverInputDStream[String] = scc.socketTextStream("192.168.168.121", 9999)
+    //切分每一行记录
+    //flatmap()是将函数应用于RDD中的每个元素，将返回的迭代器的所有内容构成新的RDD,
+    val words: DStream[String] = lines.flatMap(_.split(" "))
+    //每个单词记为1
+    val wordAndOne: DStream[(String, Int)] = words.map((_, 1))
+    //分组聚合
+    val result: DStream[(String, Int)] = wordAndOne.reduceByKey(_ + _)
+    //打印数据
+    result.print()
+    scc.start()
+    scc.awaitTermination()
+  }
+}
+```
 
 
 ## 6.	Spark Streaming整合flume实战
