@@ -53,11 +53,12 @@ RDD的优缺点： <br>
     
 DataFrame通过引入schema和off-heap（不在堆里面的内存，指的是除了不在堆的内存，使用操作系统上的内存），解决了RDD的缺点, Spark通过schame就能够读懂数据, 因此在通信和IO时就只需要序列化和反序列化数据, 而结构的部分就可以省略了；通过off-heap引入，可以快速的操作数据，避免大量的GC。但是却丢了RDD的优点，DataFrame不是类型安全的, API也不是面向对象风格的。
 
-### 2.3 读取数据源创建DataFrame
+### 2.3  读取数据源创建DataFrame
 
 在spark2.0版本之前，Spark SQL中SQLContext是创建DataFrame和执行SQL的入口，可以利用hiveContext通过hive sql语句操作hive表数据，兼容hive操作，并且hiveContext继承自SQLContext。在spark2.0之后，这些都统一于SparkSession，SparkSession 封装了 SparkContext，SqlContext，通过SparkSession可以获取到SparkConetxt,SqlContext对象。
 
-``` 
+#### 2.3.1 读取text文件
+```  scala 
 scala> val rdd1 = sc.textFile("/user/spark/people.txt").map(_.split(" "))
 rdd1: org.apache.spark.rdd.RDD[Array[String]] = MapPartitionsRDD[2] at map at <console>:24
 
@@ -96,7 +97,7 @@ root
  
 * 通过SparkSession构建DataFrame,使用spark-shell中已经初始化好的SparkSession对象spark生成DataFrame
 
-``` 
+```  scala 
 scala> spark.read.text("/user/spark/people.txt")
 res5: org.apache.spark.sql.DataFrame = [value: string]
 
@@ -117,11 +118,95 @@ root
  |-- value: string (nullable = true)
 
 ``` 
+#### 2.3.2  读取json文件创建DataFrame
+
+``` scala 
+scala> val df1 = spark.read.json("file:///export/server/spark/examples/src/main/resources/people.json")
+df1: org.apache.spark.sql.DataFrame = [age: bigint, name: string]
+
+scala> df1.show
++----+-------+
+| age|   name|
++----+-------+
+|null|Michael|
+|  30|   Andy|
+|  19| Justin|
++----+-------+
 
 
+scala> df1.printSchema
+root
+ |-- age: long (nullable = true)
+ |-- name: string (nullable = true)
+
+``` 
+
+#### 2.3.3 读取parquet列式存储格式文件创建DataFrame
+
+``` scala
+
+scala> val df2 = spark.read.parquet("file:///export/server/spark/examples/src/main/resources/users.parquet")
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+df2: org.apache.spark.sql.DataFrame = [name: string, favorite_color: string ... 1 more field]
 
 
+scala> df2.show
+18/09/18 14:35:46 WARN hadoop.ParquetRecordReader: Can not initialize counter due to context is not a instance of TaskInputOutputContext, but is org.apache.hadoop.mapreduce.task.TaskAttemptContextImpl
++------+--------------+----------------+
+|  name|favorite_color|favorite_numbers|
++------+--------------+----------------+
+|Alyssa|          null|  [3, 9, 15, 20]|
+|   Ben|           red|              []|
++------+--------------+----------------+
 
+
+scala> df2.printSchema
+root
+ |-- name: string (nullable = true)
+ |-- favorite_color: string (nullable = true)
+ |-- favorite_numbers: array (nullable = true)
+ |    |-- element: integer (containsNull = true)
+
+```
+
+
+## 3 DataFrame常用操作
+
+### 3.1 DSL风格语法
+
+DataFrame提供了一个领域特定语言(DSL)来操作结构化数据。
+
+* 拿到某一列的值
+
+``` scala
+scala> peopleDF.select("name").show
++--------+
+|    name|
++--------+
+|zhangsan|
+|    lisi|
+|   dabai|
+| xiaobai|
+|  wangwu|
+|     top|
++--------+
+
+
+scala> peopleDF.select("name","age").show
++--------+---+
+|    name|age|
++--------+---+
+|zhangsan| 20|
+|    lisi| 56|
+|   dabai| 34|
+| xiaobai| 45|
+|  wangwu| 21|
+|     top|  1|
++--------+---+
+
+```
 
 
 
