@@ -35,6 +35,92 @@ DataFrame的前身是SchemaRDD，从Spark 1.3.0开始SchemaRDD更名为DataFrame
 Source 中构造出来，像 : 结构化的数据文件，Hive 中的表，外部的数据库，或者已存在的 RDD。DataFrame API 在 Scala，Java，Python 和 R 中是可用的。
 在 Scala 和 Java 中，一个 DataFrame 所代表的是一个多个 Row（行）的 Dataset。在 Scala API 中，DataFrame 仅仅是一个 Dataset[Row] 类型的别名 。
 然而，在 Java API 中，用户需要去使用 Dataset<Row> 来表示 DataFrame。
+  
+  
+### 2.2 DataFrame与RDD的优缺点
+
+RDD的优缺点： <br>
+优点: <br>
+（1）编译时类型安全  <br>
+		编译时就能检查出类型错误 <br>
+（2）面向对象的编程风格  <br>
+		直接通过对象调用方法的形式来操作数据<br>
+缺点:<br>
+（1）序列化和反序列化的性能开销 <br>
+		无论是集群间的通信, 还是IO操作都需要对对象的结构和数据进行序列化和反序列化。<br>
+（2）GC的性能开销 <br>
+		频繁的创建和销毁对象, 势必会增加GC<br>
+    
+DataFrame通过引入schema和off-heap（不在堆里面的内存，指的是除了不在堆的内存，使用操作系统上的内存），解决了RDD的缺点, Spark通过schame就能够读懂数据, 因此在通信和IO时就只需要序列化和反序列化数据, 而结构的部分就可以省略了；通过off-heap引入，可以快速的操作数据，避免大量的GC。但是却丢了RDD的优点，DataFrame不是类型安全的, API也不是面向对象风格的。
+
+### 2.3 读取数据源创建DataFrame
+
+在spark2.0版本之前，Spark SQL中SQLContext是创建DataFrame和执行SQL的入口，可以利用hiveContext通过hive sql语句操作hive表数据，兼容hive操作，并且hiveContext继承自SQLContext。在spark2.0之后，这些都统一于SparkSession，SparkSession 封装了 SparkContext，SqlContext，通过SparkSession可以获取到SparkConetxt,SqlContext对象。
+
+``` 
+scala> val rdd1 = sc.textFile("/user/spark/people.txt").map(_.split(" "))
+rdd1: org.apache.spark.rdd.RDD[Array[String]] = MapPartitionsRDD[2] at map at <console>:24
+
+scala> case class people(id:Int,name:String,age:Int)
+defined class people
+
+scala> val peopleRDD = rdd1.map(x => people(x(0).toInt,x(1),x(2).toInt))
+peopleRDD: org.apache.spark.rdd.RDD[people] = MapPartitionsRDD[3] at map at <console>:28
+
+scala> val peopleDF = peopleRDD.toDF
+peopleDF: org.apache.spark.sql.DataFrame = [id: int, name: string ... 1 more field]
+
+scala> peopleDF.collect
+res1: Array[org.apache.spark.sql.Row] = Array([1,zhangsan,20], [2,lisi,56], [3,dabai,34], [4,xiaobai,45], [5,wangwu,21], [6,top,1])
+
+scala> peopleDF.show
++---+--------+---+
+| id|    name|age|
++---+--------+---+
+|  1|zhangsan| 20|
+|  2|    lisi| 56|
+|  3|   dabai| 34|
+|  4| xiaobai| 45|
+|  5|  wangwu| 21|
+|  6|     top|  1|
++---+--------+---+
+
+scala> peopleDF.printSchema
+root
+ |-- id: integer (nullable = true)
+ |-- name: string (nullable = true)
+ |-- age: integer (nullable = true)
+ 
+ ``` 
+ 
+ 
+* 通过SparkSession构建DataFrame,使用spark-shell中已经初始化好的SparkSession对象spark生成DataFrame
+
+``` 
+scala> spark.read.text("/user/spark/people.txt")
+res5: org.apache.spark.sql.DataFrame = [value: string]
+
+scala> res5.show
++-------------+
+|        value|
++-------------+
+|1 zhangsan 20|
+|    2 lisi 56|
+|   3 dabai 34|
+| 4 xiaobai 45|
+|  5 wangwu 21|
+|      6 top 1|
++-------------+                 
+
+scala> res5.printSchema
+root
+ |-- value: string (nullable = true)
+
+``` 
+
+
+
+
 
 
 
