@@ -383,6 +383,11 @@ Spark官网提供了两种方法来实现从RDD转换得到DataFrame，第一种
 首先在maven项目的pom.xml中添加Spark SQL的依赖。
 
 ``` xml
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_2.11</artifactId>
+      <version>2.0.2</version>
+    </dependency>
 <dependency>
     <groupId>org.apache.spark</groupId>
     <artifactId>spark-sql_2.11</artifactId>
@@ -390,6 +395,252 @@ Spark官网提供了两种方法来实现从RDD转换得到DataFrame，第一种
 </dependency>
 ```
 
-### 5.2 
+### 5.2 通过反射推断Schema
+
+Scala支持使用case class类型导入RDD转换为DataFrame，通过case class创建schema，case class的参数名称会被利用反射机制作为列名。这种RDD可以高效的转换为DataFrame并注册为表。
+
+``` scala
+package cn.itcast.sql
+
+import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.{Column, DataFrame, SparkSession}
+
+//todo:将rdd转换为DataFrame,利用反射机制---case class样例类
+//定义一个样例类
+case class Person(id:Int,name:String,age:Int)
+object CaseClassSchema {
+  def main(args: Array[String]): Unit = {
+    //1、创建sparkSession
+    val spark: SparkSession = SparkSession.builder().appName("CaseClassSchema").master("local[2]").getOrCreate()
+    //2、获取sparkContext对象
+    val sc: SparkContext = spark.sparkContext
+    sc.setLogLevel("WARN")
+    //3、通过sparkContext读取数据文件
+    val data: RDD[String] = sc.textFile("D:\\wordcount\\input\\people.txt")
+    //4、切分每一行
+    val linesArrayRDD: RDD[Array[String]] = data.map(_.split(" "))
+    //5、可以将linesArrayRDD跟样例类关联
+    val personRDD: RDD[Person] = linesArrayRDD.map(x =>Person(x(0).toInt,x(1),x(2).toInt))
+    //6、将personRDD转化为DataFrame
+    //手动导入隐式转换
+    import spark.implicits._
+    val personDF: DataFrame = personRDD.toDF
+
+    //---------------------DSL语法操作---------------start
+    //打印dataframe中的schema信息
+    personDF.printSchema()
+    //打印dataframe中的数据
+    personDF.show()
+    //获取dataframe中的第一条记录
+    println(personDF.head())
+    //打印dataframe中的总记录数
+    println(personDF.count())
+    //打印dataframe中所有的字段名称
+    personDF.columns.foreach(x=>println(x))
+    //获取对应的name字段结果
+    personDF.select("name").show()
+    //获取对应的name字段结果
+    personDF.select($"name").show()
+    //获取对应的age字段结果
+    personDF.select(new Column("age")).show()
+    //把所有age字段的结果+1
+    personDF.select($"id",$"name",$"age",$"age"+1).show()
+    //过滤出age大于30的记录
+    personDF.filter($"age" >30).show()
+    println(personDF.filter($"age" >30).count())
+    //按照对应的age进行分组，统计每一个年龄出现的次数
+    personDF.sort("age").groupBy("age").count().show()
+    //---------------------DSL语法操作---------------end
+
+    //---------------------SQL语法操作---------------start
+    //需要将dataFrame注册成一张表
+    personDF.createTempView("t_person")
+
+    //通过sparkSession来操作sql语句
+    spark.sql("select * from t_person").show()
+
+    spark.sql("select * from t_person where id =1").show()
+
+    spark.sql("select * from t_person order by age desc").show()
+    //---------------------SQL语法操作---------------end
+    //关闭
+    sc.stop()
+    spark.stop()
+
+
+  }
+}
+
+``` 
+
+### 5.3   通过StructType直接指定Schema
+当case class不能提前定义好时，可以通过以下三步创建DataFrame
+
+（1）将RDD转为包含Row对象的RDD
+
+（2）基于StructType类型创建schema，与第一步创建的RDD相匹配
+
+（3）通过sparkSession的createDataFrame方法对第一步的RDD应用schema创建DataFrame
+
+
+``` scala
+package cn.hzh.sql
+
+import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
+import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
+
+/**
+  * Created by Asus on 2018/9/18.
+  */
+object SparkSqlSchema {
+
+  def main(args: Array[String]): Unit = {
+    // 1 创建sparkSession
+    val spark: SparkSession = SparkSession.builder().appName("SparkSqlSchema").master("local[2]")
+        .getOrCreate()
+    // 2 获取SparkContext
+    val sc: SparkContext = spark.sparkContext
+        sc.setLogLevel("WARN")
+    // 3 读取目标文件
+    val rdd: RDD[String] = sc.textFile("D:\\wordcount\\input\\people.txt")
+    // 4 切割每一行
+    val lineData = rdd.map(_.split(" "))
+    // 5 将lineData与Row进行关联
+    val row: RDD[Row] = lineData.map(x => Row(x(0).toInt, x(1), x(2).toInt))
+    // 6 通过structType指定Schema
+    val structType = StructType(
+          StructField("id", IntegerType, true) ::
+          StructField("name", StringType, false) ::
+          StructField("age", IntegerType, false) :: Nil
+    )
+    // 7 通过使用sparkSession来调用createDataFrame生成DataFrame
+    val dataFrame: DataFrame = spark.createDataFrame(row,structType)
+
+    dataFrame.printSchema()
+
+    dataFrame.show()
+
+    // sql语法操作
+    dataFrame.createTempView("t_people")
+
+    spark.sql("select * from t_people").show()
+    spark.sql("select * from t_people where age > 25").show
+    spark.sql("select * from t_people order by age desc").show
+    
+    sc.stop()
+    spark.stop()
+  }
+}
+
+``` 
+
+### 5.4 编写Spark SQL程序操作HiveContext
+
+HiveContext是对应spark-hive这个项目,与hive有部分耦合, 支持hql,是SqlContext的子类，在Spark2.0之后，HiveContext和SqlContext在SparkSession进行了统一，可以通过操作SparkSession来操作HiveContext和SqlContext。
+
+``` scala
+package cn.hzh.sql
+
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.SparkContext
+
+// todo 利用sparksql操作hivesql
+object HiveSupport {
+
+  def main(args: Array[String]): Unit = {
+    // 1 创建SparkSession
+    val spark: SparkSession = SparkSession.builder()
+        .appName("HiveSupport")
+        .master("local[2]")
+        .enableHiveSupport() //开启对hive的支持
+        //  spark.sql.warehouse.dir 来指定仓库中数据库的默认存储位置
+        .config("spark.sql.warehouse.dir", "d:\\spark-warehouse")
+        .getOrCreate()
+    // 2 获取SparkContext
+    val sc: SparkContext = spark.sparkContext
+    sc.setLogLevel("WARN")
+    // 3  通过SparkSession操作hivesql
+//    spark.sql("create table if not exists student(id int,name string,age int)" +
+//        "row format delimited fields terminated by ','"
+//    )
+
+    // 4 加载数据到hive表里
+    //   spark.sql("load data local inpath 'spark-wordCount/data/student.txt' into table student")
+
+    // 5 查询表的结果spark-wordCount/data/student.txt
+    spark.sql("select * from student").show()
+
+    sc.stop()
+    spark.stop()
+  }
+}
+
+```
+
+## 6 四、 数据源
+
+### 6.1 JDBC
+
+Spark SQL可以通过JDBC从关系型数据库中读取数据的方式创建DataFrame，通过对DataFrame一系列的计算后，还可以将数据再写回关系型数据库中。
+
+#### 6.1.1  SparkSql从MySQL中加载数据
+
+``` xml
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.38</version>
+    </dependency>
+```
+
+``` scala
+package cn.hzh.sql
+
+import java.util.Properties
+
+import org.apache.spark.sql.{DataFrame, SparkSession}
+
+
+// todo 利用sparksql从mysql中加载数据
+object DataFromMysql {
+
+  def main(args: Array[String]): Unit = {
+    // 1 创建SparkSession
+   val spark =  SparkSession.builder().appName("DataFromMysql")
+        .master("local[2]")
+        .getOrCreate()
+
+    // 2 通过sparkSession获取mysql表中的数据
+    // 准备配置属性
+     val properties = new Properties()
+    properties.setProperty("user","root")
+    properties.setProperty("password","123456")
+
+
+    val dataFrame: DataFrame = spark.read.jdbc("jdbc:mysql://192.168.168.121:3306/userdb","emp_add",properties)
+
+    dataFrame.show()
+
+    dataFrame.printSchema()
+
+    dataFrame.createTempView("emp_add")
+
+    spark.sql("select * from emp_add where id >= 1203").show
+
+    //spark.sql("select * from emp_add where id >= 1203").show
+
+    spark.stop()
+
+  }
+}
+
+```
+### 6.1.2 通过spark-shell运行
+
+
+
 
 
