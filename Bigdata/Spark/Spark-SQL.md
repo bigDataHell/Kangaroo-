@@ -638,7 +638,67 @@ object DataFromMysql {
 }
 
 ```
+
+* 另一种方式
+``` scala
+package cn.hzh.sql
+
+import java.util.Properties
+
+import org.apache.spark.sql.{DataFrame, SparkSession}
+
+
+// todo 利用sparksql从mysql中加载数据
+object DataFromMysql {
+
+  def main(args: Array[String]): Unit = {
+    // 1 创建SparkSession
+   val spark =  SparkSession.builder().appName("DataFromMysql")
+        .master("local[2]")
+        .getOrCreate()
+
+    val jdbcDF = spark.read
+        .format("jdbc")
+        .option("url", "jdbc:mysql://192.168.168.121:3306/userdb")
+        .option("dbtable", "emp_add")
+        .option("user", "root")
+        .option("password", "123456")
+        .load()
+
+    jdbcDF.show()
+
+    jdbcDF.printSchema()
+
+    jdbcDF.createTempView("emp_add")
+
+    spark.sql("select * from emp_add where id >= 1203").show
+
+    //spark.sql("select * from emp_add where id >= 1203").show
+
+    spark.stop()
+
+  }
+}
+
+``` 
 ### 6.1.2 通过spark-shell运行
+
+* （1）、启动spark-shell(必须指定mysql的连接驱动包)
+
+``` 
+spark-shell \
+--master spark://hadoop-node-1:7077 \
+--executor-memory 1g \
+--total-executor-cores  2 \
+--jars /export/server/hive/lib/mysql-connector-java-5.1.35.jar \
+--driver-class-path /export/server/hive/lib/mysql-connector-java-5.1.35.jar 
+``` 
+
+* （2）、从mysql中加载数据
+
+`val mysqlDF = spark.read.format("jdbc").options(Map("url" -> "jdbc:mysql://192.168.168.121:3306/userdb", "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "emp_add", "user" -> "root", "password" -> "123456")).load()`
+
+## 7 SparkSql将数据写入到MySQL中
 
 
 
