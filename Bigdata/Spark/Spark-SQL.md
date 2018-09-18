@@ -290,5 +290,106 @@ scala> spark.sql("select * from t_people").show
 |  6|     top|  1|
 +---+--------+---+
 ```
+## 4 DateSet 
+
+### 4.1 什么是DataSet
+
+DataSet是分布式的数据集合，Dataset提供了强类型支持，也是在RDD的每行数据加了类型约束。DataSet是在Spark1.6中添加的新的接口。它集中了RDD的优点（强类型和可以用强大lambda函数）以及使用了Spark SQL优化的执行引擎。DataSet可以通过JVM的对象进行构建，可以用函数式的转换（map/flatmap/filter）进行多种操作。
+
+DataSet包含了DataFrame的功能，Spark2.0中两者统一，DataFrame表示为DataSet[Row]，即DataSet的子集。 <br>
+（1）DataSet可以在编译时检查类型 <br>
+（2）并且是面向对象的编程接口 <br>
+相比DataFrame，Dataset提供了编译时类型检查，对于分布式程序来讲，提交一次作业太费劲了（要编译、打包、上传、运行），到提交到集群运行时才发现错误，这会浪费大量的时间，这也是引入Dataset的一个重要原因。
+
+### 4.2 DataSet 与 DateFrame之间的转换
+
+DataFrame和DataSet可以相互转化。
+
+* （1）DataFrame转为 DataSet
+
+`df.as[ElementType]` 这样可以把DataFrame转化为DataSet。
+
+``` scala
+scala> case class People(age:Long,name:String)
+defined class People
+
+scala> val df2 = df.as[People]
+df2: org.apache.spark.sql.Dataset[People] = [age: bigint, name: string]
+
+scala> df2.show
++----+-------+
+| age|   name|
++----+-------+
+|null|Michael|
+|  30|   Andy|
+|  19| Justin|
++----+-------+
+
+```
+
+* （2）DataSet转为DataFrame 
+
+`ds.toDF()` 这样可以把DataSet转化为DataFrame。
+
+### 4.3 创建DateSet
+
+* （1）通过spark.createDataset创建
+``` scala
+scala> val ds1 = spark.createDataset(sc.textFile("/user/spark//people.txt"))
+ds1: org.apache.spark.sql.Dataset[String] = [value: string]
+
+scala> ds1.show
++-------------+
+|        value|
++-------------+
+|1 zhangsan 20|
+|    2 lisi 56|
+|   3 dabai 34|
+| 4 xiaobai 45|
+|  5 wangwu 21|
+|      6 top 1|
++-------------+
+```
+
+* （2）通toDS方法生成DataSet
+``` scala
+scala> case class People(name:String,age:Long)
+defined class People
+
+scala> val data = List(People("zhansan",13),People("lisi",34))
+data: List[People] = List(People(zhansan,13), People(lisi,34))
+
+scala> val dataset = data.toDS
+dataset: org.apache.spark.sql.Dataset[People] = [name: string, age: bigint]
+
+scala> dataset.show
++-------+---+
+|   name|age|
++-------+---+
+|zhansan| 13|
+|   lisi| 34|
++-------+---+
+```
+* （3）通过DataFrame转化生成
+
+## 5 以编程方式执行Spark SQL查询
+
+### 5.1． 编写Spark SQL程序实现RDD转换成DataFrame
+
+前面我们学习了如何在Spark Shell中使用SQL完成查询，现在我们通过IDEA编写Spark SQL查询程序。
+
+Spark官网提供了两种方法来实现从RDD转换得到DataFrame，第一种方法是利用反射机制，推导包含某种类型的RDD，通过反射将其转换为指定类型的DataFrame，适用于提前知道RDD的schema。第二种方法通过编程接口与RDD进行交互获取schema，并动态创建DataFrame，在运行时决定列及其类型。
+
+首先在maven项目的pom.xml中添加Spark SQL的依赖。
+
+``` xml
+<dependency>
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-sql_2.11</artifactId>
+    <version>2.0.2</version>
+</dependency>
+```
+
+### 5.2 
 
 
