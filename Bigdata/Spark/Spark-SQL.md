@@ -700,6 +700,138 @@ spark-shell \
 
 ## 7 SparkSql将数据写入到MySQL中
 
+``` scala
+package cn.hzh.sql
+
+import org.apache.spark.sql.SparkSession
+import java.util.Properties
+
+case class People(id: Int, name: String, age: Int)
+
+// todo  使用sparkSession将数据写入mysql中
+object DataToMysql {
+
+  def main(args: Array[String]): Unit = {
+
+    // 1 创建SparkSession
+    val spark = SparkSession.builder().appName("DataToMysql")
+        .master("local[2]")
+        .getOrCreate()
+    // 2
+    val sc = spark.sparkContext
+    sc.setLogLevel("WARN")
+    // 3
+    val rdd = sc.textFile("D:\\wordcount\\input\\people.txt")
+    // 4
+    val lineArrayData = rdd.map(x => x.split(" "))
+    // 5
+    val peopleRDD = lineArrayData.map(x => People(x(0).toInt, x(1), x(2).toInt))
+    // 6
+    // 导包
+    import spark.implicits._
+    val dataFarme = peopleRDD.toDF
+
+    // 7 注册为表
+    dataFarme.createTempView("people")
+
+    val resultDF = spark.sql("select * from people order by age desc")
+
+    // 8 将resultDF写入到mysql中
+
+    val properties = new Properties()
+    properties.setProperty("user", "root")
+    properties.setProperty("password", "123456")
+
+    //resultDF.write.jdbc("jdbc:mysql://192.168.168.121:3306/userdb","people",properties)
+    //mode需要对应4个参数
+    //overwrite:覆盖（它会帮你创建一个表，然后进行覆盖）
+    //append:追加（它会帮你创建一个表，然后把数据追加到表里面）
+    //ignore:忽略（它表示只要当前表存在，它就不会进行任何操作）
+    //ErrorIfExists:只要表存在就报错（默认选项）
+    resultDF.write.mode("append").jdbc("jdbc:mysql://192.168.168.121:3306/userdb", "people", properties)
+
+    sc.stop()
+    spark.stop()
+
+  }
+}
+``` 
+
+## 8 用maven将程序打包
+
+通过IDEA工具打包即可
+
+``` scala
+package cn.hzh.sql
+
+import org.apache.spark.sql.SparkSession
+import java.util.Properties
+
+case class People(id: Int, name: String, age: Int)
+
+// todo  使用sparkSession将数据写入mysql中
+object DataToMysql {
+
+  def main(args: Array[String]): Unit = {
+
+    // 1 创建SparkSession
+    val spark = SparkSession.builder().appName("DataToMysql")
+        .getOrCreate()
+    // 2
+    val sc = spark.sparkContext
+    sc.setLogLevel("WARN")
+    // 3
+    val rdd = sc.textFile(args(0))
+    // 4
+    val lineArrayData = rdd.map(x => x.split(" "))
+    // 5
+    val peopleRDD = lineArrayData.map(x => People(x(0).toInt, x(1), x(2).toInt))
+    // 6
+    // 导包
+    import spark.implicits._
+    val dataFarme = peopleRDD.toDF
+
+    // 7 注册为表
+    dataFarme.createTempView("people")
+
+    val resultDF = spark.sql("select * from people order by age desc")
+
+    // 8 将resultDF写入到mysql中
+
+    val properties = new Properties()
+    properties.setProperty("user", "root")
+    properties.setProperty("password", "123456")
+
+    //resultDF.write.jdbc("jdbc:mysql://192.168.168.121:3306/userdb","people",properties)
+    //mode需要对应4个参数
+    //overwrite:覆盖（它会帮你创建一个表，然后进行覆盖）
+    //append:追加（它会帮你创建一个表，然后把数据追加到表里面）
+    //ignore:忽略（它表示只要当前表存在，它就不会进行任何操作）
+    //ErrorIfExists:只要表存在就报错（默认选项）
+    resultDF.write.mode("overwrite").jdbc("jdbc:mysql://192.168.168.121:3306/userdb", args(1), properties)
+
+    sc.stop()
+    spark.stop()
+
+  }
+}
+
+``` 
+
+* 1 打包 
+
+* 2 把jar包上传到 `/export/server/spark/myjar`
+
+* 3 
+``` sql
+spark-submit --master spark://hadoop-node-1:7077 \
+--class cn.hzh.sql.DataToMysql \
+--executor-memory 1g \
+--total-executor-cores 2 \
+--jars  /export/server/hive/lib/mysql-connector-java-5.1.38.jar \
+--driver-class-path  /export/server/hive/lib/mysql-connector-java-5.1.38.jar  \
+/export/server/spark/myjar/spark-wordCount-1.0-SNAPSHOT-ToMysql.jar /user/spark/people.txt  qq
+``` 
 
 
 
