@@ -208,5 +208,87 @@ scala> peopleDF.select("name","age").show
 
 ```
 
+* 查询所有的name和age，并将age+1
+
+``` scala
+scala> peopleDF.select($"name",$"age"+1).show
++--------+---------+
+|    name|(age + 1)|
++--------+---------+
+|zhangsan|       21|
+|    lisi|       57|
+|   dabai|       35|
+| xiaobai|       46|
+|  wangwu|       22|
+|     top|        2|
++--------+---------+
+```
+* 过滤age大于等于25的，使用filter方法过滤
+``` scala 
+scala> peopleDF.filter($"age" > 25)
+res23: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] = [id: int, name: string ... 1 more field]
+
+scala> res23.show
++---+-------+---+
+| id|   name|age|
++---+-------+---+
+|  2|   lisi| 56|
+|  3|  dabai| 34|
+|  4|xiaobai| 45|
++---+-------+---+
+
+```
+
+* 统计年龄大于25的人数
+
+``` scala
+scala> peopleDF.filter($"age" > 25).count
+res25: Long = 3
+```
+* 按年龄进行分组并统计相同年龄的人数
+
+``` scala
+scala> peopleDF.sort("age").groupBy("age").count.show
++---+-----+                                                                     
+|age|count|
++---+-----+
+|  1|    1|
+| 20|    1|
+| 21|    1|
+| 34|    1|
+| 45|    1|
+| 56|    1|
++---+-----+
+
+```
+### 3.2 sql风格的语法
+
+DataFrame的一个强大之处就是我们可以将它看作是一个关系型数据表，然后可以通过在程序中使用spark.sql() 来执行SQL语句查询，结果返回一个DataFrame。
+如果想使用SQL风格的语法，需要将DataFrame注册成表,采用如下的方式：
+
+`personDF.registerTempTable("t_person")`
+
+
+``` scala 
+
+scala> peopleDF.registerTempTable("t_people")
+warning: there was one deprecation warning; re-run with -deprecation for details
+
+scala> 
+scala> spark.sql("select * from t_people")
+res32: org.apache.spark.sql.DataFrame = [id: int, name: string ... 1 more field]
+
+scala> spark.sql("select * from t_people").show
++---+--------+---+
+| id|    name|age|
++---+--------+---+
+|  1|zhangsan| 20|
+|  2|    lisi| 56|
+|  3|   dabai| 34|
+|  4| xiaobai| 45|
+|  5|  wangwu| 21|
+|  6|     top|  1|
++---+--------+---+
+```
 
 
