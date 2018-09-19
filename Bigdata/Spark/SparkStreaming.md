@@ -319,10 +319,180 @@ object Test {
 
 ```
 
-
-
-
-
 ## 6.	Spark Streaming整合flume实战
+
+flume作为日志实时采集的框架，可以与SparkStreaming实时处理框架进行对接，flume实时产生数据，sparkStreaming做实时处理。
+Spark Streaming对接FlumeNG有两种方式，一种是FlumeNG将消息Push推给Spark Streaming，还有一种是Spark Streaming从flume 中Poll拉取数据。
+
+#### 6.1 Poll方式 实际采用
+
+* （1）安装flume1.6以上
+
+* （2）下载依赖包
+
+spark-streaming-flume-sink_2.11-2.0.2.jar放入到flume的lib目录下
+
+* （3）修改flume/lib下的scala依赖包版本
+
+从spark安装目录的jars文件夹下找到scala-library-2.11.8.jar 包，替换掉flume的lib目录下自带的scala-library-2.10.1.jar。
+
+* （4）写flume的agent，注意既然是拉取的方式，那么flume向自己所在的机器上产数据就行
+
+* （5）编写flume-poll.conf配置文件
+
+``` 
+a1.sources = r1
+a1.sinks = k1
+a1.channels = c1
+
+#source
+a1.sources.r1.channels = c1
+a1.sources.r1.type = spooldir
+a1.sources.r1.spoolDir = /root/data
+a1.sources.r1.fileHeader = true
+
+
+#channel
+a1.channels.c1.type =memory
+a1.channels.c1.capacity = 20000
+a1.channels.c1.transactionCapacity=5000
+
+
+#sinks
+a1.sinks.k1.channel = c1
+a1.sinks.k1.type = org.apache.spark.streaming.flume.sink.SparkSink
+a1.sinks.k1.hostname=hadoop-node-1
+a1.sinks.k1.port = 8888
+a1.sinks.k1.batchSize= 2000
+
+``` 
+* (6) 启动flume
+
+`flume-ng agent -n a1 -c /export/server/flume/conf -f /export/server/flume/conf/flume-poll-spark.conf -Dflume.root.logger=INFO,console`
+
+* (7) 代码实现
+
+```
+<dependency>
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-streaming-flume_2.11</artifactId>
+    <version>2.0.2</version>
+</dependency>
+
+```
+
+``` scala
+object SparkStreamingPollFlume {
+
+  def updataFunc(currentValues: Seq[Int], historyValues: Option[Int]): Option[Int] = {
+    val newValues = currentValues.sum + historyValues.getOrElse(0)
+    Some(newValues)
+  }
+
+  def main(args: Array[String]): Unit = {
+
+    // 1 创建sparkConf
+    val sparkConf = new SparkConf().setAppName("SparkStreamingPollFlumes").setMaster("local[2]")
+    // 2 创建SparkContext
+    val sc = new SparkContext(sparkConf)
+    sc.setLogLevel("WARN")
+    // 3 创建StreamingContext
+    val streamingContext = new StreamingContext(sc, Seconds(5))
+    streamingContext.checkpoint("./flume")
+    //4、通过FlumeUtils调用createPollingStream方法获取flume中的数据
+    val pollingStream: ReceiverInputDStream[SparkFlumeEvent] = FlumeUtils
+        .createPollingStream(streamingContext, "192.168.168.121", 8888)
+    // 5 获取flume中even的body {"headers":xxxxxx,"body":xxxxx}
+    val data: DStream[String] = pollingStream.map(x => new String(x.event.getBody.array()))
+    // 6 切分每一行,每个单词记为1
+    val words = data.flatMap(_.split(" ")).map((_, 1))
+    // 7 相同单词出现次数累加
+    val result: DStream[(String, Int)] = words.updateStateByKey(updataFunc)
+
+    result.print()
+
+    streamingContext.start()
+    streamingContext.awaitTermination()
+  }
+}
+```
+
+#### 6.2 Push方式
+
+* （1）编写flume-push.conf配置文件
+
+```
+#push mode
+a1.sources = r1
+a1.sinks = k1
+a1.channels = c1
+#source
+a1.sources.r1.channels = c1
+a1.sources.r1.type = spooldir
+a1.sources.r1.spoolDir = /root/data
+a1.sources.r1.fileHeader = true
+#channel
+a1.channels.c1.type =memory
+a1.channels.c1.capacity = 20000
+a1.channels.c1.transactionCapacity=5000
+#sinks
+a1.sinks.k1.channel = c1
+a1.sinks.k1.type = avro
+a1.sinks.k1.hostname=192.168.30.35
+a1.sinks.k1.port = 8888
+a1.sinks.k1.batchSize= 2000                    
+```
+
+__注意配置文件中指明的hostname和port是spark应用程序所在服务器的ip地址和端口。__
+
+* （2）代码实现如下：
+``` scala
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.dstream.{DStream, ReceiverInputDStream}
+import org.apache.spark.streaming.flume.{FlumeUtils, SparkFlumeEvent}
+import org.apache.spark.storage.StorageLevel
+
+/**
+  * Created by Asus on 2018/9/19.
+  */
+object SparkStreamingPushFlume {
+
+  def updataFunc(currentValues: Seq[Int], historyValues: Option[Int]): Option[Int] = {
+    val newValues = currentValues.sum + historyValues.getOrElse(0)
+    Some(newValues)
+  }
+
+  def main(args: Array[String]): Unit = {
+    // 1 创建sparkConf
+    val sparkConf = new SparkConf().setAppName("SparkStreamingPushFlume").setMaster("local[2]")
+    // 2 创建SparkContext
+    val sc = new SparkContext(sparkConf)
+    sc.setLogLevel("WARN")
+    // 3 创建StreamingContext
+    val streamingContext = new StreamingContext(sc, Seconds(5))
+    streamingContext.checkpoint("./flume")
+    //4、通过FlumeUtils调用createPollingStream方法获取flume中的数据
+    val pushingStream: ReceiverInputDStream[SparkFlumeEvent] = FlumeUtils
+        .createStream(streamingContext, "192.168.30.35", 9999, StorageLevel.MEMORY_AND_DISK_2)
+    // 5 获取flume中even的body {"headers":xxxxxx,"body":xxxxx}
+    val data: DStream[String] = pushingStream.map(x => new String(x.event.getBody.array()))
+    // 6 切分每一行,每个单词记为1
+    val words = data.flatMap(_.split(" ")).map((_, 1))
+    // 7 相同单词出现次数累加
+    val result: DStream[(String, Int)] = words.updateStateByKey(updataFunc)
+
+    result.print()
+
+    streamingContext.start()
+    streamingContext.awaitTermination()
+  }
+}
+```
+
+* 3 先执行Spark代码
+
+* 4 启动flume
+`lume-ng agent -n a1 -c /export/server/flume/conf -f /export/server/flume/conf/flume-push-spark.conf -Dflume.root.logger=INFO,console `
 
 ## 7.	Spark Streaming整合kafka实战
