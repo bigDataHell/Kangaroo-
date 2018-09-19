@@ -236,7 +236,7 @@ object SparkStreamingTCPTotal {
 
 #### 5.3 SparkStreaming开窗函数reduceByKeyAndWindow，实现单词计数
 
-![02](https://github.com/bigDataHell/Kangaroo-/blob/master/images/sparkStreaming02.png)
+  ![02](https://github.com/bigDataHell/Kangaroo-/blob/master/images/sparkStreaming02.png)
 
 * 代码实现
 
@@ -277,6 +277,7 @@ object SparkStreamingTCPWindow {
 ```
 
 #### 5.4 SparkStreaming开窗函数统计一定时间内的热门词汇
+
 * 代码实现
 
 ``` scala
