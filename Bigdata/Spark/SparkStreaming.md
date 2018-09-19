@@ -493,6 +493,225 @@ object SparkStreamingPushFlume {
 * 3 先执行Spark代码
 
 * 4 启动flume
+
 `lume-ng agent -n a1 -c /export/server/flume/conf -f /export/server/flume/conf/flume-push-spark.conf -Dflume.root.logger=INFO,console `
 
 ## 7.	Spark Streaming整合kafka实战
+
+kafka作为一个实时的分布式消息队列，实时的生产和消费消息，这里我们可以利用SparkStreaming实时地读取kafka中的数据，然后进行相关计算。
+在Spark1.3版本后，KafkaUtils里面提供了两个创建dstream的方法，一种为KafkaUtils.createDstream，另一种为KafkaUtils.createDirectStream。
+
+
+### 7.1 KafkaUtils.createDstream方式
+
+KafkaUtils.createDstream(ssc, [zk], [group id], [per-topic,partitions] ) 使用了receivers接收器来接收数据，利用的是Kafka高层次的消费者api，对于所有的receivers接收到的数据将会保存在Spark executors中，然后通过Spark Streaming启动job来处理这些数据，默认会丢失，可启用WAL日志，它同步将接受到数据保存到分布式文件系统上比如HDFS。 所以数据在出错的情况下可以恢复出来 。
+
+A、创建一个receiver接收器来对kafka进行定时拉取数据，这里产生的dstream中rdd分区和kafka的topic分区不是一个概念，故如果增加特定主体分区数仅仅是增加一个receiver中消费topic的线程数，并没有增加spark的并行处理的数据量。
+
+B、对于不同的group和topic可以使用多个receivers创建不同的DStream 
+
+C、如果启用了WAL(spark.streaming.receiver.writeAheadLog.enable=true)
+同时需要设置存储级别(默认StorageLevel.MEMORY_AND_DISK_SER_2)，
+
+#### 7.1.1 KafkaUtils.createDstream实战
+
+* 1 添加kafka的pom依赖
+``` 
+<dependency>
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-streaming-kafka_0-8_2.11</artifactId>
+    <version>2.0.2</version>
+</dependency>
+
+``` 
+
+* 2 启动zookeeper集群
+
+zkServer.sh start
+
+* 3 启动kafka集群
+
+kafka-server-start.sh  /export/servers/kafka/config/server.properties
+
+* 4 创建topic
+
+`kafka-topics.sh --create --zookeeper hadoop-node-1:2181 --replication-factor 1 --partitions 3 --topic spark_01`
+
+* 5 向topic中生产数据
+
+通过shell命令向topic发送消息
+
+`  kafka-console-producer.sh --broker-list hadoop-node-1:9092 --topic  spark_01`
+
+* 编写Spark Streaming应用程序
+``` scala
+//todo:利用sparkStreaming对接kafka实现单词计数----采用receiver(高级API)
+object SparkStreamingKafka_Receiver {
+
+  def main(args: Array[String]): Unit = {
+
+    // 创建SparkConf
+    val conf = new SparkConf().setAppName("SparkStreamingKafka_Receiver").setMaster("local[2]")
+    // 创建SparkContext
+    val sc = new SparkContext(conf)
+    sc.setLogLevel("WARN")
+    //  创建StreamingContext
+    val ssc: StreamingContext = new StreamingContext(sc, Seconds(5))
+    // 准备zk的地址
+    val zkQuorum = "hadoop-node-1:2181"
+    // 准备groupID
+    val groupId = "spark_receiver"
+    // 定义topic 当前这个value并不是topic对应的分区数，而是针对于每一个分区使用多少个线程去消费(增加了消费速度)
+    val topic = Map("spark_01"->1)
+
+    //7、KafkaUtils.createStream 去接受kafka中topic数据
+    //(String, String) 前面一个string表示topic名称，后面一个string表示topic中的数据
+    //使用多个reveiver接受器去接受kafka中topic数据
+    val stream: ReceiverInputDStream[(String, String)] = KafkaUtils.createStream(ssc,zkQuorum,groupId,topic)
+
+    // 8 获取kafka中topic的数据
+    val topicData: DStream[String] = stream.map(_._2)
+    // 9 切割数据
+    val wordAndOne: DStream[(String, Int)] = topicData.flatMap(_.split(" ")).map((_,1))
+
+    val result = wordAndOne.reduceByKey(_+_)
+
+    result.print()
+    ssc.start()
+    ssc.awaitTermination()
+  }
+}
+``` 
+* 使用多个receivers创建不同的DStream 
+
+``` scala
+//todo:利用sparkStreaming对接kafka实现单词计数----采用receiver(高级API)
+object SparkStreamingKafka_Receiver {
+
+  def main(args: Array[String]): Unit = {
+
+    // 创建SparkConf
+    val conf = new SparkConf().setAppName("SparkStreamingKafka_Receiver")
+        // master[N] 至少要大于三
+        .setMaster("local[4]")
+        //表示开启WAL预写日志，保证数据源的可靠性
+        .set("spark.streaming.receiver.writeAheadLog.enable=true", "true")
+
+    // 创建SparkContext
+    val sc = new SparkContext(conf)
+    sc.setLogLevel("WARN")
+    //  创建StreamingContext
+    val ssc: StreamingContext = new StreamingContext(sc, Seconds(5))
+    ssc.checkpoint("./spark_receiver")
+    // 准备zk的地址
+    val zkQuorum = "hadoop-node-1:2181"
+    // 准备groupID
+    val groupId = "spark_receiver"
+    // 定义topic 当前这个value并不是topic对应的分区数，而是针对于每一个分区使用多少个线程去消费(增加了消费速度)
+    val topic = Map("spark_01" -> 2)
+
+    //7、KafkaUtils.createStream 去接受kafka中topic数据
+    //(String, String) 前面一个string表示topic名称，后面一个string表示topic中的数据
+    //使用多个reveiver接受器去接受kafka中topic数据
+    //val stream: ReceiverInputDStream[(String, String)] = KafkaUtils.createStream(ssc,zkQuorum,groupId,topic)
+
+    //使用多个reveiver接受器去接受kafka中topic数据
+    val dstreamSeq: immutable.IndexedSeq[ReceiverInputDStream[(String, String)]] = (1 to 3)
+        .map(x => {
+          val stream: ReceiverInputDStream[(String, String)] = KafkaUtils
+              .createStream(ssc, zkQuorum, groupId, topic)
+          stream
+        }
+        )
+
+    //利用streamingcontext调用union,获取得到所有receiver接受器的数据
+    val totalDstream: DStream[(String, String)] = ssc.union(dstreamSeq)
+
+
+    // 8 获取kafka中topic的数据
+    val topicData: DStream[String] = totalDstream.map(_._2)
+    // 9 切割数据
+    val wordAndOne: DStream[(String, Int)] = topicData.flatMap(_.split(" ")).map((_, 1))
+
+    val result = wordAndOne.reduceByKey(_ + _)
+
+    result.print()
+    ssc.start()
+    ssc.awaitTermination()
+  }
+}
+
+``` 
+
+总结 : 
+
+通过这种方式实现，刚开始的时候系统正常运行，没有发现问题，但是如果系统异常重新启动sparkstreaming程序后，发现程序会重复处理已经处理过的数据，这种基于receiver的方式，是使用Kafka的高级API，topic的offset偏移量在ZooKeeper中。这是消费Kafka数据的传统方式。这种方式配合着WAL机制可以保证数据零丢失的高可靠性，但是却无法保证数据只被处理一次，可能会处理两次。因为Spark和ZooKeeper之间可能是不同步的。官方现在也已经不推荐这种整合方式，我们使用官网推荐的第二种方式kafkaUtils的createDirectStream()方式。
+
+### 7.2 KafkaUtils.createDirectStream方式
+
+
+这种方式不同于Receiver接收数据，它定期地从kafka的topic下对应的partition中查询最新的偏移量，再根据偏移量范围在每个batch里面处理数据，Spark通过调用kafka简单的消费者Api（低级api）读取一定范围的数据。 
+
+相比基于Receiver方式有几个优点： 
+
+A、简化并行
+
+不需要创建多个kafka输入流，然后union它们，sparkStreaming将会创建和kafka分区数相同的rdd的分区数，而且会从kafka中并行读取数据，spark中RDD的分区数和kafka中的topic分区数是一一对应的关系。
+
+B、高效，	
+
+第一种实现数据的零丢失是将数据预先保存在WAL中，会复制一遍数据，会导致数据被拷贝两次，第一次是接受kafka中topic的数据，另一次是写到WAL中。而没有receiver的这种方式消除了这个问题。 
+
+C、恰好一次语义(Exactly-once-semantics)
+
+Receiver读取kafka数据是通过kafka高层次api把偏移量写入zookeeper中，虽然这种方法可以通过数据保存在WAL中保证数据不丢失，但是可能会因为sparkStreaming和ZK中保存的偏移量不一致而导致数据被消费了多次。EOS通过实现kafka低层次api，偏移量仅仅被ssc保存在checkpoint中，消除了zk和ssc偏移量不一致的问题。缺点是无法使用基于zookeeper的kafka监控工具。
+
+
+#### 7.2.1 KafkaUtils.createDirectStream实战
+
+* 代码
+
+``` scala
+import kafka.serializer.StringDecoder
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.dstream.{DStream, InputDStream}
+import org.apache.spark.streaming.kafka.KafkaUtils
+
+// todo :利用sparkStreaming对接kafka实现单词计数----采用Direct(低级API)
+object SparkStreamingKafka_Direct {
+
+  def main(args: Array[String]): Unit = {
+
+    //1、创建sparkConf
+    val sparkConf: SparkConf = new SparkConf()
+        .setAppName("SparkStreamingKafka_Direct")
+        .setMaster("local[2]")
+    //2、创建sparkContext
+    val sc = new SparkContext(sparkConf)
+    sc.setLogLevel("WARN")
+    //3、创建StreamingContext
+    val ssc = new StreamingContext(sc,Seconds(5))
+    ssc.checkpoint("./Kafka_Direct")
+    //4、配置kafka相关参数
+    val kafkaParams=Map("metadata.broker.list"->"hadoop-node-1:9092,hadoop-node-2:9092,hadoop-node-3:9092","group.id"->"Kafka_Direct")
+    //5、定义topic
+    val topics=Set("spark_01")
+    //6、通过 KafkaUtils.createDirectStream接受kafka数据，这里采用是kafka低级api偏移量不受zk管理
+    val dstream: InputDStream[(String, String)] = KafkaUtils.createDirectStream[String,String,StringDecoder,StringDecoder](ssc,kafkaParams,topics)
+    //7、获取kafka中topic中的数据
+    val topicData: DStream[String] = dstream.map(_._2)
+    //8、切分每一行,每个单词计为1
+    val wordAndOne: DStream[(String, Int)] = topicData.flatMap(_.split(" ")).map((_,1))
+    //9、相同单词出现的次数累加
+    val result: DStream[(String, Int)] = wordAndOne.reduceByKey(_+_)
+    //10、打印输出
+    result.print()
+    //开启计算
+    ssc.start()
+    ssc.awaitTermination()
+
+  }
+}
+``` 
+
