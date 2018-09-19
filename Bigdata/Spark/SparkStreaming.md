@@ -1,4 +1,4 @@
-# Spark Streaming流式处理
+# ![]()Spark Streaming流式处理
 
 ## 1 概述
 
@@ -7,13 +7,13 @@ Spark Streaming 是 Spark Core API 的扩展，它支持弹性的，高吞吐的
 盘中。事实上，你还可以在数据流上使用 Spark机器学习 以及 图形处理算法 。
 
  * 为什么要学习Spark Streaming
- 
+
  1 易用  : 可以像编写离线批处理一样去编写流式程序，支持java/scala/python语言。
- 
+
  2 容错 : SparkStreaming在没有额外代码和配置的情况下可以恢复丢失的工作。
- 
+
  3 易整合到Spark体系 : 流式处理与批处理和交互式查询相结合。
- 
+
  
 
 ## 2 Spark Streaming原理
@@ -92,9 +92,9 @@ UpdateStateByKey用于记录历史记录，保存上次的状态
 ），然后，就可以让窗口按照指定时间间隔在源DStream上滑动，每次窗口停放的位置上，都会有一部分DStream被框入窗口内，形成一个小段的DStream，这时，
 就可以启动对这个小段DStream的计算。
 
- (1) 红色的矩形就是一个窗口，窗口框住的是一段时间内的数据流。
+   (1)  红色的矩形就是一个窗口，窗口框住的是一段时间内的数据流。
 
-（2）这里面每一个time都是时间单元，在官方的例子中，每隔window size是3 time unit, 而且每隔2个单位时间，窗口会slide一次。
+（2）这里面每一个time都是时间单元，在官方的例子中，每隔window size是3 time unit, 而且每隔2个单位时       间，窗口会slide一次。
 
 所以基于窗口的操作，需要指定2个参数：
 
@@ -127,7 +127,7 @@ Output Operations可以将DStream的数据输出到外部的数据库或文件�
 
 * 架构图
 
-![01]()
+![01](https://github.com/bigDataHell/Kangaroo-/blob/master/images/SparkStreaming01.png)
 
 #### 5.1 SparkStreaming接受socket数据，实现单词计数WordCount
 
@@ -141,8 +141,8 @@ Output Operations可以将DStream的数据输出到外部的数据库或文件�
 
 * （2）通过netcat工具向指定的端口发送数据
 
- `	nc -lk 9999  `
-  
+ `nc -lk 9999  `
+
 * （ 3）编写Spark Streaming程序
 
 ``` scala
@@ -182,6 +182,146 @@ object SparkStreamingTCP {
   }
 }
 ```
+
+####   5.2 SparkStreaming接受socket数据，实现所有批次单词计数结果累加
+
+在上面的那个案例中存在这样一个问题：每个批次的单词次数都被正确的统计出来，但是结果不能累加！如果将所有批次的结果数据进行累加使用
+
+`updateStateByKey(func)`
+
+来更新状态.
+
+
+
+* 编写Spark Streaming程序
+
+``` scala
+object SparkStreamingTCPTotal {
+
+  //newValues 表示当前批次汇总成的(word,1)中相同单词的所有的1
+  //runningCount 历史的所有相同key的value总和
+  def updateFunction(newValues: Seq[Int], runningCount: Option[Int]): Option[Int] = {
+    val newCount =runningCount.getOrElse(0)+newValues.sum
+    Some(newCount)
+  }
+
+  def main(args: Array[String]): Unit = {
+
+    //配置sparkConf参数
+    val sparkConf: SparkConf = new SparkConf().setAppName("SparkStreamingTCPTotal").setMaster("local[2]")
+    //构建sparkContext对象
+    val sc: SparkContext = new SparkContext(sparkConf)
+    //设置日志输出的级别
+    sc.setLogLevel("WARN")
+    //构建StreamingContext对象，每个批处理的时间间隔
+    val scc: StreamingContext = new StreamingContext(sc, Seconds(5))
+    //设置checkpoint路径，当前项目下有一个ck目录
+    scc.checkpoint("./ck")
+    //注册一个监听的IP地址和端口  用来收集数据
+    val lines: ReceiverInputDStream[String] = scc.socketTextStream("192.168.168.121", 9999)
+    //切分每一行记录
+    val words: DStream[String] = lines.flatMap(_.split(" "))
+    //每个单词记为1
+    val wordAndOne: DStream[(String, Int)] = words.map((_, 1))
+    //累计统计单词出现的次数
+    val result: DStream[(String, Int)] = wordAndOne.updateStateByKey(updateFunction)
+    result.print()
+    scc.start()
+    scc.awaitTermination()
+  }
+}
+
+
+```
+
+#### 5.3 SparkStreaming开窗函数reduceByKeyAndWindow，实现单词计数
+
+
+
+![]()
+
+* 代码实现
+
+``` scala
+object SparkStreamingTCPWindow {
+
+  def main(args: Array[String]): Unit = {
+    //配置sparkConf参数
+    val sparkConf: SparkConf = new SparkConf().setAppName("SparkStreamingTCPWindow")
+        .setMaster("local[2]")
+    //构建sparkContext对象
+    val sc: SparkContext = new SparkContext(sparkConf)
+    //设置日志输出的级别
+    sc.setLogLevel("WARN")
+    //构建StreamingContext对象，每个批处理的时间间隔
+    val scc: StreamingContext = new StreamingContext(sc, Seconds(5))
+    //注册一个监听的IP地址和端口  用来收集数据
+    val lines: ReceiverInputDStream[String] = scc.socketTextStream("192.168.168.121", 9999)
+    //切分每一行记录
+    val words: DStream[String] = lines.flatMap(_.split(" "))
+    //每个单词记为1
+    val wordAndOne: DStream[(String, Int)] = words.map((_, 1))
+    // reduceByKeyAndWindow方法需要三个参数 :
+    // reduceFunction : 一个函数
+    // windowDuration : 表示窗口的长度
+    // slied 窗口滑动间隔,即每个多久计算一次
+    val result = wordAndOne.reduceByKeyAndWindow((x: Int, y: Int) => x + y, Seconds(10), Seconds(10))
+
+    // 8 打印
+    result.print()
+
+    //9 开启流式计算
+    scc.start()
+    scc.awaitTermination()
+
+  }
+}
+```
+
+#### 5.4 SparkStreaming开窗函数统计一定时间内的热门词汇
+* 代码实现
+
+``` scala
+object Test {
+
+  def main(args: Array[String]): Unit = {
+    //配置sparkConf参数
+    val sparkConf: SparkConf = new SparkConf().setAppName("Test").setMaster("local[2]")
+    //构建sparkContext对象
+    val sc: SparkContext = new SparkContext(sparkConf)
+    sc.setLogLevel("WARN")
+    //构建StreamingContext对象，每个批处理的时间间隔
+    val scc: StreamingContext = new StreamingContext(sc,Seconds(5))
+    //注册一个监听的IP地址和端口  用来收集数据
+    val lines: ReceiverInputDStream[String] = scc.socketTextStream("192.168.168.121",9999)
+    //切分每一行记录
+    val words: DStream[String] = lines.flatMap(_.split(" "))
+    //每个单词记为1
+    val wordAndOne: DStream[(String, Int)] = words.map((_,1))
+    //reduceByKeyAndWindow函数参数意义：
+    // windowDuration:表示window框住的时间长度，如本例5秒切分一次RDD，框10秒，就会保留最近2次切分的RDD
+    //slideDuration:  表示window滑动的时间长度，即每隔多久执行本计算
+    val result: DStream[(String, Int)] = wordAndOne.reduceByKeyAndWindow((a:Int,b:Int)=>a+b,Seconds(10),Seconds(5))
+    val data=result.transform(rdd=>{
+      //降序处理后，取前3位
+      val dataRDD: RDD[(String, Int)] = rdd.sortBy(t=>t._2,false)
+      val sortResult: Array[(String, Int)] = dataRDD.take(3)
+      println("--------------print top 3 begin--------------")
+      sortResult.foreach(println)
+      println("--------------print top 3 end--------------")
+      dataRDD
+    })
+    data.print()
+    scc.start()
+    scc.awaitTermination()
+  }
+}
+
+
+```
+
+
+
 
 
 ## 6.	Spark Streaming整合flume实战
