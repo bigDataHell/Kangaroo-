@@ -85,7 +85,7 @@ __特殊的Transformations__
 
 UpdateStateByKey用于记录历史记录，保存上次的状态
 
-*（2）Window Operations(开窗函数)
+* （2）Window Operations(开窗函数)
 
 滑动窗口转换操作: <br>
 滑动窗口转换操作的计算过程如下图所示，我们可以事先设定一个滑动窗口的长度（也就是窗口的持续时间），并且设定滑动窗口的时间间隔（每隔多长时间执行一次计算
