@@ -1,45 +1,41 @@
 ##  1  Docker安装与启动
 
-
-
-
-
-
-
+-------------------------------------------
 ## 2 docker命令
 
-###  启动docker：
+####  启动docker：
 
 `systemctl start docker`
 
-### 停止docker：
+#### 停止docker：
 
 `systemctl stop docker`
 
-### 重启docker：
+#### 重启docker：
 
 `systemctl restart docker`
 
-###  查看docker状态：
+####  查看docker状态：
 
 `systemctl status docker`
 
-### 开机启动：
+#### 开机启动：
 
 `systemctl enable`
 
-### 查看所有镜像
+#### 查看所有镜像
 
 `docker images`
 
-### l查看docker概要信息：
+#### 查看docker概要信息：
 
 `docker info`
 
-### 查看 docker帮助文档：
+#### 查看 docker帮助文档：
 
 `docker --help`
 
+---------------------------------------
 ## 3 docker容器操作
 
 ### 3.1 docker 容器命令
@@ -80,7 +76,7 @@
 
 ####   交互式容器
 
-创建一个交互式容器并取名为mycentos
+* 创建一个交互式容器并取名为mycentos
 
 `docker run -it --name=mycentos centos:7 /bin/bash`
 
@@ -88,13 +84,13 @@
 
 使用exit命令 退出当前容器,容器关机
 
-启动之后登陆 : 
+* 启动之后登陆 : 
 
 `docker exec -it mycentos  /bin/bash`
 
 #### 守护式容器
 
-创建一个守护式容器：如果对于一个需要长期运行的容器来说，我们可以创建一个守护式容器。命令如下（容器名称不能重复）：
+* 创建一个守护式容器：如果对于一个需要长期运行的容器来说，我们可以创建一个守护式容器。命令如下（容器名称不能重复）：
 
 `docker run -di --name=mycentos2 centos:7`
 
@@ -115,12 +111,12 @@
 
 ### 3.4  文件拷贝
 
-如果我们需要将文件拷贝到容器内可以使用cp命令
+* 如果我们需要将文件拷贝到容器内可以使用cp命令
 
 `docker cp 需要拷贝的文件或目录 容器名称:容器目录`
 ` docker cp anaconda-ks.cfg  mycentos2:/`
 
-也可以将文件从容器内拷贝出来
+* 也可以将文件从容器内拷贝出来
 
 `docker cp 容器名称:容器目录 需要拷贝的文件或目录`
 `docker cp mycentos2:/etc/yum /root`
@@ -131,23 +127,23 @@
 
 将容器的某一个目录与宿主机某一个目录挂在
 
-创建容器 添加`-v`参数 后边为   宿主机目录:容器目录
+* 创建容器 添加`-v`参数 后边为   宿主机目录:容器目录
 
 `docker run -di -v /usr/local/myhtml:/usr/local/myhtml --name=mycentos2 centos:7`
 
 如果你共享的是多级的目录，可能会出现权限不足的提示。
 
-这是因为CentOS7中的安全模块selinux把权限禁掉了，我们需要添加参数  --privileged=true  来解决挂载的目录没有权限的问题
+* 这是因为CentOS7中的安全模块selinux把权限禁掉了，我们需要添加参数  --privileged=true  来解决挂载的目录没有权限的问题
 
 `docker run -di --name=mycentos2 -v /usr/local/myhtml:/usr/local/myhtml   --privileged=true centos:7`
 
 ### 3.6 查看容器IP地址
 
-我们可以通过以下命令查看容器运行的各种数据
+* 我们可以通过以下命令查看容器运行的各种数据
 
 `docker inspect mycentos2`
 
-也可以直接执行下面的命令直接输出IP地址
+* 也可以直接执行下面的命令直接输出IP地址
 
 `docker inspect --format='{{.NetworkSettings.IPAddress}}' mycentos2`
 
