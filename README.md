@@ -96,6 +96,9 @@ __模块:__
 
  * [SQL](https://github.com/bigDataHell/Kangaroo-/tree/master/java/database/SQL)
  
+ 
+ * [常用SQL查询方法](https://github.com/bigDataHell/Kangaroo-/blob/master/java/database/SQL/%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2.md)
+ 
 #### Maven
 
 * [maven介绍](https://github.com/bigDataHell/Kangaroo-/tree/master/java/Maven)
