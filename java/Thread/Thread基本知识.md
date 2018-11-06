@@ -104,4 +104,70 @@ public class RunnableTest implements  Runnable {
         thread3.start();
 ```
 
+## synchronized 的使用
+
+``` java
+/**
+ * 同步方法:使用关键字synchronized修饰的方法，一旦被一个线程访问，则整个方法全部锁住，其他线程则无法访问
+ * <p>
+ * synchronized
+ * 注意：
+ *          非静态同步方法的锁对象是this
+ *          静态的同步方法的锁对象是当前类的字节码对象
+ * 同步代码块：
+ * synchronized(锁对象){
+ * <p>
+ * }
+ * <p>
+ * 注意：锁对象需要被所有的线程所共享
+ * 使用同步代码块解决线程安全问题
+ *
+ * @Author ：feixue
+ * @Data : 18:12 2018/11/6
+ */
+
+public class SynchronizedTest implements Runnable {
+
+    static int tickets = 100;// 火车票数量
+    Object obj = new Object();
+
+    @Override
+    public void run() {
+        // 出售火车票
+        while (true) {
+            method();
+        }
+    }
+
+    // 同步方法的锁对象默认为 this
+    private synchronized void method() {
+        if (tickets > 0) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName() + ":" + tickets--);
+        }
+    }
+
+}
+```
+* 测试类
+``` java
+  SynchronizedTest tt = new SynchronizedTest();
+
+        Thread t = new Thread(tt);
+        t.setName("窗口1");
+        Thread t2 = new Thread(tt);
+        t2.setName("窗口2");
+        Thread t3 = new Thread(tt);
+        t3.setName("窗口3");
+
+        //启动线程对象
+        t.start();
+        t2.start();
+        t3.start();
+```
+
 
