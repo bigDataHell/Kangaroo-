@@ -1,6 +1,8 @@
 
 # 多线程知识:
 
+## 线程基本概念
+
     进程 : 每个进程都有独立的代码和数据空间（进程上下文），进程间的切换会有较大的开销，一个进程包含1--n个线程。（进程是资源分配的最小单位）
     线程 : 线程：同一类线程共享代码和数据空间，每个线程有独立的运行栈和程序计数器(PC)，线程切换开销小。（线程是cpu调度的最小单位）
 
@@ -21,4 +23,85 @@
                                 其他阻塞：通过调用线程的 sleep() 或 join() 发出了 I/O 请求时，线程就会进入到阻塞状态。当sleep() 状态超时，join() 等待线程终止或超时，或者 I/O 处理完毕，线程重新转入就绪状态。
             5 销毁
                 一个运行状态的线程完成任务或者其他终止条件发生时，该线程就切换到终止状态。
+
+
+
+## 多线程创建方法
+
+### 1 继承Thread类.重写run方法
+
+``` java
+public class ThreadTest extends Thread{
+    
+    @Override
+    public void run() {
+
+        for(int i = 0; i< 100; i++){
+            System.out.println(getName() +" : "+getId() +"----"+ i);
+
+        }
+    }
+}
+```
+* 测试类
+``` java
+public static void main(String[] args) {
+
+        ThreadTest thread = new ThreadTest();
+
+        // 修改线程名字
+        thread.setName("线程一");
+
+        // 启动线程
+
+        thread.start();
+
+
+        ThreadTest thread2 = new ThreadTest();
+
+        // 修改线程名字
+        thread2.setName("线程二");
+
+        // 启动线程
+
+        thread2.start();
+ }
+ ```
+ 
+## 2 实现Runnable接口,多个Thread类共享一个Runnable对象
+
+``` jav
+public class RunnableTest implements  Runnable {
+
+    int num;
+
+    public RunnableTest(int num) {
+        this.num = num;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+
+            //链式编程
+            System.out.println(Thread.currentThread().getName() + ":" + i + num);
+        }
+    }
+
+}
+```
+* 测试
+``` java
+        // 共享一个Runnable对象
+        Runnable run = new  RunnableTest(100);
+        Thread thread3 = new Thread(run);
+        Thread thread4 = new Thread(run);
+
+        thread3.setName("线程三");
+        thread4.setName("线程四");
+
+        thread4.start();
+        thread3.start();
+```
+
 
