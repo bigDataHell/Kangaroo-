@@ -46,8 +46,72 @@
   
    * HashMap : 键值对, 键不可重复,值可以重复. 无序.
      * LinkedHashMap : 有序.
-   * TreeMap : 可以自然排序或者自定义排序.
+   * TreeMap : 可以自然排序或者自定义排序. 红黑树实现.
   
+## 4 可排序集合的排序方法
+
+要想改变TreeMap的默认比较次序，我们可以在其构造函数中传入一个自己的比较器。TreeMap的比较器构造函数如下：
+
+注意 : 
+  * 返回0,则默认直插入一个值.
+  * 返回1,按正序排序(ASC)
+  * 返回0,按倒序排序(DESC)
+``` java
+  public TreeMap(Comparator<? super K> comparator)
+``` 
+
+``` java
+/*排序,想到treeSet,比较简单,按姓名排序,按年龄为自然排序*/
+        Map<Student,String> classTreeMap = new TreeMap<Student,String>(new Comparator<Student>() {
+
+            @Override
+            public int compare(Student o1, Student o2) {
+                int temp = o1.getName().compareTo(o2.getName());
+                return temp==0?o1.compareTo(o2):temp;
+            }
+        });
+```
+
+## 5 集合的遍历
+
+
+### 5.1 Map集合遍历
+
+``` java
+        HashMap<String,String> map = new HashMap<>();
+
+        map.put("1","2");
+        map.put("3","2");
+        map.put("4","4");
+        map.put("5","3");
+        map.put("6","2");
+
+        for (String key : map.keySet()) {
+            String value = map.get(key);
+            System.out.println(value);
+        }
+        
+```
+### 5.2List集合遍历
+
+``` java 
+        // 集合演示
+        List<String> list = new ArrayList<>();
+
+        list.add("13");
+        list.add("35352");
+        list.add("25252");
+        // 插入,把元素插入到第几个位置,其余后排
+        list.add(2,"3424");
+        
+        Iterator<String> iterator = list.iterator();
+
+        while(iterator.hasNext()){
+            String next = iterator.next();
+            System.out.println(next);
+        }
+```
+
 
   
   
