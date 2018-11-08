@@ -103,6 +103,10 @@ __模块:__
 
 * [maven介绍](https://github.com/bigDataHell/Kangaroo-/tree/master/java/Maven)
 
+#### 面试题
+
+[集合面试题](https://github.com/bigDataHell/Kangaroo-/blob/master/java/mianshi/java-%E9%9B%86%E5%90%88.md)
+
 --------------------------------
 ## liunx
 
