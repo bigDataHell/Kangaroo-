@@ -2,7 +2,9 @@
 
 __模块:__
 
-[BigData](#bigdata) &emsp; &emsp;[java](#java) &emsp; &emsp;[liunx](#liunx) &emsp;&emsp;[网络编程](#网络编程) &emsp;&emsp;[常用软件](#常用软件) &emsp;&emsp;[问题总结](#问题总结) &emsp;&emsp;[数据结构与算法](#数据结构与算法) &emsp;&emsp;[Scala](#scala) &emsp;&emsp; [Docker](#docker) &emsp;&emsp; [Docker](#面试题汇总)
+[BigData](#bigdata) &emsp; &emsp;[java](#java) &emsp; &emsp;[liunx](#liunx) &emsp;&emsp;[网络编程](#网络编程) &emsp;&emsp;[常用软件](#常用软件) &emsp;&emsp;[问题总结](#问题总结) &emsp;&emsp;[数据结构与算法](#数据结构与算法) &emsp;&emsp;[Scala](#scala) &emsp;&emsp; [Docker](#docker)  
+
+[面试题汇总](#面试题汇总)
 
 
 --------------------------------
