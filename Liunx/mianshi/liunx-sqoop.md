@@ -30,24 +30,32 @@ export HIVE_HOME=/root/apps/hive
 
 加入 mysql 的 jdbc 驱动包
 
+``` shell
 cp /hive/lib/mysql-connector-java-5.1.28.jar $SQOOP_HOME/lib/
+```
 
 验证启动
-
+``` shell
 bin/sqoop list-databases --connect jdbc:mysql://localhost:3306/ --
 username root --password hadoop
-
+```
 本命令会列出所有 mysql 的数据库。
 到这里，整个 Sqoop 安装工作完成。
 
 ## Sqoop  导入
+
+注意 : 我们要知道数据是从哪里导入到哪里!
+
+  __导入 : 是把数据从关系型数据库到导入到HDFS系统中或者Hbase中b.<br>
+  导出 : 是把数据从HDFS存储系统中导出到关系型数组库中.__
 
 “导入工具”导入单个表从 RDBMS 到 HDFS。表中的每一行被视为 HDFS 的记录。所有记
 录都存储为文本文件的文本数据（或者 `Avro`、`sequence` 文件等二进制数据）。
 
 下面的语法用于将数据导入 HDFS。
 
-$ sqoop import (generic-args) (import-args)
+`$ sqoop import (generic-args) (import-args)`
+
 Sqoop 测试表数据
 在 mysql 中创建数据库 userdb，然后执行参考资料中的 sql 脚本：
 创建三张表: emp emp_add emp_conn。
