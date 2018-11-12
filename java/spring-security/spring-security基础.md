@@ -16,3 +16,19 @@ Force.作为补充，Spring Security 也提供了自己的一套验证功能。
 过程建立了。
 
 
+2 Maven依赖
+
+``` java
+<dependencies>
+<dependency>
+<groupId>org.springframework.security</groupId>
+<artifactId>spring-security-web</artifactId>
+<version>5.0.1.RELEASE</version>
+</dependency>
+<dependency>
+<groupId>org.springframework.security</groupId>
+<artifactId>spring-security-config</artifactId>
+<version>5.0.1.RELEASE</version>
+</dependency>
+</dependencies>
+```
