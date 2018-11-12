@@ -87,6 +87,11 @@ __模块:__
 --------------------------------
 
 ## java
+
+#### Spring Security
+ 
+    [Spring Security基础](
+    https://github.com/bigDataHell/Kangaroo-/blob/master/java/spring-security/spring-security%E5%9F%BA%E7%A1%80.md)
  
 #### 设计模式 
   * [单例模式]()
@@ -169,8 +174,7 @@ __模块:__
 
    [集合面试题](https://github.com/bigDataHell/Kangaroo-/blob/master/java/mianshi/java-%E9%9B%86%E5%90%88.md)
    
-   [Spring Security](
-    https://github.com/bigDataHell/Kangaroo-/blob/master/java/spring-security/spring-security%E5%9F%BA%E7%A1%80.md)
+
 ### Liunx
 
 ### 大数据
