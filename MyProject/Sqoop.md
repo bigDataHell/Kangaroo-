@@ -85,7 +85,7 @@ sqoop job  --create append_5 \
 
 __注意：id为55的这一条数据并不会被追加到HDFS中__
 
-##  2.3 使用Lastmodified（时间戳）模式
+##  2.3 使用Lastmodified（时间戳）模式(用问题)
 
 * Lastmodified模式可以更新数据
 
@@ -105,11 +105,11 @@ sqoop import \
 __注意 ：- -split-by 参数指定根据哪一列来实现哈希分片，从而将不同分片的数据分发到不同 map 任务上去跑，避免数据倾斜。__
 
 
-sqoop import: SQOOP 命令，从关系型数据库导数到Hadoop 
-–check-column: 必须是timestamp列 
-–incremental lastmodified: 设置为最后改动模式 
-–merge-key: 必须是唯一主键 
-–last-value: 所有大于最后一个时间的数据都会被更新
+sqoop import: SQOOP 命令，从关系型数据库导数到Hadoop <br/>
+–check-column: 必须是timestamp列 <br/>
+–incremental lastmodified: 设置为最后改动模式 <br/>
+–merge-key: 必须是唯一主键 <br/>
+–last-value: 所有大于最后一个时间的数据都会被更新<br/>
 
 
 
