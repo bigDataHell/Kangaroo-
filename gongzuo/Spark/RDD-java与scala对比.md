@@ -1,7 +1,7 @@
 
 # java中 map方法和mapToPari方法的区别
 
-## map方法
+ ## map方法
 
 ``` java
 
@@ -59,6 +59,9 @@ __scala中的map方法会可以输出包含不同类型的RDDs数据集__
     })
 ```
 ## java
+
+*  该方法scala中没有对应的方法。
+   
 ``` java
         JavaPairRDD<String, Integer> ones = wordsRDD.mapToPair(new PairFunction<String, String, Integer>() {
             @Override
@@ -68,5 +71,85 @@ __scala中的map方法会可以输出包含不同类型的RDDs数据集__
         });
 
 ``` 
+## 2 filete算子
 
+## scala
+
+``` scala
+    // 过滤
+    val rdd5: RDD[(String, Int)] = rdd4.filter(_._2 < 4)
+```
+
+## java 
+
+``` java
+         // 单词出现次数小于4的
+        JavaPairRDD<String, Integer> filterRDD = reduceRDD.filter(new Function<Tuple2<String, Integer>, Boolean>() {
+            @Override
+            public Boolean call(Tuple2<String, Integer> stringIntegerTuple2) throws Exception {
+
+                return stringIntegerTuple2._2 < 4;
+            }
+        });
+        
+  ---------------------------
+          // 单词中包含字符 "h" 的
+          JavaPairRDD<String, Integer> filterRDD = reduceRDD.filter(new Function<Tuple2<String, Integer>, Boolean>() {
+            @Override
+            public Boolean call(Tuple2<String, Integer> stringIntegerTuple2) throws Exception {
+
+               // return stringIntegerTuple2._2 < 4;
+                return stringIntegerTuple2._1.contains("h");
+            }
+        });
+``` 
+
+## 3 union 算子
+
+## scala
+``` scala
+scala> var RDD1 = sc.parallelize(List("aa","aa","bb","cc","dd"))
+    scala> var RDD2 = sc.parallelize(List("aa","dd","ff"))
+
+    scala> RDD1.collect
+    res6: Array[String] = Array(aa, aa, bb, cc, dd)
+
+    scala> RDD2.collect
+    res7: Array[String] = Array(aa, dd, ff)
+
+    scala> RDD1.union(RDD2).collect
+    res8: Array[String] = Array(aa, aa, bb, cc, dd, aa, dd, ff)
+
+```
+
+## java
+
+``` java
+
+  JavaRDD<String> RDD1 = sc.parallelize(Arrays.asList("aa", "aa", "bb", "cc", "dd"));
+    JavaRDD<String> RDD2 = sc.parallelize(Arrays.asList("aa","dd","ff"));
+    JavaRDD<String> unionRDD = RDD1.union(RDD2);
+    List<String> collect = unionRDD.collect();
+    for (String str:collect) {
+        System.out.print(str+", ");
+    }
+-----------输出---------
+aa, aa, bb, cc, dd, aa, dd, ff
+
+``` 
+
+## 4 groupByKey 算子
+
+groupByKey会将RDD[key,value] 按照相同的key进行分组，形成RDD[key,Iterable[value]]的形式， 有点类似于sql中的groupby，例如类似于mysql中的group_concat 
+
+## scala
+``` scala
+  val scoreDetail = sc.parallelize(List(("xiaoming",75),("xiaoming",90),("lihua",95),("lihua",100),("xiaofeng",85)))
+    scoreDetail.groupByKey().collect().foreach(println(_)
+```
+## java
+``` java
+JavaPairRDD<String, Iterable<Integer>> stringIterableJavaPairRDD = filterRDD.groupByKey();
+``` 
+## 5 
 
