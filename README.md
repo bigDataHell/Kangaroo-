@@ -4,7 +4,7 @@ __模块:__
 
 [BigData](#bigdata) &emsp; &emsp;[java](#java) &emsp; &emsp;[liunx](#liunx) &emsp;&emsp;[网络编程](#网络编程) &emsp;&emsp;[常用软件](#常用软件) &emsp;&emsp;[问题总结](#问题总结) &emsp;&emsp;[数据结构与算法](#数据结构与算法) &emsp;&emsp;[Scala](#scala) &emsp;&emsp; [Docker](#docker)  
 
-[面试题汇总](#面试题汇总)
+[####](#汇总)
 
 
 --------------------------------
@@ -167,12 +167,12 @@ __模块:__
 
 * [docker](https://github.com/bigDataHell/Kangaroo-/blob/master/Docker)
 
-## 面试题汇总
+## 汇总
 
 ### java
     
 
-   [集合面试题](https://github.com/bigDataHell/Kangaroo-/blob/master/java/mianshi/java-%E9%9B%86%E5%90%88.md)
+   [集合](https://github.com/bigDataHell/Kangaroo-/blob/master/java/mianshi/java-%E9%9B%86%E5%90%88.md)
    
    [JVM准备](https://github.com/bigDataHell/Kangaroo-/blob/master/java/mianshi/JVM%E7%9F%A5%E8%AF%86%E7%82%B9.md)
 
