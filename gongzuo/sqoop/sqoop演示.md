@@ -99,6 +99,8 @@ sqoop import \
 
 # export
 
+从Hive或者HDFS导出数据到MySQL
+
 ```
 sqoop export \
 --connect jdbc:mysql://hostname:3306/mydb \
